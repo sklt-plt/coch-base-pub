@@ -10,7 +10,6 @@ var current_music_player : AudioStreamPlayer
 var current_track = -1
 var looped = false
 
-var crossfade_time = 0.0
 const CROSSFADE_SPEED = 0.075
 
 func _ready():
@@ -42,7 +41,8 @@ func play_once_and_finish(var track: AudioStream):
 
 func force_next_list(var new_tracks: Array):
 	if not current_music_player.is_connected("finished", self, "play_next"):
-		current_music_player.connect("finished", self, "play_next")
+		if current_music_player.connect("finished", self, "play_next") != OK:
+			print("Warn: Can't play next music track (signal error)")
 
 	set_new_tracks_and_restart(new_tracks)
 	play_next()
@@ -50,7 +50,8 @@ func force_next_list(var new_tracks: Array):
 func queue_next_list(var new_tracks: Array):
 	#play new track list after current song finishes
 	if not current_music_player.is_connected("finished", self, "play_next"):
-		current_music_player.connect("finished", self, "play_next")
+		if current_music_player.connect("finished", self, "play_next") != OK:
+			print("Warn: Can't queue next music track (signal error)")
 
 	set_new_tracks_and_restart(new_tracks)
 	if not current_music_player.playing:
@@ -69,7 +70,8 @@ func crossfade_next_list(var new_tracks: Array):
 		current_music_player = music_player
 
 	old_music_player.disconnect("finished", self, "play_next")
-	current_music_player.connect("finished", self, "play_next")
+	if current_music_player.connect("finished", self, "play_next") != OK:
+		print("Warn: Can't crossfade to next music track (signal error)")
 
 	current_music_player.volume_db = linear2db(CROSSFADE_SPEED)
 	play_next()

@@ -9,6 +9,7 @@ func activate():
 	if not $StaticBody/CollisionShape.disabled and $"/root/Player".take("r_keys", 1):
 		$Trigger/CollisionShape.disabled = true
 		$StaticBody/CollisionShape.disabled = true
+		$"/root/Player/HUD".hide_dialog(.make_prompt_text())
 		var animation_player = get_node_or_null("Model/AnimationPlayer") as AnimationPlayer
 		if animation_player and anim:
 			animation_player.add_animation(ANIM_NAME, anim)
@@ -19,16 +20,18 @@ func activate():
 func _on_Trigger_body_entered(body):
 	if body == $"/root/Player":
 		if $"/root/Player".has("r_keys", 1):
-			# construct default prompt
-			._on_Trigger_body_entered(body)
+			$"/root/Player/HUD".display_dialog(.make_prompt_text())
+			set_process_input(true)
 		else:
-			$"/root/Player/HUD".display_dialog(make_prompt_text())
+			$"/root/Player/HUD".display_dialog(make_prompt_text_locked())
 
 func _on_Trigger_body_exited(body):
 	if body == $"/root/Player":
-		$"/root/Player/HUD".hide_dialog(make_prompt_text())
+		if $"/root/Player".has("r_keys", 1):
+			$"/root/Player/HUD".hide_dialog(.make_prompt_text())
+		else:
+			$"/root/Player/HUD".hide_dialog(make_prompt_text_locked())
 		set_process_input(false)
 
-func make_prompt_text():
-	var prompt_text = "You need a key"
-	return prompt_text
+func make_prompt_text_locked():
+	return "You need a key"

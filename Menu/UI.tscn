@@ -250,6 +250,56 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
+[node name="LevelSelectEp2" type="Control" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="LSE2BackButton" type="Button" parent="LevelSelectEp2"]
+anchor_left = 0.059375
+anchor_top = 0.832
+anchor_right = 0.152
+anchor_bottom = 0.924038
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayEp2" type="Button" parent="LevelSelectEp2"]
+anchor_left = 0.4
+anchor_top = 0.540178
+anchor_right = 0.6
+anchor_bottom = 0.62287
+text = "Play Campaign"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PlayEp2Endless" type="Button" parent="LevelSelectEp2"]
+anchor_left = 0.4
+anchor_top = 0.643768
+anchor_right = 0.6
+anchor_bottom = 0.72646
+text = "Play Arcade"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="PlayEp2Custom" type="Button" parent="LevelSelectEp2"]
+anchor_left = 0.4
+anchor_top = 0.746653
+anchor_right = 0.6
+anchor_bottom = 0.829345
+text = "Play Custom"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [node name="Options" parent="." instance=ExtResource( 3 )]
 visible = false
 
@@ -310,9 +360,14 @@ __meta__ = {
 [connection signal="button_up" from="MainMenu/MarginContainer/Button" to="." method="_on_Button_button_up"]
 [connection signal="button_up" from="LevelSelect/LSBackButton" to="." method="_on_LSBackButton_button_up"]
 [connection signal="button_up" from="LevelSelect/Ep1Button" to="." method="_on_Ep1Button_button_up"]
+[connection signal="button_up" from="LevelSelect/Ep2Button" to="." method="_on_Ep2Button_button_up"]
 [connection signal="button_up" from="LevelSelectEp1/LSE1BackButton" to="." method="_on_LSE1BackButton_button_up"]
 [connection signal="button_up" from="LevelSelectEp1/PlayEp1" to="." method="_on_PlayEp1_button_up"]
 [connection signal="button_up" from="LevelSelectEp1/PlayEp1Endless" to="." method="_on_PlayEp1Endless_button_up"]
 [connection signal="button_up" from="LevelSelectEp1/PlayEp1Custom" to="." method="_on_PlayEp1Custom_button_up"]
+[connection signal="button_up" from="LevelSelectEp2/LSE2BackButton" to="." method="_on_LSE2BackButton_button_up"]
+[connection signal="button_up" from="LevelSelectEp2/PlayEp2" to="." method="_on_PlayEp2_button_up"]
+[connection signal="button_up" from="LevelSelectEp2/PlayEp2Endless" to="." method="_on_PlayEp2Endless_button_up"]
+[connection signal="button_up" from="LevelSelectEp2/PlayEp2Custom" to="." method="_on_PlayEp2Custom_button_up"]
 [connection signal="exited" from="Options" to="." method="_on_Options_exited"]
 [connection signal="button_up" from="Ep1ClearNotif/Ep1ClearOkButton" to="." method="_on_Ep1ClearOkButton_button_up"]

@@ -48,11 +48,20 @@ func _on_FireButton_button_up():
 func _on_AltFireButton_button_up():
 	listen("Aim")
 
+func _on_QMeleeButton_button_up():
+	listen("Quick Melee")
+
 func _on_SRevolverButton_button_up():
 	listen("Select Revolver")
 
 func _on_SShotgunButton_button_up():
 	listen("Select Shotgun")
+
+func _on_SCrossbowButton_button_up():
+	listen("Select Crossbow")
+
+func _on_SMeleeButton_button_up():
+	listen("Select Melee")
 
 func _on_InteractButton_button_up():
 	listen("Interact")

@@ -2,7 +2,7 @@ extends Area
 
 var colliders = []
 
-const BASE_KINEMATIC_ACTOR_PUSH_FORCE = 10.0
+const BASE_KINEMATIC_ACTOR_PUSH_FORCE = 100.0
 
 func _physics_process(delta):
 	for c in colliders:

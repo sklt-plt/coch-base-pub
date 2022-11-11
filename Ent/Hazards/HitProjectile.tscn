@@ -5,6 +5,5 @@
 
 [node name="HitProjectile" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-
-[node name="DecayTimer" parent="." index="1"]
-wait_time = 9.0
+projectile_damage = 20.0
+projectile_push_force = 20.0

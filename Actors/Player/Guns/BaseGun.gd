@@ -1,7 +1,11 @@
 extends Spatial
 class_name BaseGun
 
+signal AltFire
+
+export (PackedScene) var projectile_scene				# projectile to spawn, leave empty to use raycast
 export var bullet_damage = 5							# damage to deal per bullet
+export var bullet_push_force = 1						# how much to push kinematic actor per bullet
 export var bullets_at_once = 1							# number of bullets to calculate when firing, unrelated to magazine size
 export var gun_inaccuracy = 0.017						# bullet spread when firing in normal mode
 export var gun_inaccuracy_aim_mode = 0.005				# spread in alt mode
@@ -47,8 +51,22 @@ func fire():
 
 		$"MuzzleFlash".show()
 
-		for _i in range(0,bullets_at_once):
-			deal_damage_by_ray(construct_ray(current_inaccuracy))
+		if projectile_scene:
+			var pr = projectile_scene.instance()
+			get_tree().current_scene.add_child(pr)
+			pr.global_rotation = $"../../WorldCamera".global_rotation
+			pr.global_translation = self.global_translation
+
+			if pr is ExplosiveProjectile:
+				if self.connect("AltFire", pr, "detonate_explosive", [null]) != OK:
+					print("Warn: couldn't connect signal AltFire to detonate projectile mid-air")
+				var expl = pr.get_node("Explosive") as Explosive
+
+				if self.connect("AltFire", expl, "explode", []) != OK:
+					print("Warn: couldn't connect signal AltFire to detonate explosive")
+		else:
+			for _i in range(0,bullets_at_once):
+				deal_damage_by_ray(construct_ray(current_inaccuracy))
 
 		if not in_aim_mode:
 			play_anim_pair(anims_fire)
@@ -131,45 +149,62 @@ func interrupt_reload():
 func can_switch():
 	return are_all_timers_stopped()
 
-func play_anim_pair(var anim_pair: Array):
-	if anim_pair[0] != "":
-		anim_player.play(anim_pair[0])
+func play_gun_anim(var anim_name: String):
+	if anim_name != "":
+		anim_player.stop()
+		anim_player.play(anim_name)
 	else:
 		print("Gun animation not provided")
+
+func play_hands_anim(var anim_name: String):
+	if anim_name != "":
+		anim_player_hands.play(anim_name)
+	else:
+		print("Hands animation not provided")
+
+func play_anim_pair(var anim_pair: Array):
+	if not anim_player:
+		print("Missing AnimationPlayer for gun")
+		return
+
+	play_gun_anim(anim_pair[0])
 
 	if not anim_player_hands:
 		print("Missing AnimationPlayer for hands")
 		return
 
-	if anim_pair[1] != "":
-		anim_player_hands.play(anim_pair[1])
+	play_hands_anim(anim_pair[1])
+
+func deal_damage_to_body(var body):
+	if body.has_method("deal_damage"):
+		body.deal_damage(bullet_damage, bullet_push_force, get_global_transform().origin, find_parent("Player*"))
+		$"/root/Player".give("s_shots_hit", 1)
+		$"/root/Player".give("s_damage_dealt", bullet_damage)
+
+func spawn_hit_effect(var body, var ray_dict):
+	var type_node = body.get_node_or_null("SurfaceHitEffectType")
+	var new_effect
+	if type_node:
+		if Effects.SURFACE_EFFECTS.has(type_node.effect):
+			new_effect = load(Effects.SURFACE_EFFECTS[type_node.effect]).instance()		# resource should be loaded in objects cache already
+		else:
+			print("Warning: Incorrect surface effect: ", type_node.effect)
+			new_effect = load(Effects.SURFACE_EFFECTS[0]).instance()
 	else:
-		print("Hands animation not provided")
+		new_effect = load(Effects.SURFACE_EFFECTS[0]).instance()
+
+	get_tree().get_root().add_child(new_effect)
+	new_effect.translation = ray_dict["position"]
+	new_effect.look_at(get_global_transform().origin, Vector3.UP)
 
 func deal_damage_by_ray(var ray_dict : Dictionary):
 	if not ray_dict.empty():
 		var body = ray_dict["collider"]
 
-		if body.has_method("deal_damage"):
-			body.deal_damage(bullet_damage, get_global_transform().origin, find_parent("Player*"))
-			$"/root/Player".give("s_shots_hit", 1)
-			$"/root/Player".give("s_damage_dealt", bullet_damage)
-
-		#spawn correct effect
-		var type_node = body.get_node_or_null("SurfaceHitEffectType")
-		var new_effect
-		if type_node:
-			if Effects.SURFACE_EFFECTS.has(type_node.effect):
-				new_effect = load(Effects.SURFACE_EFFECTS[type_node.effect]).instance()		# resource should be loaded in objects cache already
-			else:
-				print("Warning: Incorrect surface effect: ", type_node.effect)
-				new_effect = load(Effects.SURFACE_EFFECTS[0]).instance()
-		else:
-			new_effect = load(Effects.SURFACE_EFFECTS[0]).instance()
-
-		get_tree().get_root().add_child(new_effect)
-		new_effect.translation = ray_dict["position"]
-		new_effect.look_at(get_global_transform().origin, Vector3.UP)
+		deal_damage_to_body(body)
+		spawn_hit_effect(body, ray_dict)
+		return true
+	return false
 
 func construct_ray(var max_offset: float):
 	var camera = get_viewport().get_camera()

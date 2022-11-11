@@ -6,13 +6,6 @@ func _ready():
 		print("Cannot load resource pack: ", Globals.content_pack_path, ".pck, will attempt to use folder structure")
 
 	#load stuff from active content pack
-	#object cache
-	var object_cache = load(Globals.content_pack_path + "/Ent/ObjectCache.tscn")
-	if object_cache:
-		$"/root".call_deferred("add_child", object_cache.instance())
-	else:
-		print("Cannot load: ", Globals.content_pack_path, "/Ent/ObjectCache.tscn")
-
 	#load fonts
 	var font_scene = load(Globals.content_pack_path + "/UI/FontCache.tscn")
 	if font_scene:

@@ -20,7 +20,7 @@ func _ready():
 	$"/root/Player/HUD".register_boss_health(self, hud_name)
 	$"/root/Player".give("s_kills_possible", 1)
 
-func deal_damage(damage, _from_direction, _from_ent):
+func deal_damage(damage, _push_force, _from_direction, _from_ent):
 	if health > 0.1:
 		health -= damage
 
@@ -34,7 +34,7 @@ func deal_damage(damage, _from_direction, _from_ent):
 		$Model/AnimationPlayer.play(anim_die)
 		var minions = get_tree().get_nodes_in_group("enemies")
 		for m in minions:
-			m.deal_damage(10000, Vector3.ZERO, null)
+			m.deal_damage(10000, 0, Vector3.ZERO, null)
 
 		var children = get_children()
 		for c in children:

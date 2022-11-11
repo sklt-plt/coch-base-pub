@@ -68,8 +68,17 @@ func quit_to_menu():
 	if get_tree().change_scene(Globals.content_pack_path + "/MainMenu/MainMenu.tscn") != OK:
 		print("Can't load: ", Globals.content_pack_path + "/MainMenu/MainMenu.tscn")
 
+func load_object_cache(var ep_idx: int):
+	var cache_filename = Globals.content_pack_path + "/Ent/ObjectCacheEp" + String(ep_idx) + ".tscn"
+	var object_cache = load(cache_filename)
+	if object_cache:
+		$"/root".call_deferred("add_child", object_cache.instance())
+	else:
+		print("Cannot load: ", cache_filename)
+
 func start_episode(var ep_idx: int):
 	reset_episode_cache()
+	load_object_cache(ep_idx)
 	$"/root/Player".reset()
 	current_ep = ep_idx
 

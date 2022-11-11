@@ -9,6 +9,7 @@ var in_fire = false
 var in_fire_just_pressed = false
 var in_alt_just_pressed = false
 var in_alt_just_released = false
+var in_qmelee = false
 var in_select = false
 var in_select_ind
 var in_select_next = false
@@ -26,6 +27,12 @@ func _ready():
 		hide_all_guns_except(0)
 
 func process_inputs():
+	if $"/root/Player/PlayerMovement".on_ladder and not $"/root/Player".is_on_floor():
+		self.visible = false
+		return
+	else:
+		self.visible = true
+
 	if current_gun:
 		if ((in_fire_just_pressed or (in_fire && current_gun.automatic)) and not is_switching):
 			current_gun.fire()
@@ -39,38 +46,60 @@ func process_inputs():
 		if (in_alt_just_released and !Globals.user_settings["toggle_aim"]) and not is_switching:
 			current_gun.end_aim()
 
+	if in_qmelee:
+		guns[0].visible = true
+		guns[0].fire()
+
 	if in_select:
 		switch_guns(in_select_ind)
 
 	if in_select_next:
-		switch_guns((current_gun_idx+1)%(guns.size()))
+		var i = current_gun_idx + 1
+		i = i % guns.size()
+		while i != current_gun_idx and not switch_guns(i):
+			i += 1
+			i = i % guns.size()
 
 	if in_select_prev:
-		switch_guns(abs((current_gun_idx-1)%(guns.size())))
+		var i = current_gun_idx - 1
+		if i < 0: i = guns.size() - 1
+		while i != current_gun_idx and not switch_guns(i):
+			i -= 1
+			if i < 0: i = guns.size() - 1
 
 func switch_guns(var index: int, var show_on_hud = true):
-	if current_gun.firing_timer.is_stopped() and guns[index] != current_gun:
-		match index:
-			0:
-				if not $"/root/Player".has("e_pistol_level", 1):
-					return
-			1:
-				if not $"/root/Player".has("e_double_barrel_level", 1):
-					return
-			_:
-				return
+	if not current_gun.firing_timer.is_stopped():
+		return false
 
-		is_switching = true
-		current_gun.interrupt_reload()
+	match index:
+		0:
+			if not $"/root/Player".has("e_melee_level", 1):
+				return false
+		1:
+			if not $"/root/Player".has("e_pistol_level", 1):
+				return false
+		2:
+			if not $"/root/Player".has("e_double_barrel_level", 1):
+				return false
+		3:
+			if not $"/root/Player".has("e_crossbow_level", 1):
+				return false
+		_:
+			return false
 
-		$"/root/Player/PlayerAnimations"._on_switch_input()
+	is_switching = true
+	current_gun.interrupt_reload()
 
-		if show_on_hud:
-			$"/root/Player/HUD/Guns".show_guns(index)
-		$"/root/Player/HUD".update_gun_index(index)
+	$"/root/Player/PlayerAnimations"._on_switch_input()
 
-		$SwitchingTimer.switching_idx = index
-		$SwitchingTimer.start()
+	if show_on_hud:
+		$"/root/Player/HUD/Guns".show_guns(index)
+	$"/root/Player/HUD".update_gun_index(index)
+
+	$SwitchingTimer.switching_idx = index
+	$SwitchingTimer.start()
+
+	return true # switched
 
 func finish_switching(var index):
 	current_gun_idx = index

@@ -43,8 +43,11 @@ var crawl_button : Button
 var run_button : Button
 var fire_button : Button
 var alt_fire_button : Button
+var qmelee_button: Button
 var srevolver_button : Button
 var sshotgun_button : Button
+var scrossbow_button : Button
+var smelee_button : Button
 var snext_button : Button
 var sprev_button : Button
 
@@ -92,8 +95,11 @@ func _ready():
 	run_button = $"TC/Controls/SC/GC/RunButton"
 	fire_button = $"TC/Controls/SC/GC/FireButton"
 	alt_fire_button = $"TC/Controls/SC/GC/AltFireButton"
+	qmelee_button = $"TC/Controls/SC/GC/QMeleeButton"
 	srevolver_button = $"TC/Controls/SC/GC/SRevolverButton"
 	sshotgun_button = $"TC/Controls/SC/GC/SShotgunButton"
+	scrossbow_button = $"TC/Controls/SC/GC/SCrossbowButton"
+	smelee_button = $"TC/Controls/SC/GC/SMeleeButton"
 	snext_button = $"TC/Controls/SC/GC/SNextButton"
 	sprev_button = $"TC/Controls/SC/GC/SPrevButton"
 
@@ -141,34 +147,23 @@ func _on_Options_visibility_changed():
 		set_all_input_buttons_texts()
 
 func set_all_input_buttons_texts():
-	set_input_buttons_text(move_forward_button, "Forward")
-	set_input_buttons_text(move_backwards_button, "Backwards")
-	set_input_buttons_text(strafe_left_button, "Strafe Left")
-	set_input_buttons_text(strafe_right_button, "Strafe Right")
-	set_input_buttons_text(interact_button, "Interact")
-	set_input_buttons_text(jump_button, "Jump")
-	set_input_buttons_text(crawl_button, "Crawl")
-	set_input_buttons_text(run_button, "Run")
-	set_input_buttons_text(fire_button, "Fire")
-	set_input_buttons_text(alt_fire_button, "Aim")
-	set_input_buttons_text(srevolver_button, "Select Revolver")
-	set_input_buttons_text(sshotgun_button, "Select Shotgun")
-	set_input_buttons_text(snext_button, "Select Next")
-	set_input_buttons_text(sprev_button, "Select Prev")
-
-func set_input_buttons_text(var button : Button, var action : String):
-	var event = InputMap.get_action_list(action)[0]
-	if event is InputEventKey:
-		button.text = InputMap.get_action_list(action)[0].as_text()
-	elif event is InputEventMouseButton:
-		if event.button_index == BUTTON_WHEEL_DOWN:
-			button.text = "M. Wheel Down"
-		elif event.button_index == BUTTON_WHEEL_UP:
-			button.text = "M. Wheel Up"
-		else:
-			button.text = "Mouse "+String(event.button_index)
-	else:
-		button.text = ""
+	move_forward_button.text = InputHelper.get_input_buttons_text("Forward")
+	move_backwards_button.text = InputHelper.get_input_buttons_text("Backwards")
+	strafe_left_button.text = InputHelper.get_input_buttons_text("Strafe Left")
+	strafe_right_button.text = InputHelper.get_input_buttons_text("Strafe Right")
+	interact_button.text = InputHelper.get_input_buttons_text("Interact")
+	jump_button.text = InputHelper.get_input_buttons_text("Jump")
+	crawl_button.text = InputHelper.get_input_buttons_text("Crawl")
+	run_button.text = InputHelper.get_input_buttons_text("Run")
+	fire_button.text = InputHelper.get_input_buttons_text("Fire")
+	alt_fire_button.text = InputHelper.get_input_buttons_text("Aim")
+	qmelee_button.text = InputHelper.get_input_buttons_text("Quick Melee")
+	srevolver_button.text = InputHelper.get_input_buttons_text("Select Revolver")
+	sshotgun_button.text = InputHelper.get_input_buttons_text("Select Shotgun")
+	scrossbow_button.text = InputHelper.get_input_buttons_text("Select Crossbow")
+	smelee_button.text = InputHelper.get_input_buttons_text("Select Melee")
+	snext_button.text = InputHelper.get_input_buttons_text("Select Next")
+	sprev_button.text = InputHelper.get_input_buttons_text("Select Prev")
 
 func _on_DisplayModeOption_item_selected(index):
 	var new_settings = {"screen_mode" : index}

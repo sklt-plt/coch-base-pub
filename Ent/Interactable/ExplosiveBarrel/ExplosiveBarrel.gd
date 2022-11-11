@@ -1,4 +1,5 @@
 extends RigidBody
+class_name ExplosiveBarrel
 
 var exploded = false
 
@@ -11,8 +12,11 @@ func disable_collisions():
 		if c is CollisionShape:
 			c.disabled = true
 
-func deal_damage(var _amount, var _from_dir, var _from_ent):
-	if not exploded:
+func deal_damage(var amount, var push_force, var from_dir, var _from_ent):
+	if is_zero_approx(amount):
+		# basically kick
+		apply_central_impulse((self.global_translation-from_dir).normalized() * push_force*80)
+	elif not exploded:
 		exploded = true
 		self.mode = MODE_STATIC
 		disable_collisions()

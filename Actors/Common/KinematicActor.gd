@@ -10,7 +10,7 @@ func _physics_process(_delta):
 		reduce_move_modifier()
 
 func is_move_modif_neglible():
-	return move_modifier_linear.length() == 0.0  #  < ??
+	return is_zero_approx(move_modifier_linear.length())
 
 func reduce_move_modifier():
 	if not is_move_modif_neglible():
@@ -27,7 +27,6 @@ func move_and_slide(var desired_move_vector, var floor_normal=Vector3( 0, 0, 0 )
 			return ret
 		else:
 			return .move_and_slide(move_modifier_linear+desired_move_vector, floor_normal, stop_on_slope, max_slides, floor_max_angle, infinite_inertia)
-
 
 func push_linear(var force_origin, var force):
 	if is_physics_processing():

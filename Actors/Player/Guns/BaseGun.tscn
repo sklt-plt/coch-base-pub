@@ -14,6 +14,7 @@ one_shot = true
 one_shot = true
 
 [node name="MuzzleFlash" parent="." instance=ExtResource( 1 )]
+
 [connection signal="timeout" from="FiringTimer" to="." method="finish_firing"]
 [connection signal="timeout" from="ReloadingTimer" to="." method="finish_reload"]
 

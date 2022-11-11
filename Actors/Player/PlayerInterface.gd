@@ -13,8 +13,8 @@ func start_flying():
 func stop_flying():
 	$PlayerMovement.stop_flying()
 
-func on_ladder_entered(var ladderPos):
-	$PlayerMovement.enteredLadder(ladderPos)
+func on_ladder_entered():
+	$PlayerMovement.enteredLadder()
 
 func on_ladder_exited():
 	$PlayerMovement.exitedLadder()
@@ -26,8 +26,9 @@ func revive():
 	var pr = $"PlayerResources"
 	pr.r_health = pr.resources_limits["r_health"]
 	pr.r_armor = pr.resources_limits["r_armor"]
-	pr.r_pistol_ammo = pr.resources_limits["r_pistol_ammo"]
-	pr.r_shotgun_ammo = pr.resources_limits["r_shotgun_ammo"]
+	pr.r_pistol_ammo = pr.resources_limits["r_pistol_ammo"] / 2
+	pr.r_shotgun_ammo = pr.resources_limits["r_shotgun_ammo"] / 2
+	pr.r_crossbow_ammo = pr.resources_limits["r_crossbow_ammo"] / 2
 	$"PlayerStats".give("s_deaths", 1)
 	$"PlayerStats".give("s_score", -10000)
 	$"HUD/HurtEffect".color.a = 0.0
@@ -38,7 +39,7 @@ func reset():
 	$"HUD/Arcade".visible = false
 	$"PlayerResources".reset()
 	$"PlayerStats".reset()
-	$BodyCollision/LookHeight/LookDirection/GunController.switch_guns(0, false)
+	$BodyCollision/LookHeight/LookDirection/GunController.switch_guns(1, false)
 	$"GameOverStats".reset()
 	enable()
 
@@ -50,10 +51,10 @@ func enable():
 	$"SFXPlayer2".stop()
 	$"SFXPlayer3".stop()
 
-func deal_damage(var damage, var from_direction, var _from_ent):
+func deal_damage(var damage, var push_force, var from_direction, var _from_ent):
 	$"PlayerResources".deal_damage(damage)
 	$"PlayerStats".give("s_damage_taken", damage)
-	.push_linear(from_direction, damage)
+	.push_linear(from_direction, push_force)
 
 func upgrade_resource(var resource, var value):
 	$"PlayerResources".upgrade_resource(resource, value)

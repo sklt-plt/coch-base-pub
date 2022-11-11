@@ -14,6 +14,7 @@ enum CombatMovementStates {
 enum States {
 	DEAD,  # not processing
 	IDLE,  # not processing
+	DYING,
 	AWAKE,
 	MOVE_CHARGE,
 	MOVE_CHASE,
@@ -34,10 +35,10 @@ var ANIM_ATTACK_BEGIN = ""
 var ANIM_ATTACK_HOLD = ""
 var ANIM_EXTRA = ""
 
-export (float) var health = 50                   # how much damage enemy can take
+export (float) var health = 50.0                 # how much damage enemy can take
 
-export (float) var movement_speed = 8            # how fast it should move when engaging player
-export (float) var movement_speed_wandering = 4  # how fast to move when not engaging player
+export (float) var movement_speed = 8.0            # how fast it should move when engaging player
+export (float) var movement_speed_wandering = 4.0  # how fast to move when not engaging player
 export (float) var wander_single_time = 5.0      # for how long (seconds) to move in random direction when wandering / searching
 												 # also applies to chasing
 
@@ -47,7 +48,7 @@ export (CombatMovementStates) var combat_movement  # which movement to use when 
 export (bool) var allow_chasing                  # should ai go towards last player's position when loses direct line of sight
 												 # broken, if not going directly at player when it kicks in
 export (bool) var uses_melee_attack              # allows performing melee attack (requires "melee" animation state machine node)
-export (float) var melee_damage = 5              # how much damage to deal in MeleeArea (def 5)
+export (float) var melee_damage = 5.0            # how much damage to deal in MeleeArea (def 5)
 export (float) var distance_to_melee = 10.0      # distance to player to perform melee (def 10.0)
 export (float) var distance_to_melee_hit = 5.0   # distance to player to perform melee (def 10.0)
 
@@ -73,6 +74,14 @@ export (Dictionary) var kill_immediate_resources = {
 	"s_leveled_score" : 100,
 	"r_time_freeze" : 1.0,
 	"s_kills" : 1
+}
+
+export (Dictionary) var player_resource_costs = {
+	"r_health": 2,
+	"r_armor" : 2,
+	"r_pistol_ammo" : 2,
+	"r_shotgun_ammo": 2,
+	"r_crossbow_ammo": 2
 }
 
 export (float) var dynamic_self_poison = 2.0
@@ -120,7 +129,6 @@ func _ready():
 		self.visible = false
 		$"/root/AIManager".register_ai(self)
 
-
 func _physics_process(delta):
 	if is_dynamic:
 		_managed_process(delta)
@@ -138,7 +146,7 @@ func _managed_process(var delta):
 
 func update_current_state():
 	if health <= 0:
-		begin_state(States.DEAD)
+		begin_state(States.DYING)
 
 	if current_state == States.AWAKE:
 		if (visible_player and is_player_in_range(distance_to_melee)
@@ -164,11 +172,9 @@ func update_current_state():
 
 func process_current_state(var delta):
 	match current_state:
-		States.DEAD:
+		States.DYING:
 			if .is_move_modif_neglible():
-				set_physics_process(false)
-				$CollisionShape.disabled = true
-			simulate_movement = false
+				begin_state(States.DEAD)
 
 		States.ATTACK_MELEE:
 			if anim_player.current_animation != ANIM_ATTACK_MELEE: # ughhhhh
@@ -235,16 +241,22 @@ func begin_state(var desired_state):
 			States.DEAD:
 				current_state = States.DEAD
 				simulate_movement = false
+				set_physics_process(false)
+				$CollisionShape.disabled = true
+			States.DYING:
+				current_state = States.DYING
+
 				wander_timer.stop()
 				ranged_attack_tele_timer.stop()
 				ranged_attack_freq_timer.stop()
 				audio_callouts_timer.stop()
-				.get_node("CollisionShape").disabled = true
 				if ANIM_DIE != "":
 					play_animation(ANIM_DIE)
 				elif gib_effect:
 					get_node("Model").visible = false
 					self.add_child(gib_effect.instance())
+					begin_state(States.DEAD)
+
 				play_audio(audio_death)
 
 				if (is_dynamic):
@@ -254,6 +266,7 @@ func begin_state(var desired_state):
 					#don't give score for respawning enemies
 					for r in kill_immediate_resources:
 						$"/root/Player".give(r, kill_immediate_resources[r])
+
 			States.AWAKE:
 				self.visible = true
 				play_animation(ANIM_IDLE)
@@ -343,14 +356,14 @@ func face_target(var target):
 
 		look_at(new_target, Vector3.UP)
 
-func deal_damage(var damage, var from_direction, var from_ent):
+func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 	if .is_physics_processing() and current_state == States.AWAKE:
 		if from_ent and not visible_player:
 			visible_player = true
 		begin_state(States.AWAKE)
 
 	health -= damage
-	.push_linear(from_direction, damage/2)
+	.push_linear(from_direction, push_force)
 
 func reset_delta_search():
 	wander_total_delta = 0
@@ -372,11 +385,11 @@ func find_random_point_to_wander_to():
 	new_target.z = get_global_transform().origin.z + rand_range(-wander_max_distance, wander_max_distance)
 	return new_target
 
-func set_awake(var awake):
+func set_awake(var to_awake):
 	if current_state != States.DEAD:
-		if awake:
+		if to_awake and current_state == States.IDLE:
 			begin_state(States.AWAKE)
-		else:
+		elif not to_awake:
 			begin_state(States.IDLE)
 
 func _on_WanderTimer_timeout():

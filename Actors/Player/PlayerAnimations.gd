@@ -1,7 +1,7 @@
 extends Node
 class_name PlayerAnimations
 
-export (float) var animation_lerp_speed = 6
+export (float) var animation_lerp_speed = 6.0
 
 var joy_input = Vector2()
 

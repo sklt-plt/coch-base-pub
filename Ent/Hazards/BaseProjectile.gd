@@ -9,7 +9,6 @@ func _physics_process(delta):
 
 	if col:
 		hit_target(col)
-		queue_free()
 
 func hit_target(var _col : KinematicCollision):
 	pass  # override me

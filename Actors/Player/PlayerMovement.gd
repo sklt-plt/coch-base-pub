@@ -3,21 +3,21 @@ class_name PlayerMovement
 
 export (float) var walk_speed = 7.5  #max walking speed
 export (float) var walk_aim_speed = 5.5  #max walking speed
-export (float) var run_speed = 17  #max running speed
-export (float) var accel = 12  #(de)acceleration in x and z axes
-export (float) var jump_power = 15  #initial y magnitude during jump
+export (float) var run_speed = 17.0  #max running speed
+export (float) var accel = 12.0  #(de)acceleration in x and z axes
+export (float) var jump_power = 15.0  #initial y magnitude during jump
 export (float) var gravity = 0.75  #(de)acceleration in y axis
-export (float) var ladder_fly_gravity = 10 #(de)acceleration in y axis while climbing ladder (or flying)
-export (float) var max_fall_speed = -80  # vertical (downward) terminal velocity
+export (float) var ladder_fly_gravity = 20.0 #(de)acceleration in y axis while climbing ladder (or flying)
+export (float) var max_fall_speed = -80.0  # vertical (downward) terminal velocity
 
-export (float) var water_speed = 4  #max speed in water
-export (float) var water_sink_speed = 4  #max fall speed in water
-export (float) var water_gravity = 4  #(de)acceleration in y axis in water when not moving
+export (float) var water_speed = 4.0  #max speed in water
+export (float) var water_sink_speed = 4.0  #max fall speed in water
+export (float) var water_gravity = 4.0  #(de)acceleration in y axis in water when not moving
 
-export (float) var fly_speed = 30  #max speed while flying (debug)
+export (float) var fly_speed = 30.0  #max speed while flying (debug)
 
-export (float) var crawl_speed = 2
-export (float) var to_crawl_lerp = 8
+export (float) var crawl_speed = 2.0
+export (float) var to_crawl_lerp = 8.0
 
 var mouse_sensitivity = 0.225
 
@@ -41,8 +41,6 @@ var oryginal_camera_height
 
 var in_water
 var on_ladder
-var ladderPos
-var ladderEnterPos
 var is_flying
 
 func _ready():
@@ -142,16 +140,8 @@ func move(var horizontal_input, var vertical_input, var delta):
 	if in_water or on_ladder or is_flying:
 		var rotx = deg2rad($"../BodyCollision/LookHeight/LookDirection".rotation_degrees.x)
 
-		if in_water or is_flying:
-			current_movement.x = lerp(current_movement.x, horizontal_input*desired["speed"], accel*delta)
-			current_movement.z = lerp(current_movement.z, -vertical_input*desired["speed"]*cos(rotx), accel*delta)
-		else:
-			current_movement.x = 0.0
-			current_movement.z = 0.0
-			kinematic_body_node.translation.x = lerp(ladderEnterPos.x, ladderPos.x, accel*delta)
-			kinematic_body_node.translation.z = lerp(ladderEnterPos.z, ladderPos.y, accel*delta)
-			ladderEnterPos = kinematic_body_node.translation
-
+		current_movement.x = lerp(current_movement.x, horizontal_input*desired["speed"], accel*delta)
+		current_movement.z = lerp(current_movement.z, -vertical_input*desired["speed"]*cos(rotx), accel*delta)
 
 		if abs(horizontal_input) > 0.01 or abs(vertical_input) > 0.01:
 			current_movement.y = lerp(current_movement.y, vertical_input*desired["speed"]*sin(rotx), accel*delta)
@@ -170,15 +160,10 @@ func move(var horizontal_input, var vertical_input, var delta):
 		else:
 			current_movement.y = 0.0
 
-	if (in_water or is_flying) and jump_input:
+	if (in_water or is_flying or on_ladder) and jump_input:
 		current_movement.y = lerp(current_movement.y, desired["speed"], accel*delta)
-	if (in_water or is_flying) and crawl_input:
+	if (in_water or is_flying or on_ladder) and crawl_input:
 		current_movement.y = lerp(current_movement.y, -desired["speed"], accel*delta)
-
-	if on_ladder and jump_input:
-		exitedLadder()
-		current_movement.y = jump_power
-
 
 	#transform along camera
 	var move_vec = Vector3()
@@ -214,11 +199,9 @@ func start_flying():
 func stop_flying():
 	is_flying = false
 
-func enteredLadder(var where):
+func enteredLadder():
 	on_ladder = true
 	in_water = false
-	ladderEnterPos = kinematic_body_node.translation
-	ladderPos = where
 
 func exitedLadder():
 	on_ladder = false

@@ -35,8 +35,8 @@ var user_settings = {
 	"legacy_campaign": false
 }
 
-const player_input_settings = {"Aim" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
-	"Jump" : "", "Run" : "", "Select Revolver" : "", "Select Shotgun" : "", "Strafe Left" : "", "Strafe Right" : "",
+const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
+	"Jump" : "", "Run" : "", "Select Revolver" : "", "Select Shotgun" : "", "Select Crossbow" : "", "Select Melee" : "", "Strafe Left" : "", "Strafe Right" : "",
 	"Select Prev" : "", "Select Next" : ""}
 
 const USER_INPUT_FILENAME = "user://user_input.cfg"

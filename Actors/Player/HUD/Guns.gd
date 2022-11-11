@@ -5,7 +5,10 @@ export (Array, Texture) var gun_icons = []
 export (Array, Texture) var gun_icons_inactive = []
 
 func _ready():
-	guns = [$Revolver, $DoubleBarrel]
+	for c in get_children():
+		if c is Control:
+			guns.push_back(c)
+
 	gun_icons.resize(guns.size())
 	gun_icons_inactive.resize(guns.size())
 
@@ -16,6 +19,8 @@ func show_guns(var active_gun_idx: int):
 	# check if we should enable icon
 	if $"/root/Player".has("e_double_barrel_level", 1):
 		$DoubleBarrel.visible = true
+	if $"/root/Player".has("e_crossbow_level", 1):
+		$Gun3.visible = true
 
 	# set all to inactive
 	for i in range (0, guns.size()):

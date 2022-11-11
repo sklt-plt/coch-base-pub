@@ -1,7 +1,7 @@
 extends Path
 class_name Drone
 
-export (float) var speed = 1
+export (float) var speed = 1.0
 export (PackedScene) var projectile
 export (float) var targeting_height_offset = 0.5
 export (PackedScene) var destroy_effect

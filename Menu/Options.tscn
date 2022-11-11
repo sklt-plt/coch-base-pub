@@ -40,9 +40,6 @@ margin_top = 19.969
 margin_bottom = 19.9689
 size_flags_horizontal = 2
 size_flags_vertical = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Video" type="Tabs" parent="TC"]
 anchor_right = 1.0
@@ -703,7 +700,7 @@ __meta__ = {
 
 [node name="GC" type="GridContainer" parent="TC/Controls/SC"]
 margin_right = 272.0
-margin_bottom = 670.0
+margin_bottom = 775.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 custom_constants/vseparation = 15
@@ -980,10 +977,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SRevolverLabel" type="Label" parent="TC/Controls/SC/GC"]
+[node name="QMeleeLabel" type="Label" parent="TC/Controls/SC/GC"]
 margin_top = 545.0
 margin_right = 113.0
 margin_bottom = 565.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Quick Melee"
+valign = 1
+
+[node name="QMeleeButton" type="Button" parent="TC/Controls/SC/GC"]
+margin_left = 163.0
+margin_top = 545.0
+margin_right = 272.0
+margin_bottom = 565.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SRevolverLabel" type="Label" parent="TC/Controls/SC/GC"]
+margin_top = 580.0
+margin_right = 113.0
+margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Select Revolver"
@@ -991,17 +1006,17 @@ valign = 1
 
 [node name="SRevolverButton" type="Button" parent="TC/Controls/SC/GC"]
 margin_left = 163.0
-margin_top = 545.0
+margin_top = 580.0
 margin_right = 272.0
-margin_bottom = 565.0
+margin_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SShotgunLabel" type="Label" parent="TC/Controls/SC/GC"]
-margin_top = 580.0
+margin_top = 615.0
 margin_right = 113.0
-margin_bottom = 600.0
+margin_bottom = 635.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Select Shotgun"
@@ -1009,17 +1024,53 @@ valign = 1
 
 [node name="SShotgunButton" type="Button" parent="TC/Controls/SC/GC"]
 margin_left = 163.0
-margin_top = 580.0
+margin_top = 615.0
 margin_right = 272.0
-margin_bottom = 600.0
+margin_bottom = 635.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SCrossbowLabel" type="Label" parent="TC/Controls/SC/GC"]
+margin_top = 650.0
+margin_right = 113.0
+margin_bottom = 670.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Select Crossbow"
+valign = 1
+
+[node name="SCrossbowButton" type="Button" parent="TC/Controls/SC/GC"]
+margin_left = 163.0
+margin_top = 650.0
+margin_right = 272.0
+margin_bottom = 670.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SMeleeLabel" type="Label" parent="TC/Controls/SC/GC"]
+margin_top = 685.0
+margin_right = 113.0
+margin_bottom = 705.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Select Melee"
+valign = 1
+
+[node name="SMeleeButton" type="Button" parent="TC/Controls/SC/GC"]
+margin_left = 163.0
+margin_top = 685.0
+margin_right = 272.0
+margin_bottom = 705.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SNextLabel" type="Label" parent="TC/Controls/SC/GC"]
-margin_top = 615.0
+margin_top = 720.0
 margin_right = 113.0
-margin_bottom = 635.0
+margin_bottom = 740.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Select Next Gun"
@@ -1027,18 +1078,18 @@ valign = 1
 
 [node name="SNextButton" type="Button" parent="TC/Controls/SC/GC"]
 margin_left = 163.0
-margin_top = 615.0
+margin_top = 720.0
 margin_right = 272.0
-margin_bottom = 635.0
+margin_bottom = 740.0
 text = "M.Wheel Down"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SPrevLabel" type="Label" parent="TC/Controls/SC/GC"]
-margin_top = 650.0
+margin_top = 755.0
 margin_right = 113.0
-margin_bottom = 670.0
+margin_bottom = 775.0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Select Prev. Gun"
@@ -1046,9 +1097,9 @@ valign = 1
 
 [node name="SPrevButton" type="Button" parent="TC/Controls/SC/GC"]
 margin_left = 163.0
-margin_top = 650.0
+margin_top = 755.0
 margin_right = 272.0
-margin_bottom = 670.0
+margin_bottom = 775.0
 text = "M.Wheel Up"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1232,8 +1283,11 @@ valign = 1
 [connection signal="button_up" from="TC/Controls/SC/GC/RunButton" to="InputSetter" method="_on_RunButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/FireButton" to="InputSetter" method="_on_FireButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/AltFireButton" to="InputSetter" method="_on_AltFireButton_button_up"]
+[connection signal="button_up" from="TC/Controls/SC/GC/QMeleeButton" to="InputSetter" method="_on_QMeleeButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SRevolverButton" to="InputSetter" method="_on_SRevolverButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SShotgunButton" to="InputSetter" method="_on_SShotgunButton_button_up"]
+[connection signal="button_up" from="TC/Controls/SC/GC/SCrossbowButton" to="InputSetter" method="_on_SCrossbowButton_button_up"]
+[connection signal="button_up" from="TC/Controls/SC/GC/SMeleeButton" to="InputSetter" method="_on_SMeleeButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SNextButton" to="InputSetter" method="_on_SNextButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SPrevButton" to="InputSetter" method="_on_SPrevButton_button_up"]
 [connection signal="toggled" from="TC/Misc/SC/GC/LegacyCampaignCB" to="." method="_on_LegacyCampaignCB_toggled"]

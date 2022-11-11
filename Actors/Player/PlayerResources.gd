@@ -4,10 +4,13 @@ var r_health : int
 var r_armor : int
 var r_pistol_ammo : int
 var r_shotgun_ammo : int
+var r_crossbow_ammo : int
 var r_keys : int
 var ammo_bonus_cap : int
+var e_melee_level : int
 var e_pistol_level : int
 var e_double_barrel_level : int
+var e_crossbow_level : int
 var r_time_left : float
 var r_time_freeze: float
 
@@ -29,10 +32,13 @@ func reset():
 	r_armor = 50
 	r_pistol_ammo = 50
 	r_shotgun_ammo = 25
+	r_crossbow_ammo = 25
 	r_keys = 0
 	ammo_bonus_cap = 0
+	e_melee_level = 1
 	e_pistol_level = 1
 	e_double_barrel_level = 0
+	e_crossbow_level = 0
 	r_time_left = TIME_LEFT_MAX
 	r_time_freeze = 0.01
 
@@ -41,9 +47,12 @@ func reset():
 		"r_armor"  : 50,
 		"r_pistol_ammo" : 50,
 		"r_shotgun_ammo" : 25,
+		"r_crossbow_ammo" : 25,
 		"r_keys" : 100,
+		"e_melee_level" : 1,
 		"e_pistol_level" : 1,
 		"e_double_barrel_level" : 1,
+		"e_crossbow_level" : 1,
 		"r_time_left" : TIME_LEFT_MAX,
 		"r_time_freeze": 1.04
 	}
@@ -112,10 +121,14 @@ func take(var resource, var value):
 
 func switch_to_new_weapon(var resource):
 	match resource:
-		"e_pistol_level":
+		"e_melee_level":
 			get_node("../BodyCollision/LookHeight/LookDirection/GunController").switch_guns(0)
-		"e_double_barrel_level":
+		"e_pistol_level":
 			get_node("../BodyCollision/LookHeight/LookDirection/GunController").switch_guns(1)
+		"e_double_barrel_level":
+			get_node("../BodyCollision/LookHeight/LookDirection/GunController").switch_guns(2)
+		"e_crossbow_level":
+			get_node("../BodyCollision/LookHeight/LookDirection/GunController").switch_guns(3)
 
 func set(var resource, var value):
 	.set(resource, value)
@@ -136,7 +149,7 @@ func give(var resource, var value):
 
 		#check limits
 		#if this is ammo take bonus capacity into consideration
-		if resource == "r_pistol_ammo" or resource == "r_shotgun_ammo":
+		if resource == "r_pistol_ammo" or resource == "r_shotgun_ammo" or resource == "r_crossbow_ammo":
 			if get(resource) == resources_limits[resource]+ammo_bonus_cap:
 				#player is full
 				return false || use_time_limit

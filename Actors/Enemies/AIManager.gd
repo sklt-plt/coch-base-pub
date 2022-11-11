@@ -20,7 +20,7 @@ func clear_registrations():
 	enemies.clear()
 
 func _physics_process(delta):
-	for i in range(0, MAX_PROCESS_PER_FRAME):
+	for _i in range(0, MAX_PROCESS_PER_FRAME):
 		seek_and_process(delta)
 
 func increase_index():
@@ -29,7 +29,7 @@ func increase_index():
 func seek_and_process(var delta):
 	if current > -1:
 		var seek_tries = 0
-		while not enemies[current].is_inside_tree() or enemies[current].current_state < KinematicEnemy.States.AWAKE:
+		while not enemies[current].is_inside_tree() or enemies[current].current_state < KinematicEnemy.States.DYING:
 			increase_index()
 			seek_tries += 1
 			if seek_tries > index_seek_max_tries:

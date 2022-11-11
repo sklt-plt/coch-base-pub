@@ -41,7 +41,7 @@ func _physics_process(delta):
 
 func hit_target(var col):
 	if col.collider.has_method("deal_damage"):
-		col.collider.deal_damage(projectile_damage*1, get_global_transform().origin , null)
+		col.collider.deal_damage(projectile_damage, projectile_damage, get_global_transform().origin , null)
 
 		return true
 	return false

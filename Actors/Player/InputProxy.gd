@@ -12,7 +12,7 @@ func _ready():
 	player_animation_node = get_parent().get_node("PlayerAnimations")
 	gun_controller_node = get_parent().get_node("BodyCollision/LookHeight/LookDirection/GunController")
 
-func _unhandled_input(event_):
+func _unhandled_input(_event):
 	#cheats :
 	if (Input.is_action_just_pressed("ui_cancel") && Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE
 		&& get_tree().get_current_scene().get_name() != "MainMenu"):
@@ -48,8 +48,10 @@ func _unhandled_input(event_):
 
 		if Input.is_action_just_pressed("DBG_4"):
 			$"/root/Player".give("e_double_barrel_level", 1)
+			$"/root/Player".give("e_crossbow_level", 1)
 			$"/root/Player".give("r_pistol_ammo", 100)
 			$"/root/Player".give("r_shotgun_ammo", 100)
+			$"/root/Player".give("r_crossbow_ammo", 100)
 			$"/root/Player".give("r_health", 100)
 			$"/root/Player".give("r_armor", 100)
 
@@ -68,6 +70,7 @@ func _process(delta):
 		var proxy_just_fired
 		var proxy_alt_fire_just_pressed
 		var proxy_alt_fire_just_released
+		var proxy_qmelee
 		var proxy_select
 		var proxy_select_ind = 0
 		var proxy_select_next
@@ -110,11 +113,21 @@ func _process(delta):
 		proxy_just_fired = Input.is_action_just_pressed("Fire")
 		proxy_alt_fire_just_pressed = Input.is_action_just_pressed("Aim")
 		proxy_alt_fire_just_released = Input.is_action_just_released("Aim")
-		proxy_select = Input.is_action_just_pressed("Select Revolver") or Input.is_action_just_pressed("Select Shotgun")
-		if Input.is_action_just_pressed("Select Revolver"):
+		proxy_qmelee = Input.is_action_pressed("Quick Melee")
+
+		proxy_select = Input.is_action_just_pressed("Select Melee") \
+			or Input.is_action_just_pressed("Select Revolver") \
+			or Input.is_action_just_pressed("Select Shotgun") \
+			or Input.is_action_just_pressed("Select Crossbow")
+
+		if Input.is_action_just_pressed("Select Melee"):
 			proxy_select_ind = 0
-		if Input.is_action_just_pressed("Select Shotgun"):
+		if Input.is_action_just_pressed("Select Revolver"):
 			proxy_select_ind = 1
+		if Input.is_action_just_pressed("Select Shotgun"):
+			proxy_select_ind = 2
+		if Input.is_action_just_pressed("Select Crossbow"):
+			proxy_select_ind = 3
 
 		proxy_joy = Vector2(fake_axis("Strafe Right", "Strafe Left"), fake_axis("Forward", "Backwards"))
 		player_movement_node.joy_input = proxy_joy.normalized()
@@ -124,6 +137,7 @@ func _process(delta):
 		gun_controller_node.in_fire_just_pressed = proxy_just_fired
 		gun_controller_node.in_alt_just_pressed = proxy_alt_fire_just_pressed
 		gun_controller_node.in_alt_just_released = proxy_alt_fire_just_released
+		gun_controller_node.in_qmelee = proxy_qmelee
 		gun_controller_node.in_select = proxy_select
 		gun_controller_node.in_select_ind = proxy_select_ind
 		gun_controller_node.in_select_next = proxy_select_next
@@ -139,6 +153,7 @@ func _process(delta):
 		player_movement_node.joy_input = Vector2(0.0, 0.0)
 		gun_controller_node.in_fire = false
 		gun_controller_node.in_fire_just_pressed = false
+		gun_controller_node.in_qmelee = false
 		gun_controller_node.process_inputs()
 
 		player_movement_node.run_input = false

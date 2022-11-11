@@ -30,13 +30,4 @@ func _on_Trigger_body_exited(body):
 		set_process_input(false)
 
 func make_prompt_text():
-	var prompt_text = "Press "
-	var event = InputMap.get_action_list("Interact")[0]
-	if event is InputEventKey:
-		prompt_text = prompt_text + event.as_text()
-	else:
-		prompt_text = prompt_text + "Mouse "+String(event.button_index)
-
-	prompt_text = prompt_text + " " + prompt_text_suffix
-
-	return prompt_text
+	return "Press " + InputHelper.get_input_buttons_text("Interact") + " " + prompt_text_suffix
