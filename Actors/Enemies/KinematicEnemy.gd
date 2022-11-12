@@ -59,7 +59,8 @@ export (PackedScene) var projectile              # if set, will try to perform r
 
 export (bool) var uses_raycast_attack            # unused yet
 
-export (float) var los_check_y_offset = 2.5      # height offset for line-of-sight cheking
+export (float) var los_check_player_height = 2.5      # height offset for line-of-sight cheking
+export (Vector3) var los_check_self_offset = Vector3(0, 2.5, 0)
 
 export (Array, AudioStream) var audio_callouts
 export (AudioStream) var audio_death
@@ -403,14 +404,14 @@ func check_line_of_sight():
 		#do a raycast
 		var space_state = get_world().direct_space_state
 		var origin = get_global_transform().origin
-		origin.y += los_check_y_offset
+		origin += los_check_self_offset
 		var target
 		if player_node.is_crawling():
-			target = player_node.get_global_transform().origin + Vector3(0, los_check_y_offset - 1, 0)
+			target = player_node.get_global_transform().origin + Vector3(0, los_check_player_height - 1, 0)
 		else:
-			target = player_node.get_global_transform().origin + Vector3(0, los_check_y_offset, 0)
+			target = player_node.get_global_transform().origin + Vector3(0, los_check_player_height, 0)
 
-		var ray_result = space_state.intersect_ray(origin, target, [get_parent()], collision_mask)
+		var ray_result = space_state.intersect_ray(origin, target, [self, get_parent()], collision_mask)
 		if ray_result and ray_result.collider == player_node:
 
 			if not player_node.is_dead():
