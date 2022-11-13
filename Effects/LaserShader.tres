@@ -1,0 +1,26 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "// NOTE: Shader automatically converted from Godot Engine 3.5.stable's SpatialMaterial.
+
+shader_type spatial;
+render_mode async_visible,blend_mix,depth_draw_opaque,cull_disabled,diffuse_burley,specular_disabled,unshaded,shadows_disabled,ambient_light_disabled;
+uniform float tween : hint_range(0,1);
+uniform vec4 albedo_a : hint_color;
+uniform vec4 albedo_b : hint_color;
+
+void fragment() {
+	vec4 final_albedo = mix(albedo_a, albedo_b, tween);
+	ALBEDO = final_albedo.rgb;
+	METALLIC = 0.0;
+	ROUGHNESS = 1.0;
+	SPECULAR = 0.5;
+	ALPHA = final_albedo.a;
+}
+"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/tween = 0.0
+shader_param/albedo_a = Color( 0, 0.439216, 1, 0.584314 )
+shader_param/albedo_b = Color( 1, 0, 0, 0.588235 )

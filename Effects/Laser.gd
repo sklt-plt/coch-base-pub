@@ -1,20 +1,24 @@
 extends RayCast
 
-export (Material) var miss_material
-export (Material) var targeted_material
+export (ShaderMaterial) var shader : ShaderMaterial;
 
-const PLAYER_HEIGHT_TARGETING_OFFSET = -0.5
-
+const PLAYER_STANDING_TARGETING_OFFSET = -0.5
+const PLAYER_CROUCHING_TARGETING_OFFSET = -0.9
+const PLAYER_WIDTH = 1.0
+const SHADER_TWEEN_SPEED = 0.75
 var mesh_insts
 
 func _ready():
-	mesh_insts = get_children()
-	self.translation = get_parent().los_check_self_offset
-#	for mesh in mesh_insts:
-#		mesh.mesh.size.y = MAX_LASER_DISTANCE
-#		mesh.mesh.center_offset.z = -0.5 * MAX_LASER_DISTANCE
+	shader = shader.duplicate()
 
-func _process(_delta):
+	self.translation = get_parent().los_check_self_offset
+
+	mesh_insts = get_children()
+	for mesh in mesh_insts:
+		mesh.mesh = mesh.mesh.duplicate()
+		mesh.material_override = shader
+
+func _process(delta):
 	if get_parent().current_state == KinematicEnemy.States.DEAD:
 		self.set_process(false)
 		self.visible = false
@@ -29,18 +33,25 @@ func _process(_delta):
 		return
 
 	self.visible = true
-	var targeting_offset = get_parent().los_check_player_height + PLAYER_HEIGHT_TARGETING_OFFSET
+	var targeting_offset = get_parent().los_check_player_height + PLAYER_STANDING_TARGETING_OFFSET + (PLAYER_CROUCHING_TARGETING_OFFSET * float($"/root/Player".is_crawling()))
 	self.look_at(targeting_point + Vector3(0, targeting_offset, 0), Vector3.UP)
 
 	var distance = self.get_collision_point().distance_to(self.global_translation)
 	for mesh in mesh_insts:
+		if visible_player:
+			distance += PLAYER_WIDTH
+
 		mesh.mesh.size.y = distance
 		mesh.mesh.center_offset.z = -0.5 * distance
 
-	if visible_player:
-		for mesh in mesh_insts:
-			mesh.material_override = targeted_material
-	else:
-		for mesh in mesh_insts:
-			mesh.material_override = miss_material
 
+	var tween = shader.get_shader_param("tween")
+
+	if visible_player:
+		tween += delta * SHADER_TWEEN_SPEED
+	else:
+		tween -= delta * SHADER_TWEEN_SPEED
+
+	tween = clamp(tween, 0.0, 1.0)
+
+	shader.set_shader_param("tween", tween)
