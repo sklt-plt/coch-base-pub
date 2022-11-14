@@ -6,6 +6,7 @@
 [node name="SpawnerProjectile" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 speed = 50.0
+spawn = null
 spawn_group = "dynamic_enemy"
 spawn_max_count = 4
 

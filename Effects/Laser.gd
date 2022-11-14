@@ -11,8 +11,6 @@ var mesh_insts
 func _ready():
 	shader = shader.duplicate()
 
-	self.translation = get_parent().los_check_self_offset
-
 	mesh_insts = get_children()
 	for mesh in mesh_insts:
 		mesh.mesh = mesh.mesh.duplicate()

@@ -215,4 +215,4 @@ func construct_ray(var max_offset: float):
 	var from = camera.project_ray_origin(ray_origin)
 	var to = from + camera.project_ray_normal(ray_origin) * 1000
 
-	return get_world().direct_space_state.intersect_ray(from, to)
+	return get_world().direct_space_state.intersect_ray(from, to, [], 0x7FFFFFFF - 128)

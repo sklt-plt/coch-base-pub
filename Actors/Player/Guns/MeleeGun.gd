@@ -28,14 +28,12 @@ func construct_ray(var _max_offset: float):
 	for i in range(0, 4):
 		var camera = get_viewport().get_camera()
 		var midpoint = OS.window_size * Vector2(0.5, 0.5 + 0.117 * i)
-		print(midpoint)
 		var ray_origin = midpoint
 
 		var from = camera.project_ray_origin(ray_origin)
 		var to = from + camera.project_ray_normal(ray_origin) * MELEE_RAYCAST_HIT_DISTANCE
 
 		result = get_world().direct_space_state.intersect_ray(from, to)
-		print(result)
 		if result:
 			break
 
