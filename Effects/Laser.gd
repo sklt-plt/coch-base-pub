@@ -2,10 +2,10 @@ extends RayCast
 
 export (ShaderMaterial) var shader : ShaderMaterial;
 
-const PLAYER_STANDING_TARGETING_OFFSET = -0.5
+const PLAYER_STANDING_TARGETING_OFFSET = 0.2
 const PLAYER_CROUCHING_TARGETING_OFFSET = -0.9
-const PLAYER_WIDTH = 1.0
-const SHADER_TWEEN_SPEED = 0.75
+const PLAYER_WIDTH = 0.95
+const SHADER_TWEEN_SPEED = 0.7
 var mesh_insts
 
 func _ready():
@@ -45,10 +45,10 @@ func _process(delta):
 
 	var tween = shader.get_shader_param("tween")
 
-	if visible_player:
+	if get_parent().current_state == KinematicEnemy.States.ATTACK_BEGIN:
 		tween += delta * SHADER_TWEEN_SPEED
 	else:
-		tween -= delta * SHADER_TWEEN_SPEED
+		tween = 0
 
 	tween = clamp(tween, 0.0, 1.0)
 

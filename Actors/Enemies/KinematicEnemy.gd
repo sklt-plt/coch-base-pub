@@ -12,18 +12,18 @@ enum CombatMovementStates {
 }
 
 enum States {
-	DEAD,  # not processing
-	IDLE,  # not processing
-	DYING,
-	AWAKE,
-	MOVE_CHARGE,
-	MOVE_CHASE,
-	MOVE_RANDOM,
-	ATTACK_MELEE,
-	ATTACK_BEGIN,
-	ATTACK_END,
-	BOOMERANG_WAIT,
-	BOOMERANG_CATCH
+	DEAD,				# 0  # not processing
+	IDLE,				# 1  # not processing
+	DYING,				# 2
+	AWAKE,				# 3
+	MOVE_CHARGE,		# 4
+	MOVE_CHASE,			# 5
+	MOVE_RANDOM,		# 6
+	ATTACK_MELEE,		# 7
+	ATTACK_BEGIN,		# 8
+	ATTACK_END,			# 9
+	BOOMERANG_WAIT,		# 10
+	BOOMERANG_CATCH		# 11
 }
 
 var ANIM_IDLE = "" # override these
@@ -58,6 +58,7 @@ var missile_spawn_cords
 export (PackedScene) var projectile              # if set, will try to perform ranged attack with this projectile scene
 
 export (bool) var uses_raycast_attack            # unused yet
+export (bool) var allow_attack_cancelling = false  # shoult attack telegraph be stopped if player leaves los
 
 export (float) var los_check_player_height = 2.5      # height offset for line-of-sight cheking
 export (Vector3) var los_check_self_offset = Vector3(0, 2.5, 0)
@@ -150,8 +151,8 @@ func update_current_state():
 		begin_state(States.DYING)
 
 	if current_state == States.AWAKE:
-		if (visible_player and is_player_in_range(distance_to_melee)
-			and uses_melee_attack):
+		if (visible_player and uses_melee_attack
+			and is_player_in_range(distance_to_melee)):
 				ranged_attack_freq_timer.stop()
 				begin_state(States.ATTACK_MELEE)
 		elif (visible_player and (not is_player_in_range(distance_to_melee)
@@ -186,9 +187,14 @@ func process_current_state(var delta):
 
 			if not is_at_target(last_player_pos):
 				face_target(last_player_pos)
+
 			current_move_vector = transform.basis.xform(Vector3(0,-1,-1))* movement_speed
 
 		States.ATTACK_BEGIN:
+			if !visible_player and allow_attack_cancelling:
+				ranged_attack_tele_timer.stop()
+				begin_state(States.AWAKE)
+
 			current_move_vector = Vector3.ZERO
 			face_target(last_player_pos)
 
@@ -219,8 +225,7 @@ func process_current_state(var delta):
 		States.ATTACK_END:
 			current_move_vector = Vector3.ZERO
 			if anim_player.current_animation != ANIM_ATTACK_END:
-				var p = projectile.instance()
-				if p is Boomerang:
+				if projectile and projectile.instance() is Boomerang:
 					begin_state(States.BOOMERANG_WAIT)
 				else:
 					if not audio_callouts.empty():
@@ -446,7 +451,11 @@ func _on_RangedAttackTelegraph_timeout():
 				p.target = Vector3(last_player_pos + Vector3(0.0, targeting_height_offset, 0.0))
 				p.boomerang_owner = self
 
-			begin_state(States.ATTACK_END)
+		elif uses_raycast_attack:
+			print("bang")
+
+		begin_state(States.ATTACK_END)
+
 
 func _on_returned_boomerang():
 	if current_state != States.DEAD:
