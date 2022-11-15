@@ -41,7 +41,7 @@ func explode(var to_ignore : Array = []):
 			var final_dmg = expl_damage*mul
 
 			if body.has_method("deal_damage"):
-				body.deal_damage(final_dmg, final_dmg/2, get_global_transform().origin , null)
+				body.deal_damage(final_dmg, final_dmg*2, get_global_transform().origin , null)#/2, get_global_transform().origin , null)
 				$"/root/Player".give("s_damage_dealt", expl_damage*mul)
 
 	#remove explosive

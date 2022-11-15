@@ -2,7 +2,7 @@ extends RayCast
 
 export (ShaderMaterial) var shader : ShaderMaterial;
 
-const PLAYER_STANDING_TARGETING_OFFSET = 0.2
+const PLAYER_STANDING_TARGETING_OFFSET = 0.175
 const PLAYER_CROUCHING_TARGETING_OFFSET = -0.9
 const PLAYER_WIDTH = 0.95
 const SHADER_TWEEN_SPEED = 0.7
@@ -41,7 +41,6 @@ func _process(delta):
 
 		mesh.mesh.size.y = distance
 		mesh.mesh.center_offset.z = -0.5 * distance
-
 
 	var tween = shader.get_shader_param("tween")
 

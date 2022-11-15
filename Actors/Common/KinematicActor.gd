@@ -30,7 +30,7 @@ func move_and_slide(var desired_move_vector, var floor_normal=Vector3( 0, 0, 0 )
 
 func push_linear(var force_origin, var force):
 	if is_physics_processing():
-		move_modifier_linear += (self.get_global_transform().origin-force_origin) *force
+		move_modifier_linear += (self.get_global_transform().origin-force_origin).normalized() * force
 
 func push_instant(var from_direction):
 	if is_physics_processing():

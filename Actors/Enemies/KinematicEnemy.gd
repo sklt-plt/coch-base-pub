@@ -48,7 +48,7 @@ export (CombatMovementStates) var combat_movement  # which movement to use when 
 export (bool) var allow_chasing                  # should ai go towards last player's position when loses direct line of sight
 												 # broken, if not going directly at player when it kicks in
 export (bool) var uses_melee_attack              # allows performing melee attack (requires "melee" animation state machine node)
-export (float) var melee_damage = 5.0            # how much damage to deal in MeleeArea (def 5)
+export (float) var direct_damage = 5.0            # how much damage to deal in MeleeArea (def 5)
 export (float) var distance_to_melee = 10.0      # distance to player to perform melee (def 10.0)
 export (float) var distance_to_melee_hit = 5.0   # distance to player to perform melee (def 10.0)
 
@@ -104,6 +104,8 @@ var wander_timer : Timer
 var ranged_attack_freq_timer : Timer
 var ranged_attack_tele_timer : Timer
 var audio_callouts_timer : Timer
+
+const MAX_LOS_DISTANCE = 60
 
 func _ready():
 	anim_player = $Model/AnimationPlayer
@@ -417,8 +419,7 @@ func check_line_of_sight():
 			target = player_node.get_global_transform().origin + Vector3(0, los_check_player_height, 0)
 
 		var ray_result = space_state.intersect_ray(origin, target, [self, get_parent()], collision_mask)
-		if ray_result and ray_result.collider == player_node:
-
+		if ray_result and ray_result.collider == player_node and self.global_translation.distance_to(player_node.global_translation) < MAX_LOS_DISTANCE:
 			if not player_node.is_dead():
 				visible_player = true
 
@@ -452,7 +453,8 @@ func _on_RangedAttackTelegraph_timeout():
 				p.boomerang_owner = self
 
 		elif uses_raycast_attack:
-			print("bang")
+			var player = $"/root/Player"
+			player.deal_damage(direct_damage, direct_damage, self.global_translation, self)
 
 		begin_state(States.ATTACK_END)
 
