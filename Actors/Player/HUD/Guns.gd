@@ -11,6 +11,7 @@ func _ready():
 
 	gun_icons.resize(guns.size())
 	gun_icons_inactive.resize(guns.size())
+	hide_guns()
 
 func show_guns(var active_gun_idx: int):
 	$Timer.start()

@@ -11,9 +11,11 @@ export (String) var gen_seed = ""
 
 export (String) var _detail_tileset_path = "/Maps/Tiles/TilesEp0.tres"
 
-export (Array) var locked_doors =  [{"path" : "/Ent/Interactable/LockedDoor/LockedDoor4x4.tscn"},		# needs to be sorted from tallest to lowest
-		{"path" : "/Ent/Interactable/LockedDoor/LockedDoor4x2.tscn"},
-		{"path" : "/Ent/Interactable/LockedDoor/LockedDoor.tscn"}]
+export (Array) var locked_doors =  [{"path" : "/Ent/Interactable/LockedDoor/LockedDoorNew4x4.tscn"},		# needs to be sorted from tallest to lowest
+		{"path" : "/Ent/Interactable/LockedDoor/LockedDoorNew4x2.tscn"},
+		{"path" : "/Ent/Interactable/LockedDoor/LockedDoorNew3x3.tscn"},
+		{"path" : "/Ent/Interactable/LockedDoor/LockedDoorNew3x2.tscn"},
+		{"path" : "/Ent/Interactable/LockedDoor/LockedDoorNew2x2.tscn"}]
 
 const HIDE_ORIGIN = Vector3(-10000, -10000, -10000)
 
