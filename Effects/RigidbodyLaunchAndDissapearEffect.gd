@@ -17,16 +17,23 @@ func launch(var rng: RandomNumberGenerator, var max_offset: float, var max_force
 		anim_player.play(anim_player.get_animation_list()[0])
 
 func dissapear():
-	var model = $model.get_child(0)
-	var new_material = model.get("material/0").duplicate()
-	model.material_override = new_material
-	new_material.flags_transparent = true
+	var models = $model.get_children()
+	var alpha = 1
+	for model in models:
+		var new_material = model.get("material/0").duplicate()
+		model.material_override = new_material
+		new_material.flags_transparent = true
 
-	while(new_material.albedo_color.a > 0.001):
-		new_material.albedo_color.a -= 0.01
+	while(alpha > 0.001):
+		alpha -= 0.01
+		for model in models:
+			model.material_override.albedo_color.a = alpha
+
 		if not self.is_inside_tree():
-			new_material.albedo_color.a = 0.0
+			for model in models:
+				model.material_override.albedo_color.a = 0
 			break
+
 		yield(get_tree(), "idle_frame")
 
 	self.mode = RigidBody.MODE_STATIC
