@@ -54,6 +54,7 @@ func _unhandled_input(_event):
 			$"/root/Player".give("r_crossbow_ammo", 100)
 			$"/root/Player".give("r_health", 100)
 			$"/root/Player".give("r_armor", 100)
+			$"/root/Player".give("r_keys", 1)
 
 		if Input.is_action_just_pressed("DBG_5"):
 			EpisodeManager.next_map()

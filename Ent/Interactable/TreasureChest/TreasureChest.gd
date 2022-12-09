@@ -1,10 +1,11 @@
 extends Interactable
 class_name TreasureChest
 
+const LID_LAUNCH_MAX_FORCE = 2.0
+
 var is_open = false
 export (bool) var prioritize_new_weapon = false
 
-var effect_coroutine
 export (Array, Dictionary) var powerups = [
 	{"path": "/Ent/Interactable/Powerups/HealthPowerup.tscn", "resource_name": "r_health"},
 	{"path": "/Ent/Interactable/Powerups/ArmorPowerup.tscn", "resource_name": "r_armor"},
@@ -30,18 +31,9 @@ func _ready():
 func activate():
 	is_open = true
 	#"animate" lid with physics
-	var lid : RigidBody
 	var rng = RandomNumberGenerator.new()
-
 	rng.randomize()
-
-	lid = get_node("Lid")
-	lid.mode = RigidBody.MODE_RIGID
-	lid.apply_impulse(Vector3.ZERO+Vector3(rng.randf_range(-2.0, 2.0), rng.randf_range(-2.0, 2.0), rng.randf_range(-2.0, 2.0)),
-		Vector3.UP+Vector3(rng.randf_range(-2.0, 2.0), rng.randf_range(-2.0, 2.0), rng.randf_range(-2.0, 2.0)))
-
-	#animate material
-	effect_coroutine = dissapear()
+	$Lid.launch(rng, LID_LAUNCH_MAX_FORCE, LID_LAUNCH_MAX_FORCE)
 
 	#delete user prompt
 	$Trigger.collision_layer = 0
@@ -85,20 +77,3 @@ func gather_powerups():
 			allowed_powerups.append(p["ref"])
 
 	return allowed_powerups
-
-func dissapear():
-	var lid_model = $Lid/model.get_child(0)
-	var new_material = lid_model.get("material/0").duplicate()
-	lid_model.material_override = new_material
-	new_material.flags_transparent = true
-
-	while(new_material.albedo_color.a > 0.001):
-		new_material.albedo_color.a -= 0.01
-		if not self.is_inside_tree():
-			new_material.albedo_color.a = 0.0
-			break
-		yield(get_tree(), "idle_frame")
-
-	$Lid.mode = RigidBody.MODE_STATIC
-	$Lid.collision_layer = 0
-	$Lid.collision_mask = 0
