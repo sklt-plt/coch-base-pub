@@ -31,7 +31,7 @@ func set_actors(var enabled):
 		if c is RigidBody:
 			c.mode = RigidBody.MODE_RIGID if enabled else RigidBody.MODE_STATIC
 
-		if c is KinematicEnemy:
+		if c is KinematicEnemy or c is StaticEnemy:
 			c.set_awake(enabled)
 
 		if c is LinkDoor:
@@ -166,7 +166,8 @@ func toggle_collisions(var enable):
 		# remove from tree what we can
 		if (c is TreasureChest or c is Area
 		or c is ResourcePickup or c is RigidBody
-		or c is KinematicEnemy or c is MeshInstance):
+		or c is KinematicEnemy or c is MeshInstance
+		or c is StaticEnemy):
 			if enable:
 				self.add_child(c)
 			else:

@@ -1,24 +1,11 @@
-extends KinematicActor
-class_name KinematicEnemy
-
-enum AwakeMovementStates {
-	IDLE,
-	MOVE_RANDOM
-}
-enum CombatMovementStates {
-	IDLE,
-	MOVE_CHARGE,
-	MOVE_RANDOM
-}
+extends StaticBody
+class_name StaticEnemy
 
 enum States {
 	DEAD,				# 0  # not processing
 	IDLE,				# 1  # not processing
 	DYING,				# 2
 	AWAKE,				# 3
-	MOVE_CHARGE,		# 4
-	MOVE_CHASE,			# 5
-	MOVE_RANDOM,		# 6
 	ATTACK_MELEE,		# 7
 	ATTACK_BEGIN,		# 8
 	ATTACK_END,			# 9
@@ -27,7 +14,6 @@ enum States {
 }
 
 var ANIM_IDLE = "" # override these
-var ANIM_MOVE = ""
 var ANIM_DIE = ""
 var ANIM_ATTACK_MELEE = ""
 var ANIM_ATTACK_END = ""
@@ -37,16 +23,6 @@ var ANIM_EXTRA = ""
 
 export (float) var health = 50.0                 # how much damage enemy can take
 
-export (float) var movement_speed = 8.0            # how fast it should move when engaging player
-export (float) var movement_speed_wandering = 4.0  # how fast to move when not engaging player
-export (float) var wander_single_time = 5.0      # for how long (seconds) to move in random direction when wandering / searching
-												 # also applies to chasing
-
-export (AwakeMovementStates) var awake_movement    # which movement to use when ai is awake but doesn't see the player
-export (CombatMovementStates) var combat_movement  # which movement to use when ai sees the player
-
-export (bool) var allow_chasing                  # should ai go towards last player's position when loses direct line of sight
-												 # broken, if not going directly at player when it kicks in
 export (bool) var uses_melee_attack              # allows performing melee attack (requires "melee" animation state machine node)
 export (float) var direct_damage = 5.0            # how much damage to deal in MeleeArea (def 5)
 export (float) var distance_to_melee = 10.0      # distance to player to perform melee (def 10.0)
@@ -88,19 +64,14 @@ export (Dictionary) var player_resource_costs = {
 
 export (float) var dynamic_self_poison = 2.0
 
-var current_wander_time = 0.0
 var anim_player : AnimationPlayer
-const wander_max_distance = 30.0
-var wander_total_delta = 0.0
 var current_state = States.IDLE
 var last_player_pos
 var visible_player = false
 var last_simuated_pos
-var current_move_vector = Vector3.ZERO
 
 var audio_stream_player
 
-var wander_timer : Timer
 var ranged_attack_freq_timer : Timer
 var ranged_attack_tele_timer : Timer
 var audio_callouts_timer : Timer
@@ -111,7 +82,6 @@ func _ready():
 	anim_player = $Model/AnimationPlayer
 	audio_stream_player = $AudioStreamPlayer3D
 
-	wander_timer = $WanderTimer
 	ranged_attack_freq_timer = $RangedAttackFrequency
 	ranged_attack_tele_timer = $RangedAttackTelegraph
 	audio_callouts_timer = $AudioCalloutsTimer
@@ -127,7 +97,6 @@ func _ready():
 	if not is_dynamic:
 		$"/root/Player".give("s_kills_possible", 1)
 		audio_stream_player.stream_paused = true
-		simulate_movement = false
 		$CollisionShape.disabled = true
 		set_physics_process(false)
 		self.visible = false
@@ -137,9 +106,6 @@ func _physics_process(delta):
 	if is_dynamic:
 		_managed_process(delta)
 		health -= dynamic_self_poison * delta
-
-	move_and_slide(current_move_vector, Vector3.ZERO, false, 4, 0.785398, false)
-	._physics_process(delta)
 
 func _managed_process(var delta):
 	check_line_of_sight()
@@ -162,23 +128,17 @@ func update_current_state():
 
 			if (projectile or uses_raycast_attack) and ranged_attack_freq_timer.is_stopped():
 				ranged_attack_freq_timer.start()
-			begin_state(get_combat_movement())
+			begin_state(States.AWAKE)
 
-		elif not visible_player and last_player_pos and allow_chasing:
-			ranged_attack_freq_timer.stop()
-			begin_state(States.MOVE_CHASE)
 		else:
 			ranged_attack_freq_timer.stop()
-			if (awake_movement == AwakeMovementStates.IDLE):
-				play_animation(ANIM_IDLE)
-				current_move_vector = Vector3.ZERO
-			begin_state(get_awake_movement())
+			play_animation(ANIM_IDLE)
+			begin_state(States.AWAKE)
 
 func process_current_state(var delta):
 	match current_state:
 		States.DYING:
-			if .is_move_modif_neglible():
-				begin_state(States.DEAD)
+			begin_state(States.DEAD)
 
 		States.ATTACK_MELEE:
 			if anim_player.current_animation != ANIM_ATTACK_MELEE: # ughhhhh
@@ -190,42 +150,20 @@ func process_current_state(var delta):
 			if not is_at_target(last_player_pos):
 				face_target(last_player_pos)
 
-			current_move_vector = transform.basis.xform(Vector3(0,-1,-1))* movement_speed
-
 		States.ATTACK_BEGIN:
 			if !visible_player and allow_attack_cancelling:
 				ranged_attack_tele_timer.stop()
 				begin_state(States.AWAKE)
 
-			current_move_vector = Vector3.ZERO
 			face_target(last_player_pos)
 
-		States.MOVE_CHARGE:
-			if visible_player and not is_player_in_range(distance_to_melee):
-				face_target(last_player_pos)
-				current_move_vector = transform.basis.xform(Vector3(0,-1,-1))* movement_speed
-			else:
-				begin_state(States.AWAKE)
-				current_move_vector = Vector3.ZERO
-
-		States.MOVE_CHASE:
-			if not visible_player and wander_total_delta < wander_single_time:
-				wander_total_delta += delta
-				current_move_vector = transform.basis.xform(Vector3(0,-1,-1))* movement_speed
-			else:
-				visible_player = false
-				begin_state(States.AWAKE)
-				current_move_vector = Vector3.ZERO
-
 		States.BOOMERANG_CATCH:
-			current_move_vector = Vector3.ZERO
 			if anim_player.current_animation != ANIM_EXTRA:
 				if not audio_callouts.empty():
 					audio_callouts_timer.start()
 				begin_state(States.AWAKE)
 
 		States.ATTACK_END:
-			current_move_vector = Vector3.ZERO
 			if anim_player.current_animation != ANIM_ATTACK_END:
 				if projectile and projectile.instance() is Boomerang:
 					begin_state(States.BOOMERANG_WAIT)
@@ -234,27 +172,17 @@ func process_current_state(var delta):
 						audio_callouts_timer.start()
 					begin_state(States.AWAKE)
 
-		States.MOVE_RANDOM:
-			if ((visible_player and combat_movement != CombatMovementStates.MOVE_RANDOM)
-				or (!visible_player and last_player_pos and allow_chasing)):
-				wander_timer.stop()
-				begin_state(States.AWAKE)
-				return
-
-			current_move_vector = transform.basis.xform(Vector3(0,-1,-1))* movement_speed_wandering
 
 func begin_state(var desired_state):
 	if desired_state != current_state:
 		match desired_state:
 			States.DEAD:
 				current_state = States.DEAD
-				simulate_movement = false
-				set_physics_process(false)
 				$CollisionShape.disabled = true
+				set_physics_process(false)
 			States.DYING:
 				current_state = States.DYING
 
-				wander_timer.stop()
 				ranged_attack_tele_timer.stop()
 				ranged_attack_freq_timer.stop()
 				audio_callouts_timer.stop()
@@ -280,21 +208,12 @@ func begin_state(var desired_state):
 				play_animation(ANIM_IDLE)
 				$CollisionShape.disabled = false
 				set_physics_process(true)
-				simulate_movement = true
 				if not last_simuated_pos:
 					last_simuated_pos = translation
 				audio_stream_player.stream_paused = false
 				if not audio_callouts.empty():
 					audio_callouts_timer.start()
 				current_state = States.AWAKE
-			States.MOVE_CHASE:
-				play_animation(ANIM_MOVE)
-				reset_delta_search()
-				face_target(last_player_pos)
-				current_state = States.MOVE_CHASE
-			States.MOVE_CHARGE:
-				play_animation(ANIM_MOVE)
-				current_state = States.MOVE_CHARGE
 			States.ATTACK_MELEE:
 				play_audio(audio_attack)
 				play_animation(ANIM_ATTACK_MELEE)
@@ -309,14 +228,7 @@ func begin_state(var desired_state):
 			States.ATTACK_END:
 				play_animation(ANIM_ATTACK_END)
 				current_state = States.ATTACK_END
-			States.MOVE_RANDOM:
-				play_animation(ANIM_MOVE)
-				visible_player = false
-				wander_timer.start(rand_range(wander_single_time/2.0, wander_single_time))
-				face_target(find_random_point_to_wander_to())
-				current_state = States.MOVE_RANDOM
 			States.BOOMERANG_WAIT:
-				wander_timer.stop()
 				play_animation(ANIM_ATTACK_HOLD)
 				current_state = States.BOOMERANG_WAIT
 			States.BOOMERANG_CATCH:
@@ -327,8 +239,6 @@ func begin_state(var desired_state):
 				set_physics_process(false)
 				$CollisionShape.disabled = true
 				teleport_to_spawn()
-				simulate_movement = false
-				wander_timer.stop()
 				audio_callouts_timer.stop()
 				ranged_attack_freq_timer.stop()
 				audio_stream_player.stream_paused = true
@@ -341,22 +251,6 @@ func teleport_to_spawn():
 		translation = last_simuated_pos
 		last_simuated_pos = null
 
-func get_combat_movement():
-	match combat_movement:
-		CombatMovementStates.MOVE_CHARGE:
-			return States.MOVE_CHARGE
-		CombatMovementStates.MOVE_RANDOM:
-			return States.MOVE_RANDOM
-		CombatMovementStates.IDLE:
-			return States.AWAKE
-
-func get_awake_movement():
-	match awake_movement:
-		AwakeMovementStates.MOVE_RANDOM:
-			return States.MOVE_RANDOM
-		AwakeMovementStates.IDLE:
-			return States.AWAKE
-
 func face_target(var target):
 	if target:
 		var new_target = Vector3()
@@ -366,16 +260,12 @@ func face_target(var target):
 		look_at(new_target, Vector3.UP)
 
 func deal_damage(var damage, var push_force, var from_direction, var from_ent):
-	if .is_physics_processing() and current_state == States.AWAKE:
+	if is_physics_processing() and current_state == States.AWAKE:
 		if from_ent and not visible_player:
 			visible_player = true
 		begin_state(States.AWAKE)
 
 	health -= damage
-	.push_linear(from_direction, push_force)
-
-func reset_delta_search():
-	wander_total_delta = 0
 
 func is_at_target(var target: Vector3):
 	return is_in_range(target, 1.0)
@@ -388,22 +278,12 @@ func is_player_in_range(var distance):
 	var target_pos = $"/root/Player".get_global_transform().origin
 	return is_in_range(target_pos, distance)
 
-func find_random_point_to_wander_to():
-	var new_target = Vector3()
-	new_target.x = get_global_transform().origin.x + rand_range(-wander_max_distance, wander_max_distance)
-	new_target.z = get_global_transform().origin.z + rand_range(-wander_max_distance, wander_max_distance)
-	return new_target
-
 func set_awake(var to_awake):
 	if current_state != States.DEAD:
 		if to_awake and current_state == States.IDLE:
 			begin_state(States.AWAKE)
 		elif not to_awake:
 			begin_state(States.IDLE)
-
-func _on_WanderTimer_timeout():
-	if current_state == States.MOVE_RANDOM:
-		begin_state(States.AWAKE)
 
 func check_line_of_sight():
 	if current_state >= States.AWAKE:

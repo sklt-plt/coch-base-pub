@@ -106,7 +106,7 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 	# get resource costs from enemies spawned by buildings / furniture
 	var room_children = room_geometry.get_children()
 	for c in room_children:
-		if c is KinematicEnemy:
+		if c is KinematicEnemy or c is StaticEnemy:
 			for res in c.player_resource_costs:
 				room_resources[res] += c.player_resource_costs[res]
 
