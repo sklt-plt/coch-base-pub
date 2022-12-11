@@ -7,9 +7,14 @@ const LOCK_LAUNCH_MAX_OFFSET = 0.5
 export (Vector2) var size = Vector2(2,2)
 export (PackedScene) var padlock
 
+var needs_key = true
+
 func _ready():
-	#construct padlock
-	if padlock:
+	#construct padlock unless this is first normal room
+	if (get_node(get_parent().tree_ref).get_parent().traits.has(GeneratedRoom.ROOM_TRAITS.STARTING)):
+		needs_key = false
+
+	elif padlock:
 		var lock_inst = padlock.instance()
 		lock_inst.name = "Padlock"
 		self.add_child(lock_inst)
@@ -18,7 +23,7 @@ func _ready():
 		lock_inst.rotate(Vector3.UP, deg2rad(180))
 
 func activate():
-	if not $StaticBody/CollisionShape.disabled and $"/root/Player".take("r_keys", 1):
+	if not $StaticBody/CollisionShape.disabled and (not needs_key or $"/root/Player".take("r_keys", 1)):
 		$Trigger/CollisionShape.disabled = true
 		$StaticBody/CollisionShape.disabled = true
 		$"/root/Player/HUD".hide_dialog(.make_prompt_text())
@@ -36,7 +41,7 @@ func activate():
 
 func _on_Trigger_body_entered(body):
 	if body == $"/root/Player":
-		if $"/root/Player".has("r_keys", 1):
+		if $"/root/Player".has("r_keys", 1) or not needs_key:
 			$"/root/Player/HUD".display_dialog(.make_prompt_text())
 			set_process_input(true)
 		else:
@@ -44,7 +49,7 @@ func _on_Trigger_body_entered(body):
 
 func _on_Trigger_body_exited(body):
 	if body == $"/root/Player":
-		if $"/root/Player".has("r_keys", 1):
+		if $"/root/Player".has("r_keys", 1) or not needs_key:
 			$"/root/Player/HUD".hide_dialog(.make_prompt_text())
 		else:
 			$"/root/Player/HUD".hide_dialog(make_prompt_text_locked())
