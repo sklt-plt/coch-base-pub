@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Base/Actors/Enemies/KinematicEnemy.gd" type="Script" id=1]
+[ext_resource path="res://Base/Actors/Enemies/EnemyAI.gd" type="Script" id=2]
 
 [node name="KinematicEnemy" type="KinematicBody" groups=["enemies"]]
 script = ExtResource( 1 )
-health = 25.0
-combat_movement = 1
+
+[node name="AI" type="Node" parent="."]
+script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 
@@ -30,7 +32,7 @@ one_shot = true
 
 [node name="AudioCalloutsTimer" type="Timer" parent="."]
 
-[connection signal="timeout" from="WanderTimer" to="." method="_on_WanderTimer_timeout"]
-[connection signal="timeout" from="RangedAttackFrequency" to="." method="_on_RangedAttackFrequency_timeout"]
-[connection signal="timeout" from="RangedAttackTelegraph" to="." method="_on_RangedAttackTelegraph_timeout"]
-[connection signal="timeout" from="AudioCalloutsTimer" to="." method="_on_AudioCalloutsTimer_timeout"]
+[connection signal="timeout" from="WanderTimer" to="AI" method="_on_WanderTimer_timeout"]
+[connection signal="timeout" from="RangedAttackFrequency" to="AI" method="_on_RangedAttackFrequency_timeout"]
+[connection signal="timeout" from="RangedAttackTelegraph" to="AI" method="_on_RangedAttackTelegraph_timeout"]
+[connection signal="timeout" from="AudioCalloutsTimer" to="AI" method="_on_AudioCalloutsTimer_timeout"]

@@ -107,8 +107,8 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 	var room_children = room_geometry.get_children()
 	for c in room_children:
 		if c is KinematicEnemy or c is StaticEnemy:
-			for res in c.player_resource_costs:
-				room_resources[res] += c.player_resource_costs[res]
+			for res in c.get_player_resource_costs():
+				room_resources[res] += c.get_player_resource_costs()[res]
 
 	# random cherry-pick algo for enemies
 	# until we exhaust pool
@@ -128,7 +128,7 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 
 		difficulty_pool -= potential_monster["spawn_cost"]
 		# remember other costs
-		var player_resource_costs = potential_monster["ref"].instance().player_resource_costs
+		var player_resource_costs = potential_monster["ref"].instance().get_player_resource_costs()
 		add_resources_needed_by_monster(player_resource_costs, room_resources)
 
 		var new_group = []

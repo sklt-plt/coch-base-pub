@@ -32,7 +32,7 @@ func _physics_process(delta):
 	if col:
 		#deal damage directly
 		#behave like boomerang, ignore environment
-		if col.collider == boomerang_owner:
+		if col.collider == boomerang_owner.get_parent():  # KinematicEnemy
 			boomerang_owner._on_returned_boomerang()
 			queue_free()
 		else:

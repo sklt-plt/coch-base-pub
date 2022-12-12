@@ -17,21 +17,21 @@ func _ready():
 		mesh.material_override = shader
 
 func _process(delta):
-	if get_parent().current_state == KinematicEnemy.States.DEAD:
+	if $"../AI".current_state == EnemyAI.States.DEAD:
 		self.set_process(false)
 		self.visible = false
 		return
 
-	var visible_player = get_parent().visible_player
-	var targeting_point = get_parent().last_player_pos if not get_parent().visible_player else $"/root/Player".global_translation
-	var last_player_pos = get_parent().last_player_pos
+	var visible_player = $"../AI".visible_player
+	var targeting_point = $"../AI".last_player_pos if not $"../AI".visible_player else $"/root/Player".global_translation
+	var last_player_pos = $"../AI".last_player_pos
 
 	if !targeting_point:
 		self.visible = false
 		return
 
 	self.visible = true
-	var targeting_offset = get_parent().los_check_player_height + PLAYER_STANDING_TARGETING_OFFSET + (PLAYER_CROUCHING_TARGETING_OFFSET * float($"/root/Player".is_crawling()))
+	var targeting_offset = $"../AI".los_check_player_height + PLAYER_STANDING_TARGETING_OFFSET + (PLAYER_CROUCHING_TARGETING_OFFSET * float($"/root/Player".is_crawling()))
 	self.look_at(targeting_point + Vector3(0, targeting_offset, 0), Vector3.UP)
 
 	var distance = self.get_collision_point().distance_to(self.global_translation)
@@ -44,7 +44,7 @@ func _process(delta):
 
 	var tween = shader.get_shader_param("tween")
 
-	if get_parent().current_state == KinematicEnemy.States.ATTACK_BEGIN:
+	if $"../AI".current_state == EnemyAI.States.ATTACK_BEGIN:
 		tween += delta * SHADER_TWEEN_SPEED
 	else:
 		tween = 0

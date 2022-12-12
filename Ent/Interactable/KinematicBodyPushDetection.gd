@@ -9,7 +9,7 @@ func _physics_process(delta):
 		push_away(c, delta) # push
 
 func push_away(var body: KinematicEnemy, var mul: float):
-	var direction = (self.global_transform.origin - body.global_transform.origin) + (body.current_move_vector)
+	var direction = (self.global_transform.origin - body.global_transform.origin) + (body.get_current_move_vector())
 	#assumming parent is rigidbody
 	get_parent().apply_impulse(Vector3(0.0, 0.25, 0.0), direction*BASE_KINEMATIC_ACTOR_PUSH_FORCE*mul)
 

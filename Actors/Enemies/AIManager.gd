@@ -29,7 +29,7 @@ func increase_index():
 func seek_and_process(var delta):
 	if current > -1:
 		var seek_tries = 0
-		while not enemies[current].is_inside_tree() or enemies[current].current_state < KinematicEnemy.States.DYING:
+		while not enemies[current].is_inside_tree() or enemies[current].current_state < EnemyAI.States.DYING:
 			increase_index()
 			seek_tries += 1
 			if seek_tries > index_seek_max_tries:
