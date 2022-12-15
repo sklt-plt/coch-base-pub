@@ -15,7 +15,7 @@ func hit_target(var _col):
 	new_spawn.set_owner(self.owner)
 
 	if new_spawn is KinematicEnemy:
-		new_spawn.is_dynamic = true
+		new_spawn.set_dynamic(true)
 
 	get_tree().current_scene.add_child(new_spawn)
 	new_spawn.global_transform.origin = self.global_transform.origin

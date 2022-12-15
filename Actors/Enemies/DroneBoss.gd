@@ -34,7 +34,8 @@ func deal_damage(damage, _push_force, _from_direction, _from_ent):
 		$Model/AnimationPlayer.play(anim_die)
 		var minions = get_tree().get_nodes_in_group("enemies")
 		for m in minions:
-			m.deal_damage(10000, 0, Vector3.ZERO, null)
+			if m.is_inside_tree():
+				m.deal_damage(10000, 0, Vector3.ZERO, null)
 
 		var children = get_children()
 		for c in children:
