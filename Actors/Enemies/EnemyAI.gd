@@ -26,7 +26,11 @@ enum States {
 	BOOMERANG_CATCH		# 11
 }
 
-var ANIM_IDLE = "" # override these
+##############################################################
+## SETTINGS:
+
+# animation names, override
+var ANIM_IDLE = ""
 var ANIM_MOVE = ""
 var ANIM_DIE = ""
 var ANIM_ATTACK_MELEE = ""
@@ -35,50 +39,51 @@ var ANIM_ATTACK_BEGIN = ""
 var ANIM_ATTACK_HOLD = ""
 var ANIM_EXTRA = ""
 
-export (float) var health = 50.0                 # how much damage enemy can take
+var health = 50.0						# how much damage enemy can take
 
-export (float) var movement_speed = 8.0            # how fast it should move when engaging player
-export (float) var movement_speed_wandering = 4.0  # how fast to move when not engaging player
-export (float) var wander_single_time = 5.0      # for how long (seconds) to move in random direction when wandering / searching
-												 # also applies to chasing
+var movement_speed = 8.0				# how fast it should move when engaging player
+var movement_speed_wandering = 4.0		# how fast to move when not engaging player
+var wander_single_time = 5.0			# for how long (seconds) to move in random direction when wandering / searching
+										# also applies to chasing
 
-export (AwakeMovementStates) var awake_movement    # which movement to use when ai is awake but doesn't see the player
-export (CombatMovementStates) var combat_movement  # which movement to use when ai sees the player
+var awake_movement = AwakeMovementStates.IDLE		# which movement to use when ai is awake but doesn't see the player
+var combat_movement = CombatMovementStates.IDLE		# which movement to use when ai sees the player
 
-export (bool) var allow_chasing                  # should ai go towards last player's position when loses direct line of sight
-												 # broken, if not going directly at player when it kicks in
-export (bool) var uses_melee_attack              # allows performing melee attack (requires "melee" animation state machine node)
-export (float) var direct_damage = 5.0            # how much damage to deal in MeleeArea (def 5)
-export (float) var distance_to_melee = 10.0      # distance to player to perform melee (def 10.0)
-export (float) var distance_to_melee_hit = 5.0   # distance to player to perform melee (def 10.0)
+var allow_chasing = false				# should ai go towards last player's position when loses direct line of sight
+										# broken, if not going directly at player when it kicks in (?)
 
-export (float) var targeting_height_offset          # how high above player cords to aim projectile (def 0.25)
-export (float) var missile_spawn_z_offset           # how far ahead from spawner to spawn missile (def 2.0)
-var missile_spawn_cords
-export (PackedScene) var projectile              # if set, will try to perform ranged attack with this projectile scene
+var uses_melee_attack = false			# allows performing melee attack (requires "melee" animation state machine node)
+var direct_damage = 5.0					# how much damage to deal in MeleeArea (def 5)
+var distance_to_melee = 10.0			# distance to player to perform melee (def 10.0)
+var distance_to_melee_hit = 5.0			# distance to player to perform melee (def 10.0)
 
-export (bool) var uses_raycast_attack            # unused yet
-export (bool) var allow_attack_cancelling = false  # shoult attack telegraph be stopped if player leaves los
+var targeting_height_offset = 0.25		# how high above player cords to aim projectile (def 0.25)
+var missile_spawn_z_offset = 2.0		# how far ahead from spawner to spawn missile (def 2.0)
+var missile_spawn_cords: Spatial		# where to spawn missile
+var projectile: PackedScene				# if set, will try to perform ranged attack with this projectile scene
 
-export (float) var los_check_player_height = 2.5      # height offset for line-of-sight cheking
-export (Vector3) var los_check_self_offset = Vector3(0, 2.5, 0)
+var uses_raycast_attack = false			# can use raycast attack?
+var allow_attack_cancelling = false		# shoult attack telegraph be stopped if player leaves los
 
-export (Array, AudioStream) var audio_callouts
-export (AudioStream) var audio_death
-export (AudioStream) var audio_attack
+var los_check_player_height = 2.5      				# how high to offset line-of-sight TO
+var los_check_self_offset = Vector3(0, 2.5, 0)		# where to cast line-of-sight FROM
 
-export (PackedScene) var gib_effect
+var audio_callouts = []					# random audio 'grunts'
+var audio_death: AudioStream			# plays when die
+var audio_attack: AudioStream 			# plays when attacking
 
-export (bool) var is_dynamic = false				#allow de-spawning after death
-export (bool) var DEBUG_set_awake = false
+var gib_effect: PackedScene			# scene that holds gib effect
 
-export (Dictionary) var kill_immediate_resources = {
+var is_dynamic = false				#allow de-spawning after death
+var DEBUG_set_awake = false
+
+var kill_immediate_resources = {		# resources to give() player after kill
 	"s_leveled_score" : 100,
 	"r_time_freeze" : 1.0,
 	"s_kills" : 1
 }
 
-export (Dictionary) var player_resource_costs = {
+var player_resource_costs = {			# how much to compensate in map generation
 	"r_health": 2,
 	"r_armor" : 2,
 	"r_pistol_ammo" : 2,
@@ -86,7 +91,10 @@ export (Dictionary) var player_resource_costs = {
 	"r_crossbow_ammo": 2
 }
 
-export (float) var dynamic_self_poison = 2.0
+var dynamic_self_poison = 2.0				# how much damage take when awake and is dynamic
+
+## END OF SETTINGS
+#######################################################
 
 var current_wander_time = 0.0
 var anim_player : AnimationPlayer
