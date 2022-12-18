@@ -54,8 +54,7 @@ var allow_chasing = false				# should ai go towards last player's position when 
 
 var uses_melee_attack = false			# allows performing melee attack (requires "melee" animation state machine node)
 var direct_damage = 5.0					# how much damage to deal in MeleeArea (def 5)
-var distance_to_melee = 10.0			# distance to player to perform melee (def 10.0)
-var distance_to_melee_hit = 5.0			# distance to player to perform melee (def 10.0)
+var distance_to_melee = 10.0			# distance to player to go to melee state (def 10.0)
 
 var targeting_height_offset = 0.25		# how high above player cords to aim projectile (def 0.25)
 var missile_spawn_z_offset = 2.0		# how far ahead from spawner to spawn missile (def 2.0)
@@ -193,7 +192,7 @@ func update_current_state():
 func process_current_state(var delta):
 	match current_state:
 		States.DYING:
-			if parent_node.is_move_modif_neglible():
+			if (parent_node is StaticEnemy or (parent_node is KinematicEnemy and parent_node.is_move_modif_neglible())):
 				begin_state(States.DEAD)
 
 		States.ATTACK_MELEE:
@@ -388,7 +387,10 @@ func face_target(var target):
 		new_target = target
 		new_target.y = parent_node.get_global_transform().origin.y
 
-		parent_node.look_at(new_target, Vector3.UP)
+		if parent_node is KinematicEnemy:
+			parent_node.look_at(new_target, Vector3.UP)
+		elif parent_node is StaticEnemy:
+			$"../Model/Head".look_at(new_target, Vector3.UP)
 
 func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 	if .is_physics_processing() and current_state == States.AWAKE:
@@ -397,7 +399,8 @@ func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 		begin_state(States.AWAKE)
 
 	health -= damage
-	parent_node.push_linear(from_direction, push_force)
+	if parent_node is KinematicEnemy:
+		parent_node.push_linear(from_direction, push_force)
 
 func reset_delta_search():
 	wander_total_delta = 0
