@@ -6,6 +6,7 @@
 radius = 1.19927
 
 [node name="MeleeDetector" type="Area"]
+collision_mask = 129
 script = ExtResource( 1 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
@@ -15,5 +16,7 @@ __meta__ = {
 "_editor_description_": ""
 }
 
+[connection signal="area_entered" from="." to="." method="_on_MeleeDetector_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_MeleeDetector_area_exited"]
 [connection signal="body_shape_entered" from="." to="." method="_on_MeleeDetector_body_shape_entered"]
 [connection signal="body_shape_exited" from="." to="." method="_on_MeleeDetector_body_shape_exited"]

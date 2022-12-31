@@ -13,6 +13,7 @@ script = ExtResource( 1 )
 wait_time = 2.0
 
 [node name="Area" type="Area" parent="."]
+monitorable = false
 
 [node name="CollisionShape" type="CollisionShape" parent="Area"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0 )

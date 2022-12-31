@@ -20,10 +20,12 @@ enum States {
 	MOVE_CHASE,			# 5
 	MOVE_RANDOM,		# 6
 	ATTACK_MELEE,		# 7
-	ATTACK_BEGIN,		# 8
-	ATTACK_END,			# 9
-	BOOMERANG_WAIT,		# 10
-	BOOMERANG_CATCH		# 11
+	ATTACK_MELEE_BEGIN,	# 8
+	ATTACK_MELEE_END,	# 9
+	ATTACK_BEGIN,		# 10
+	ATTACK_END,			# 11
+	BOOMERANG_WAIT,		# 12
+	BOOMERANG_CATCH		# 13
 }
 
 ##############################################################
@@ -33,7 +35,9 @@ enum States {
 var ANIM_IDLE = ""
 var ANIM_MOVE = ""
 var ANIM_DIE = ""
-var ANIM_ATTACK_MELEE = ""
+var ANIM_ATTACK_MELEE = []
+var ANIM_ATTACK_MELEE_BEGIN = ""
+var ANIM_ATTACK_MELEE_END = ""
 var ANIM_ATTACK_END = ""
 var ANIM_ATTACK_BEGIN = ""
 var ANIM_ATTACK_HOLD = ""
@@ -95,6 +99,7 @@ var dynamic_self_poison = 2.0				# how much damage take when awake and is dynami
 ## END OF SETTINGS
 #######################################################
 
+var current_melee_anim
 var current_wander_time = 0.0
 var anim_player : AnimationPlayer
 const wander_max_distance = 30.0
@@ -171,7 +176,7 @@ func update_current_state():
 		if (visible_player and uses_melee_attack
 			and is_player_in_range(distance_to_melee)):
 				ranged_attack_freq_timer.stop()
-				begin_state(States.ATTACK_MELEE)
+				begin_state(States.ATTACK_MELEE_BEGIN)
 		elif (visible_player and (not is_player_in_range(distance_to_melee)
 			or not uses_melee_attack)):
 
@@ -196,8 +201,12 @@ func process_current_state(var delta):
 				begin_state(States.DEAD)
 
 		States.ATTACK_MELEE:
-			if anim_player.current_animation != ANIM_ATTACK_MELEE: # ughhhhh
-				begin_state(States.AWAKE)
+			if anim_player.current_animation != current_melee_anim: # ughhhhh
+				if is_player_in_range(distance_to_melee):
+					#continue melee attacks
+					play_random_melee_anim()
+				else:
+					begin_state(States.ATTACK_MELEE_END)
 				return
 
 			# player should detect collision themselves
@@ -207,6 +216,16 @@ func process_current_state(var delta):
 
 			if parent_node is KinematicEnemy:
 				current_move_vector = parent_node.transform.basis.xform(Vector3(0,-1,-1))* movement_speed
+
+		States.ATTACK_MELEE_BEGIN:
+			if ANIM_ATTACK_MELEE_BEGIN == "" or anim_player.current_animation != ANIM_ATTACK_MELEE_BEGIN: # ughhhhh
+				begin_state(States.ATTACK_MELEE)
+				return
+
+			if !visible_player and allow_attack_cancelling:
+				begin_state(States.AWAKE)
+
+			face_target(last_player_pos)
 
 		States.ATTACK_BEGIN:
 			if !visible_player and allow_attack_cancelling:
@@ -249,6 +268,12 @@ func process_current_state(var delta):
 					if not audio_callouts.empty():
 						audio_callouts_timer.start()
 					begin_state(States.AWAKE)
+
+		States.ATTACK_MELEE_END:
+			if ANIM_ATTACK_MELEE_END == "" or anim_player.current_animation != ANIM_ATTACK_MELEE_END:
+				if not audio_callouts.empty():
+					audio_callouts_timer.start()
+				begin_state(States.AWAKE)
 
 		States.MOVE_RANDOM:
 			if ((visible_player and combat_movement != CombatMovementStates.MOVE_RANDOM)
@@ -318,7 +343,7 @@ func begin_state(var desired_state):
 				current_state = States.MOVE_CHARGE
 			States.ATTACK_MELEE:
 				play_audio(audio_attack)
-				play_animation(ANIM_ATTACK_MELEE)
+				play_random_melee_anim()
 				current_state = States.ATTACK_MELEE
 			States.ATTACK_BEGIN:
 				audio_callouts_timer.stop()
@@ -327,9 +352,18 @@ func begin_state(var desired_state):
 				ranged_attack_freq_timer.stop()
 				ranged_attack_tele_timer.start()
 				current_state = States.ATTACK_BEGIN
+			States.ATTACK_MELEE_BEGIN:
+				audio_callouts_timer.stop()
+				if ANIM_ATTACK_MELEE_BEGIN != "":
+					play_animation(ANIM_ATTACK_MELEE_BEGIN)
+				current_state = States.ATTACK_MELEE_BEGIN
 			States.ATTACK_END:
 				play_animation(ANIM_ATTACK_END)
 				current_state = States.ATTACK_END
+			States.ATTACK_MELEE_END:
+				if ANIM_ATTACK_MELEE_END != "":
+					play_animation(ANIM_ATTACK_MELEE_END)
+				current_state = States.ATTACK_MELEE_END
 			States.MOVE_RANDOM:
 				play_animation(ANIM_MOVE)
 				visible_player = false
@@ -502,6 +536,13 @@ func play_audio(var audio : AudioStream):
 	if current_state != States.IDLE:
 		audio_stream_player.stream = audio
 		audio_stream_player.play()
+
+func play_random_melee_anim():
+	play_audio(audio_attack)
+	if not ANIM_ATTACK_MELEE.empty():
+		var idx = randi()%ANIM_ATTACK_MELEE.size()
+		current_melee_anim = ANIM_ATTACK_MELEE[idx]
+		play_animation(current_melee_anim)
 
 func _on_AudioCalloutsTimer_timeout():
 	#play random callout
