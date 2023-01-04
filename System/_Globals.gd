@@ -5,7 +5,9 @@ extends Node
 var content_pack_path = "res://Content/custom"
 
 var player_progress = {
-	"ep1_completed" : false
+	"1" : false,
+	"2" : false,
+	"3" : false
 }
 
 var applying_setings = false
@@ -43,8 +45,8 @@ const USER_INPUT_FILENAME = "user://user_input.cfg"
 const USER_SETTINGS_FILENAME = "user://user_settings.cfg"
 const USER_PROGRESS_FILENAME = "user://user_progress.sav"
 
-func set_ep_completed(var episode: String, var value : bool):
-	player_progress[episode] = value
+func set_ep_completed(var episode_idx: int, var value : bool):
+	player_progress[String(episode_idx)] = value
 	save_user_progress()
 
 func load_user_progress():

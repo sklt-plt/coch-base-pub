@@ -9,10 +9,9 @@ func _ready():
 	$"MenuCamera".current = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	match $"/root/EpisodeManager".episode_clear_idx:
-		1:
-			$"UI".show_ep1_clear_notif()
-		_:
+	if $"/root/EpisodeManager".episode_clear_idx > 0:
+			$"UI".show_ep_clear_notif()
+	else:
 			$"UI".show_main_menu()
 
 func _on_UI_unsetup_menu():

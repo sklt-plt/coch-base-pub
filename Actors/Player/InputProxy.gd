@@ -42,7 +42,8 @@ func _unhandled_input(_event):
 			$"/root/Player".play_slowmo_effect()
 
 		if Input.is_action_just_pressed("DBG_3"):
-			Globals.set_ep_completed("ep1_completed", not Globals.player_progress["ep1_completed"])
+			Globals.set_ep_completed(1, not Globals.player_progress["1"])
+			Globals.set_ep_completed(2, not Globals.player_progress["2"])
 			EpisodeManager.change_map(Globals.content_pack_path + "/MainMenu/MainMenu.tscn")
 			$"/root/Player".hide_loading()
 

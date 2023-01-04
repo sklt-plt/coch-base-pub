@@ -7,22 +7,24 @@ export (String) var readme_dir = "/README"
 export (String) var feedback_url = ""
 
 func _ready():
-	$"LevelSelect/Ep2Button".disabled = !Globals.player_progress["ep1_completed"]
-	$"LevelSelect/Ep3Button".disabled = true #!Globals.ep2_completed  # unavailable yet
-	$"LevelSelectEp1/PlayEp1Endless".disabled = !Globals.player_progress["ep1_completed"]
-	$"LevelSelectEp1/PlayEp1Custom".disabled = !Globals.player_progress["ep1_completed"]
+	$"LevelSelect/Ep2Button".disabled = !Globals.player_progress["1"]
+	$"LevelSelect/Ep3Button".disabled = true#!Globals.player_progress["2"]
+	$"LevelSelectEp1/PlayEp1Endless".disabled = !Globals.player_progress["1"]
+	$"LevelSelectEp1/PlayEp1Custom".disabled = !Globals.player_progress["1"]
+	$"LevelSelectEp2/PlayEp2Endless".disabled = !Globals.player_progress["2"]
+	$"LevelSelectEp2/PlayEp2Custom".disabled = !Globals.player_progress["2"]
 	$"Options".visible = false
 	$"LevelSelectEp1".visible = false
 	$"LevelSelect".visible = false
 
-func show_ep1_clear_notif():
-	$"/root/EpisodeManager".episode_clear_idx = -1
+func show_ep_clear_notif():
 	$"MainMenu".visible = false
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionMain")
 	$"LevelSelectEp1".visible = false
+	$"LevelSelectEp2".visible = false
 	$"Options".visible = false
-	$"Ep1ClearNotif".visible = true
+	$"EpClearNotif".build_text_and_show()
 
 func show_main_menu():
 	$"MainMenu".visible = true
@@ -30,7 +32,7 @@ func show_main_menu():
 	emit_signal("focus_camera", "CameraPositionMain")
 	$"LevelSelectEp1".visible = false
 	$"Options".visible = false
-	$"Ep1ClearNotif".visible = false
+	$"EpClearNotif".visible = false
 
 func show_options():
 	$"MainMenu".visible = false
@@ -41,6 +43,7 @@ func show_level_select():
 	$"LevelSelect".visible = true
 	$"LevelSelectEp1".visible = false
 	$"LevelSelectEp2".visible = false
+	$"EpClearNotif".visible = false
 	emit_signal("focus_camera", "CameraPositionMain")
 
 func show_ep1():
@@ -115,8 +118,8 @@ func _on_ManualButton_button_up():
 		if OS.shell_open(OS.get_executable_path().get_base_dir().plus_file(ProjectSettings.globalize_path(Globals.content_pack_path) + readme_dir)) != OK:
 			print("Can't open manual directory.")
 
-func _on_Ep1ClearOkButton_button_up():
-	show_main_menu()
+func _on_EpClearOkButton_button_up():
+	show_level_select()
 
 func _on_Button_button_up():
 	if readme_dir != "":

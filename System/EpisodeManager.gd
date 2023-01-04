@@ -21,11 +21,13 @@ func next_map():
 	match current_ep:
 		1:
 			next_map_in_ep()
+		2:
+			next_map_in_ep()
 		101:
-			#endless episode
+			#endless ep1
 			restart_current_map()
 		201:
-			#custom map episode
+			#custom map ep1
 			restart_episode()
 
 func restart_episode():
@@ -43,11 +45,12 @@ func change_map(var map_path: String):
 	yield(get_tree().create_timer(0.05), "timeout")
 
 	if get_tree().change_scene(map_path) != OK:
-		if current_ep == 1:
+		if is_normal_episode_playing():
 			$"/root/Player".hide_loading()
-			if not Globals.player_progress["ep1_completed"] :
-				Globals.set_ep_completed("ep1_completed", true)
-				episode_clear_idx = 1
+
+			if not Globals.player_progress[String(current_ep)] :
+				Globals.set_ep_completed(current_ep, true)
+				episode_clear_idx = current_ep
 
 			$"/root/Player/GameOverStats".show()
 

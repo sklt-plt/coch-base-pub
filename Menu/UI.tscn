@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Base/Menu/UI.gd" type="Script" id=1]
 [ext_resource path="res://Base/Menu/default_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Base/Menu/Options.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Base/Menu/EpClearNotif.gd" type="Script" id=4]
 
 [node name="UI" type="Control"]
 anchor_right = 1.0
@@ -303,15 +304,16 @@ __meta__ = {
 [node name="Options" parent="." instance=ExtResource( 3 )]
 visible = false
 
-[node name="Ep1ClearNotif" type="Control" parent="."]
+[node name="EpClearNotif" type="Control" parent="."]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="Ep1ClearNotif"]
+[node name="ColorRect" type="ColorRect" parent="EpClearNotif"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.423529 )
@@ -319,7 +321,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="Ep1ClearNotif"]
+[node name="Panel" type="Panel" parent="EpClearNotif"]
 anchor_left = 0.3
 anchor_top = 0.370192
 anchor_right = 0.7
@@ -328,22 +330,24 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Label" type="Label" parent="Ep1ClearNotif/Panel"]
+[node name="Label" type="Label" parent="EpClearNotif/Panel"]
 anchor_left = 0.157552
 anchor_top = 0.134783
 anchor_right = 0.838542
 anchor_bottom = 0.847826
 text = "Congratulations!
 
-You've unlocked
-Arcade and Custom Mode for Episode 1"
+You've unlocked:
+Episode 2
+Episode 1 Arcade Mode
+Episode 1 Custom Mode"
 align = 1
 valign = 1
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Ep1ClearOkButton" type="Button" parent="Ep1ClearNotif"]
+[node name="EpClearOkButton" type="Button" parent="EpClearNotif"]
 anchor_left = 0.471
 anchor_top = 0.643885
 anchor_right = 0.528
@@ -370,4 +374,4 @@ __meta__ = {
 [connection signal="button_up" from="LevelSelectEp2/PlayEp2Endless" to="." method="_on_PlayEp2Endless_button_up"]
 [connection signal="button_up" from="LevelSelectEp2/PlayEp2Custom" to="." method="_on_PlayEp2Custom_button_up"]
 [connection signal="exited" from="Options" to="." method="_on_Options_exited"]
-[connection signal="button_up" from="Ep1ClearNotif/Ep1ClearOkButton" to="." method="_on_Ep1ClearOkButton_button_up"]
+[connection signal="button_up" from="EpClearNotif/EpClearOkButton" to="." method="_on_EpClearOkButton_button_up"]
