@@ -283,7 +283,7 @@ func place_entities(var entities: Dictionary, var room_geometry: RoomGeometry, v
 
 					align_door_to_hole(ent_inst, e)
 
-		elif ent_inst is LevelExit or ent_inst is BossSpawn:
+		elif ent_inst is LevelExit or ent_inst is BossSpawn or ent_inst is FakeExit:
 			# get link location
 			for e in exits:
 				if e["target"] == "outside":

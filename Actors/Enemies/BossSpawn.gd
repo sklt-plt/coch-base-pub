@@ -5,6 +5,7 @@ tool
 export (PackedScene) var boss_scene
 
 func _ready():
+	#spawn scene instance aligned to (and facing) center of the room
 	var instance = boss_scene.instance() as Spatial
 
 	get_parent().get_parent().add_child(instance)
