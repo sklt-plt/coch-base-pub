@@ -73,7 +73,7 @@ var los_check_self_offset = Vector3(0, 2.5, 0)		# where to cast line-of-sight FR
 
 var audio_callouts = []					# random audio 'grunts'
 var audio_death: AudioStream			# plays when die
-var audio_attack: AudioStream 			# plays when attacking
+var audio_attack_begin: AudioStream 	# plays when attacking begins
 
 var gib_effect: PackedScene			# scene that holds gib effect
 
@@ -342,17 +342,18 @@ func begin_state(var desired_state):
 				play_animation(ANIM_MOVE)
 				current_state = States.MOVE_CHARGE
 			States.ATTACK_MELEE:
-				play_audio(audio_attack)
+				#play audio by animation
 				play_random_melee_anim()
 				current_state = States.ATTACK_MELEE
 			States.ATTACK_BEGIN:
 				audio_callouts_timer.stop()
-				play_audio(audio_attack)
+				play_audio(audio_attack_begin)
 				play_animation(ANIM_ATTACK_BEGIN)
 				ranged_attack_freq_timer.stop()
 				ranged_attack_tele_timer.start()
 				current_state = States.ATTACK_BEGIN
 			States.ATTACK_MELEE_BEGIN:
+				play_audio(audio_attack_begin)
 				audio_callouts_timer.stop()
 				if ANIM_ATTACK_MELEE_BEGIN != "":
 					play_animation(ANIM_ATTACK_MELEE_BEGIN)
@@ -538,7 +539,6 @@ func play_audio(var audio : AudioStream):
 		audio_stream_player.play()
 
 func play_random_melee_anim():
-	play_audio(audio_attack)
 	if not ANIM_ATTACK_MELEE.empty():
 		var idx = randi()%ANIM_ATTACK_MELEE.size()
 		current_melee_anim = ANIM_ATTACK_MELEE[idx]
