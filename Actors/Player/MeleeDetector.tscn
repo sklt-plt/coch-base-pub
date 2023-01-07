@@ -18,5 +18,3 @@ __meta__ = {
 
 [connection signal="area_entered" from="." to="." method="_on_MeleeDetector_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_MeleeDetector_area_exited"]
-[connection signal="body_shape_entered" from="." to="." method="_on_MeleeDetector_body_shape_entered"]
-[connection signal="body_shape_exited" from="." to="." method="_on_MeleeDetector_body_shape_exited"]
