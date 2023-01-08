@@ -1,5 +1,7 @@
 extends Node
 
+const DEBUG_DEMO_EP = 0
+
 func _ready():
 	# load content pack
 	if not ProjectSettings.load_resource_pack(Globals.content_pack_path + ".pck"):
@@ -26,6 +28,12 @@ func on_player_ready():
 	$"/root/Globals".load_user_inputs()
 	$"/root/Globals".load_user_progress()
 
+	#debug load demo
+	if DEBUG_DEMO_EP > 0:
+		$"/root/Player/HUD".visible = true
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		$"/root/EpisodeManager".start_episode(DEBUG_DEMO_EP)
+
 	# finally load main menu
-	if get_tree().change_scene(Globals.content_pack_path + "/MainMenu/MainMenu.tscn") != OK:
-		print("Can't load: ", Globals.content_pack_path + "/MainMenu/MainMenu.tscn")
+	#if get_tree().change_scene(Globals.content_pack_path + "/MainMenu/MainMenu.tscn") != OK:
+	#	print("Can't load: ", Globals.content_pack_path + "/MainMenu/MainMenu.tscn")

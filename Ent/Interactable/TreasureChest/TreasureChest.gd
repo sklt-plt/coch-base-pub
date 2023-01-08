@@ -41,6 +41,9 @@ func activate():
 	$HitTrig.collision_layer = 0
 	$HitTrig.collision_mask = 0
 
+	#delete light
+	$OmniLight.queue_free()
+
 	#collect only legal powerups for spawning
 	var allowed_powerups = []
 

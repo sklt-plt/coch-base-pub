@@ -2,16 +2,19 @@ extends Node
 class_name LinkDoorsGenerator
 tool
 
-export (Material) var link_door_material
-export (PackedScene) var gate_side_l
-export (PackedScene) var gate_side_r
-export (PackedScene) var gate_corner_r
-export (PackedScene) var gate_corner_l
-export (PackedScene) var gate_top
+enum DOOR_TYPE {
+	SINGLE,
+	DOUBLE
+}
 
 enum DOOR_VARIANT {
 	L, R, CENTER
 }
+export (Material) var link_door_material
+
+export (PackedScene) var gate_top
+
+export (DOOR_TYPE) var door_type = DOOR_TYPE.SINGLE
 
 func make_doors(var room: GeneratedRoom):
 	var geometry = get_node(room.geometry) as RoomGeometry
@@ -22,17 +25,16 @@ func make_doors(var room: GeneratedRoom):
 		if l["target"] == "outside":
 			continue
 
-		var gate_models_exist = gate_side_l and gate_side_r and gate_corner_r and gate_corner_l and gate_top
-
-		if gate_models_exist and l["size"].x > 2:
-			make_single_door(geometry, l, DOOR_VARIANT.L)
-			make_single_door(geometry, l, DOOR_VARIANT.R)
-			make_door_frame(geometry, l)
-		elif gate_models_exist and l["size"].x <=2:
-			var l_dup = l.duplicate()
-			l_dup["size"].x *= 2
-			make_single_door(geometry, l_dup, DOOR_VARIANT.L)
-			make_door_frame(geometry, l)
+		if door_type == DOOR_TYPE.DOUBLE:
+			if l["size"].x > 2:
+				make_single_door(geometry, l, DOOR_VARIANT.L)
+				make_single_door(geometry, l, DOOR_VARIANT.R)
+				make_door_frame(geometry, l)
+			else:
+				var l_dup = l.duplicate()
+				l_dup["size"].x *= 2
+				make_single_door(geometry, l_dup, DOOR_VARIANT.L)
+				make_door_frame(geometry, l)
 		else:
 			make_single_door(geometry, l, DOOR_VARIANT.CENTER)
 
@@ -53,32 +55,21 @@ func make_door_frame(var geometry: RoomGeometry, var link):
 		3:
 			parent.rotation_degrees.y = -90
 
-	for y in range(0, link["size"].y):
-		var element_left = gate_side_l.instance()
-		parent.add_child(element_left)
-		element_left.owner = parent.owner
-		element_left.translation = Vector3(-1, y, 0)
-
-		var element_right = gate_side_r.instance()
-		parent.add_child(element_right)
-		element_right.owner = parent.owner
-		element_right.translation = Vector3(link["size"].x, y, 0)
-
-	var corner_left = gate_corner_l.instance()
+	var corner_left = gate_top.instance()
 	parent.add_child(corner_left)
 	corner_left.owner = parent.owner
-	corner_left.translation = Vector3(-1, link["size"].y, 0)
+	corner_left.translation = Vector3(0, link["size"].y, 0)
 
-	var corner_right = gate_corner_r.instance()
+	var corner_right = gate_top.instance()
 	parent.add_child(corner_right)
 	corner_right.owner = parent.owner
 	corner_right.translation = Vector3(link["size"].x, link["size"].y, 0)
 
-	for x in range(0, link["size"].x):
+	if link["size"].x > 2:
 		var element = gate_top.instance()
 		parent.add_child(element)
 		element.owner = parent.owner
-		element.translation = Vector3(x, link["size"].y, 0)
+		element.translation = Vector3(link["size"].x / 2, link["size"].y, 0)
 
 func make_single_door(var geometry: RoomGeometry, var link, var variant : int):
 	#prepare
