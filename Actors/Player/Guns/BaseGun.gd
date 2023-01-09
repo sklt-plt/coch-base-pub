@@ -24,6 +24,8 @@ export (Array, String) var anims_reload = ["", ""]
 export (AudioStream) var audio_fire						# audio to play when firing in normal mode
 export (AudioStream) var audio_reload					# audio to play when reloading
 
+export (bool) var use_muzzle_flash = true
+
 var rng : RandomNumberGenerator
 var anim_player : AnimationPlayer
 var anim_player_hands : AnimationPlayer
@@ -49,7 +51,8 @@ func fire():
 	if current_magazine != 0 and are_all_timers_stopped() and $"/root/Player".take(ammo_type, 1):
 		current_magazine -= 1
 
-		$"MuzzleFlash".show()
+		if use_muzzle_flash:
+			$"MuzzleFlash".show()
 
 		if projectile_scene:
 			var pr = projectile_scene.instance()
