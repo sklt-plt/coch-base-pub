@@ -33,7 +33,7 @@ func on_player_ready():
 		$"/root/Player/HUD".visible = true
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		$"/root/EpisodeManager".start_episode(DEBUG_DEMO_EP)
-
-	# finally load main menu
-	#if get_tree().change_scene(Globals.content_pack_path + "/MainMenu/MainMenu.tscn") != OK:
-	#	print("Can't load: ", Globals.content_pack_path + "/MainMenu/MainMenu.tscn")
+	else:
+		# finally load main menu
+		if get_tree().change_scene(Globals.content_pack_path + "/MainMenu/MainMenu.tscn") != OK:
+			print("Can't load: ", Globals.content_pack_path + "/MainMenu/MainMenu.tscn")
