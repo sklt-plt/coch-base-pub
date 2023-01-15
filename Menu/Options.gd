@@ -205,6 +205,7 @@ func _on_FOVSlider_value_changed(value):
 	fov_label.text = String(value)
 	var new_settings = {"fov" : value}
 	Globals.apply_user_settings(new_settings)
+	$"/root/Player/PlayerAnimations".base_fov = value
 
 func _on_MasterVolumeSlider_value_changed(value):
 	master_volume_label.text = String(value*100)

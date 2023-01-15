@@ -15,6 +15,12 @@ func fire():
 		$"/root/Player".give("s_shots_fired", bullets_at_once)
 		firing_timer.start()
 
+func begin_aim():
+	pass
+
+func end_aim():
+	pass
+
 func deal_damage_to_body(var body):
 	if body is ExplosiveBarrel:
 		body.deal_damage(0, bullet_push_force, get_global_transform().origin, find_parent("Player*"))

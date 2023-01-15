@@ -89,6 +89,7 @@ func switch_guns(var index: int, var show_on_hud = true):
 
 	is_switching = true
 	current_gun.interrupt_reload()
+	current_gun.end_aim()
 
 	$"/root/Player/PlayerAnimations"._on_switch_input()
 

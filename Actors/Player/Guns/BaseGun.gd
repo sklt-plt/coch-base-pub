@@ -105,10 +105,12 @@ func begin_aim():
 	if reloading_timer.is_stopped():
 		play_anim_pair(anims_aim_prep)
 		in_aim_mode = true
+		$"/root/Player/PlayerAnimations".zoom_fov()
 		current_inaccuracy = gun_inaccuracy_aim_mode
 
 func end_aim():
 	play_anim_pair(anims_idle)
+	$"/root/Player/PlayerAnimations".unzoom_fov()
 	current_inaccuracy = gun_inaccuracy
 	in_aim_mode = false
 
