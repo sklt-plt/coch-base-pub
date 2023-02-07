@@ -66,6 +66,7 @@ func _process(_delta):
 				oldMap.queue_free()
 
 			_generated_tree_root = _rooms_data_generator.generate_design_tree()
+			$"/root/Player".create_map(_generated_tree_root.get_node("starting_room"))
 
 			generate_pass_one(_generated_tree_root)
 

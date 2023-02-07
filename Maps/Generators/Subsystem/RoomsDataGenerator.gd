@@ -278,7 +278,7 @@ func generate_path(var path_root: Node, var number_of_rooms: int, var purpose: i
 
 	for i in range(0, number_of_rooms):
 		if i == number_of_rooms-1: #last room
-			current_room = add_next_room_node("end_room", current_room,
+			current_room = add_next_room_node("end_room"+String(_rng.randi()%10000), current_room,
 			generated_sizes[i], generated_difficulties, prefab_room_locations, i, purpose)
 			current_room.difficulty *= 1.5
 
@@ -291,7 +291,7 @@ func generate_path(var path_root: Node, var number_of_rooms: int, var purpose: i
 				current_room.traits.append(GeneratedRoom.ROOM_TRAITS.END_SUB)
 				current_room.traits.append(GeneratedRoom.ROOM_TRAITS.SUB)
 		else:
-			current_room = add_next_room_node("normal_room", current_room,
+			current_room = add_next_room_node("normal_room"+String(_rng.randi()%10000), current_room,
 			generated_sizes[i], generated_difficulties, prefab_room_locations, i, EXTRA_CONTENTS_NULL_ID)
 
 			current_room.traits.append(_main_room_type)

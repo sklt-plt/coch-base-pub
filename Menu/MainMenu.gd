@@ -20,7 +20,7 @@ func _on_UI_unsetup_menu():
 	$"/root/Player".set("is_locked", false)
 	$"/root/Player/BodyCollision/LookHeight/LookDirection/WorldCamera".current = true
 	$"/root/Player/HUD".visible = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 func _on_UI_focus_camera(target_node):
 	$"MenuCamera".set_target(get_node(target_node))
