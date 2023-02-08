@@ -2,7 +2,7 @@ extends Spatial
 class_name MapGenerator
 tool
 
-export (bool) var DBG_SKIP_DOORS = false
+var DBG_SKIP_DOORS = false
 
 export (bool) var generate = false
 var hide_after_generation = false
@@ -35,6 +35,11 @@ var _owner
 var _rng
 
 func _ready():
+	# flush old map
+	var oldMap = get_parent().find_node("generated_map*")
+	if oldMap:
+		oldMap.queue_free()
+
 	if not Engine.is_editor_hint():
 		generate = true
 		hide_after_generation = true
@@ -60,13 +65,10 @@ func _process(_delta):
 				maybe_overrides.apply()
 
 		if (prepare_subsystems()):
-			# flush old map
-			var oldMap = get_parent().find_node("generated_map*")
-			if oldMap:
-				oldMap.queue_free()
-
 			_generated_tree_root = _rooms_data_generator.generate_design_tree()
-			$"/root/Player".create_map(_generated_tree_root.get_node("starting_room"))
+
+			if not Engine.is_editor_hint():
+				$"/root/Player".create_map(_generated_tree_root.get_node("starting_room"))
 
 			generate_pass_one(_generated_tree_root)
 

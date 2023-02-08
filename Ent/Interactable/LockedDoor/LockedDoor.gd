@@ -11,7 +11,11 @@ var needs_key = true
 
 func _ready():
 	#construct padlock unless this is first normal room
-	if (get_node(get_parent().tree_ref).get_parent().traits.has(GeneratedRoom.ROOM_TRAITS.STARTING)):
+	var tree_ref = get_node_or_null(get_parent().tree_ref)
+	if !tree_ref:
+		return
+
+	if (tree_ref.get_parent().traits.has(GeneratedRoom.ROOM_TRAITS.STARTING)):
 		needs_key = false
 
 	elif padlock:
