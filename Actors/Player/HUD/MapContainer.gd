@@ -1,10 +1,15 @@
 extends Control
 
 var layers
+var node_refs
+
 const NODE_X_SIZE = 150
 const NODE_Y_SIZE = 60
 
+const COLOR_UNEXPLORED = Color(0.375, 0.372831, 0.343546)
+
 func create_map(var map_root):
+	node_refs = []
 	layers = []
 	layers.resize(50)
 
@@ -14,16 +19,20 @@ func create_map(var map_root):
 
 	trim_layers()
 
-	#arrange layers
+	arrange_layers()
+
+	#connect the fuckers
+
+	for ref in node_refs:
+		print(ref)
+
+func arrange_layers():
 	for y in range(0, layers.size()):
 		var x_offset = $Root.rect_size.x / 2
-		#if layers[y].size() == 1:
-		#	x_offset -= NODE_X_SIZE / 2
-		#else:
-		x_offset = $Root.rect_size.x / (layers[y].size() + 1) #- NODE_X_SIZE / 2
+		x_offset = $Root.rect_size.x / (layers[y].size() + 1)
 
 		for x in range(0, layers[y].size()):
-			layers[y][x].rect_position = Vector2(x_offset * (x+1) - NODE_X_SIZE / 2, NODE_Y_SIZE * (y+1))
+			layers[y][x].rect_position = Vector2(x_offset * (x+1) - NODE_X_SIZE / 2, NODE_Y_SIZE * 1.5 * (y+1))
 
 func trim_layers():
 	for i in range(0, layers.size()):
@@ -35,9 +44,10 @@ func create_nodes(var map_node, var layer_idx):
 	if layers.size() == layer_idx:
 		layers.resize(layers.size()+50)  # shouldn't be needed but still...
 
-	var node = UIMapNode.new()
-	node.color = Color(0, 0, 0, 0.0)
-	node.tree_ref = map_node.get_path()
+	var node = ColorRect.new()
+	node.color = COLOR_UNEXPLORED
+
+	node_refs.push_back({map_node.get_path() : node})
 
 	$Root.add_child(node)
 
@@ -50,11 +60,11 @@ func create_nodes(var map_node, var layer_idx):
 	node.size_flags_vertical = SIZE_EXPAND_FILL
 	node.owner = $Root.owner
 
-	node.margin_left = -NODE_X_SIZE
-	node.margin_right = NODE_X_SIZE
-	node.margin_top = -NODE_Y_SIZE
-	node.margin_bottom = NODE_X_SIZE
-	node.name = map_node.name
+	node.margin_left = -NODE_X_SIZE / 2
+	node.margin_right = NODE_X_SIZE / 2
+	node.margin_top = -NODE_Y_SIZE / 2
+	node.margin_bottom = NODE_Y_SIZE / 2
+	node.name = "color_rect_for"+map_node.name
 
 	var label = Label.new()
 	label.text = map_node.name
