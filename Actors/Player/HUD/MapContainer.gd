@@ -1,15 +1,16 @@
 extends Control
 
-var layers
-var node_refs
+var layers : Array
+var node_refs : Dictionary
 
 const NODE_X_SIZE = 150
 const NODE_Y_SIZE = 60
 
-const COLOR_UNEXPLORED = Color(0.375, 0.372831, 0.343546)
+const COLOR_UNEXPLORED = Color(0.35, 0.35, 0.35)
+const COLOR_LINK = Color(0.25, 0.25, 0.25)
 
 func create_map(var map_root):
-	node_refs = []
+	node_refs = {}
 	layers = []
 	layers.resize(50)
 
@@ -21,10 +22,26 @@ func create_map(var map_root):
 
 	arrange_layers()
 
-	#connect the fuckers
+	connect_the_fuckers()
 
-	for ref in node_refs:
-		print(ref)
+func connect_the_fuckers():
+	for key in node_refs.keys():
+		var point_a = node_refs[key].rect_position + Vector2(NODE_X_SIZE/2, NODE_Y_SIZE/2)
+
+		var as_string = String(key)
+		var point_a_parent = as_string.substr(0, as_string.rfind("/"))
+
+		if point_a_parent.find("starting_room") == -1:
+			continue
+
+		var point_b = node_refs[NodePath(point_a_parent)].rect_position + Vector2(NODE_X_SIZE/2, NODE_Y_SIZE/2)
+
+		var line = Line2D.new()
+		line.points = [point_a, point_b]
+
+		$LinesContainer.add_child(line)
+		line.owner = $LinesContainer.owner
+		line.default_color = COLOR_LINK
 
 func arrange_layers():
 	for y in range(0, layers.size()):
@@ -47,7 +64,7 @@ func create_nodes(var map_node, var layer_idx):
 	var node = ColorRect.new()
 	node.color = COLOR_UNEXPLORED
 
-	node_refs.push_back({map_node.get_path() : node})
+	node_refs[map_node.get_path()] = node
 
 	$Root.add_child(node)
 
@@ -64,7 +81,7 @@ func create_nodes(var map_node, var layer_idx):
 	node.margin_right = NODE_X_SIZE / 2
 	node.margin_top = -NODE_Y_SIZE / 2
 	node.margin_bottom = NODE_Y_SIZE / 2
-	node.name = "color_rect_for"+map_node.name
+	node.name = "color_rect_for_"+map_node.name
 
 	var label = Label.new()
 	label.text = map_node.name
