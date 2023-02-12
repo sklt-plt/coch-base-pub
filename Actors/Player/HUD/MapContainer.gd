@@ -1,29 +1,59 @@
 extends Control
 
+var layers
+const NODE_X_SIZE = 150
+const NODE_Y_SIZE = 60
+
 func create_map(var map_root):
+	layers = []
+	layers.resize(50)
+
 	self.visible = true
-	var base_offset = Vector2.ZERO
 
-	var parent = $Root.duplicate()
-	parent.name = "PathA"
-	$Root.add_child(parent)
+	create_nodes(map_root, 0)
 
-	traverse_and_map(map_root, parent, base_offset)
+	trim_layers()
 
-func traverse_and_map(var map_node, var parent_control, var base_offset):
-	var node = ColorRect.new()
+	#arrange layers
+	for y in range(0, layers.size()):
+		var x_offset = $Root.rect_size.x / 2
+		#if layers[y].size() == 1:
+		#	x_offset -= NODE_X_SIZE / 2
+		#else:
+		x_offset = $Root.rect_size.x / (layers[y].size() + 1) #- NODE_X_SIZE / 2
+
+		for x in range(0, layers[y].size()):
+			layers[y][x].rect_position = Vector2(x_offset * (x+1) - NODE_X_SIZE / 2, NODE_Y_SIZE * (y+1))
+
+func trim_layers():
+	for i in range(0, layers.size()):
+		if layers[i] == null:
+			layers.resize(i)
+			return
+
+func create_nodes(var map_node, var layer_idx):
+	if layers.size() == layer_idx:
+		layers.resize(layers.size()+50)  # shouldn't be needed but still...
+
+	var node = UIMapNode.new()
 	node.color = Color(0, 0, 0, 0.0)
+	node.tree_ref = map_node.get_path()
 
-	parent_control.add_child(node)
+	$Root.add_child(node)
+
+	if layers[layer_idx] == null:
+		layers[layer_idx] = []
+
+	layers[layer_idx].push_back(node)
 
 	node.size_flags_horizontal = SIZE_EXPAND_FILL
 	node.size_flags_vertical = SIZE_EXPAND_FILL
-	node.owner = parent_control.owner
+	node.owner = $Root.owner
 
-	node.margin_left = -150 + base_offset.x
-	node.margin_right = 150 + base_offset.x
-	node.margin_top = -60 + base_offset.y
-	node.margin_bottom = 60 + base_offset.y
+	node.margin_left = -NODE_X_SIZE
+	node.margin_right = NODE_X_SIZE
+	node.margin_top = -NODE_Y_SIZE
+	node.margin_bottom = NODE_X_SIZE
 	node.name = map_node.name
 
 	var label = Label.new()
@@ -36,39 +66,7 @@ func traverse_and_map(var map_node, var parent_control, var base_offset):
 
 	#for c in children:
 	for i in range (0, children.size()):
-		if i == children.size() - 1:  # last element goes down
-			var new_offset = Vector2(0, 60)
-			traverse_and_map(children[i], parent_control, base_offset + new_offset)
-
-		elif i == children.size() - 2:  # second subpath goes right
-			#var new_offset = Vector2(150, 0)
-			var new_parent = Control.new()
-			#ew_parent.rect_position += Vector2(150, 0)
-			parent_control.rect_position += Vector2(-150, 0)
-			new_parent.rect_position += Vector2(150, 0)
-
-			new_parent.name = new_parent.name+"B"
-			parent_control.add_child(new_parent)
-			new_parent.owner = parent_control.owner
-
-			traverse_and_map(children[i], new_parent, base_offset)
-
-		elif i == children.size() - 3:  # first subpath goes left
-			#var new_offset = Vector2(150, 0)
-			var new_parent = Control.new()
-			parent_control.rect_position += Vector2(150, 0)
-			new_parent.rect_position += Vector2(-150, 0)
-
-			new_parent.name = new_parent.name+"C"
-			parent_control.add_child(new_parent)
-			new_parent.owner = parent_control.owner
-
-			traverse_and_map(children[i], new_parent, base_offset)
-			#2:
-			#	new_offset = Vector2(300, 0)
-
-	# adjust whole thing?
-	#$Root.rect_position.x = 0
+		create_nodes(children[i], layer_idx + 1)
 
 func show():
 	self.visible = true

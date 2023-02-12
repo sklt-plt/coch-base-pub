@@ -68,7 +68,7 @@ func _process(_delta):
 			_generated_tree_root = _rooms_data_generator.generate_design_tree()
 
 			if not Engine.is_editor_hint():
-				$"/root/Player".create_map(_generated_tree_root.get_node("starting_room"))
+				$"/root/Player".create_map(_generated_tree_root.get_node("starting_room").get_child(0))
 
 			generate_pass_one(_generated_tree_root)
 
