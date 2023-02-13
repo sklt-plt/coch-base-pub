@@ -34,3 +34,4 @@ func _on_TriggerDetector_area_entered(area):
 				visible_last[i].move_away()
 
 		visible_last = visible_now
+		$"../MapContainer".update_map(parent, visible_now)
