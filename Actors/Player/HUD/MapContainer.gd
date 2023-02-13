@@ -7,7 +7,16 @@ const NODE_X_SIZE = 150
 const NODE_Y_SIZE = 60
 
 const COLOR_UNEXPLORED = Color(0.35, 0.35, 0.35)
+const COLOR_EXPLORED = Color(0.25, 0.59, 0.75)
+const COLOR_TREASURE = Color(0.88, 0.91, 0.42)
+const COLOR_PLAYER = Color(0.73, 0.16, 0.16)
 const COLOR_LINK = Color(0.25, 0.25, 0.25)
+
+func _ready():
+	$"%UnexploredColorLegend".color = COLOR_UNEXPLORED
+	$"%ExploredColorLegend".color = COLOR_EXPLORED
+	$"%TreasureColorLegend".color = COLOR_TREASURE
+	$"%PlayerColorLegend".color = COLOR_PLAYER
 
 func create_map(var map_root):
 	node_refs = {}
