@@ -22,6 +22,6 @@ func flash_cache_objects():
 	hide_loading()
 
 func hide_loading():
-	#get_tree().paused = false
+	get_tree().paused = false
 	$"/root/Player".hide_loading()
 

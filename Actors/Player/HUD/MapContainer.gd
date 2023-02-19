@@ -17,7 +17,7 @@ const MINI_X_SCALE = 0.15
 const MINI_Y_SCALE = 0.25
 const MINI_MASK_WIDTH = 512
 
-const DBG_NO_HIDE = false
+const DBG_CREATE_LABELS = false
 
 enum MODE {
 	HIDDEN,
@@ -84,7 +84,6 @@ func to_fullscreen():
 	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
 
 	$BG2.visible = false
-	#$Light2DMM.enabled = false
 
 	$LegendMC.visible = true
 	self.rect_position = Vector2.ZERO
@@ -109,7 +108,6 @@ func to_mini():
 	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_LIGHT_ONLY
 
 	$BG2.visible = true
-	#$Light2DMM.enabled = true
 
 	$LegendMC.visible = false
 	get_tree().set_input_as_handled()
@@ -125,7 +123,7 @@ func create_map(var map_root):
 
 	flush_old_map()
 
-	self.to_fullscreen()
+	self.to_mini()
 
 	create_nodes(map_root, 0)
 
@@ -221,15 +219,20 @@ func create_nodes(var map_node, var layer_idx):
 	node.name = "color_rect_for_"+map_node.name
 	node.material = node_material
 
-	var label = Label.new()
-	label.text = map_node.name
-	label.size_flags_vertical = SIZE_EXPAND_FILL
-	node.add_child(label)
-	label.owner = node.owner
-	label.material = node_material
+	if DBG_CREATE_LABELS:
+		var label = Label.new()
+		label.text = map_node.name
+		label.size_flags_vertical = SIZE_EXPAND_FILL
+		node.add_child(label)
+		label.owner = node.owner
+		label.material = node_material
 
 	var children = map_node.get_children()
 
 	#for c in children:
 	for i in range (0, children.size()):
 		create_nodes(children[i], layer_idx + 1)
+
+func restore():
+	if current_mode != MODE.HIDDEN:
+		self.visible = true

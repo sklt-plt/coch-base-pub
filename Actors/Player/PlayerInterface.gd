@@ -101,10 +101,10 @@ func refresh_shaders():
 	$"BodyCollision/LookHeight/LookDirection/WorldCamera".flash_cache_objects()
 
 func show_loading():
-	$"FakeLoading".visible = true
+	$"FakeLoading".show()
 
 func hide_loading():
-	$"FakeLoading".visible = false
+	$"FakeLoading".hide()
 
 func is_dead():
 	return $"PlayerResources".r_health <= 0.0
