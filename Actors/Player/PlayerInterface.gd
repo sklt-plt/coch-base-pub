@@ -19,11 +19,11 @@ func on_ladder_entered():
 func on_ladder_exited():
 	$PlayerMovement.exitedLadder()
 
-func create_map(var map_root):
-	$"MapContainer".create_map(map_root)
-
 func save():
 	return $PlayerState.save()
+
+func get_map_container():
+	return $MapContainer
 
 func revive():
 	var pr = $"PlayerResources"

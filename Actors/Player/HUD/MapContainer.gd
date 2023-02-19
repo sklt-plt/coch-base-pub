@@ -6,15 +6,27 @@ var node_refs : Dictionary
 const NODE_X_SIZE = 150
 const NODE_Y_SIZE = 60
 
-const COLOR_UNEXPLORED = Color(0.35, 0.35, 0.35)
+const COLOR_UNEXPLORED = Color(0.5, 0.5, 0.5)
 const COLOR_EXPLORED = Color(0.25, 0.59, 0.75)
 const COLOR_TREASURE = Color(0.88, 0.91, 0.42)
 const COLOR_PLAYER = Color(0.73, 0.16, 0.16)
-const COLOR_LINK = Color(0.25, 0.25, 0.25)
+const COLOR_GOAL = Color(0.19, 0.70, 0.06)
+const COLOR_LINK = Color(0.4, 0.4, 0.4)
 
-const DBG_NO_HIDE = true
+const MINI_X_SCALE = 0.15
+const MINI_Y_SCALE = 0.25
+
+const DBG_NO_HIDE = false
+
+enum MODE {
+	HIDDEN,
+	FULLSCREEN,
+	MINI
+}
 
 var current_players_node
+
+var current_mode
 
 func _ready():
 	$"%UnexploredColorLegend".color = COLOR_UNEXPLORED
@@ -36,6 +48,9 @@ func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Arr
 				if is_key_and_active(child) or is_treasure_chest_and_active(child):
 					node_refs[node.tree_ref].color = COLOR_TREASURE
 
+				elif child is LevelExit or child is FakeExit:
+					node_refs[node.tree_ref].color = COLOR_GOAL
+
 	# color current node
 	current_players_node = node_refs[new_players_node.tree_ref]
 	current_players_node.color = COLOR_PLAYER
@@ -47,24 +62,51 @@ func is_treasure_chest_and_active(var maybe_chest):
 	return maybe_chest is TreasureChest and not maybe_chest.is_open
 
 func _input(event):
-	if visible and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("ShowMap")):
-		if DBG_NO_HIDE:
-			$BG.visible = false
-			get_tree().set_input_as_handled()
-			get_tree().paused = false
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		else:
-			get_tree().set_input_as_handled()
-			.hide()
+	if current_mode == MODE.HIDDEN and event.is_action_pressed("ShowMap"):
+		to_fullscreen()
 
-	elif not visible and event.is_action_pressed("ShowMap"):
-		get_tree().set_input_as_handled()
-		.show()
+	elif current_mode == MODE.FULLSCREEN and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("ShowMap")):
+		to_mini()
+
+	elif current_mode == MODE.MINI and event.is_action_pressed("ShowMap"):
+		to_hidden()
+
+func to_fullscreen():
+	self.show()
+	current_mode = MODE.FULLSCREEN
+	$BG1.visible = true
+	$BG2.visible = false
+	$LegendMC.visible = true
+	self.rect_position = Vector2.ZERO
+	self.rect_scale = Vector2.ONE
+	self.show()
+	get_tree().set_input_as_handled()
+
+func to_mini():
+	# unlock controls
+	get_tree().paused = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	self.visible = true
+
+	# modify
+	current_mode = MODE.MINI
+	var x_offset = self.rect_size.x - self.rect_size.x*MINI_X_SCALE
+	var y_offset = self.rect_size.y / 2 - self.rect_size.y*MINI_Y_SCALE
+	self.rect_position = Vector2(x_offset, y_offset)
+	self.rect_scale = Vector2(MINI_X_SCALE, MINI_Y_SCALE)
+	$BG1.visible = false
+	$BG2.visible = true
+	$LegendMC.visible = false
+	get_tree().set_input_as_handled()
+
+func to_hidden():
+	self.visible = false
+	current_mode = MODE.HIDDEN
 
 func create_map(var map_root):
 	flush_old_map()
 
-	self.visible = true
+	self.to_fullscreen()
 
 	create_nodes(map_root, 0)
 
@@ -78,6 +120,12 @@ func create_map(var map_root):
 	current_players_node.color = COLOR_PLAYER
 
 func flush_old_map():
+	$LinesContainer.free()
+	var new_lines_container = Node2D.new()
+	self.add_child(new_lines_container)
+	new_lines_container.owner = self.owner
+	new_lines_container.name = "LinesContainer"
+
 	$Root.free()
 	var new_root = Control.new()
 	self.add_child(new_root)
@@ -86,12 +134,6 @@ func flush_old_map():
 
 	new_root.anchor_right = 1
 	new_root.anchor_bottom = 1
-
-	$LinesContainer.free()
-	var new_lines_container = Node2D.new()
-	self.add_child(new_lines_container)
-	new_lines_container.owner = self.owner
-	new_lines_container.name = "LinesContainer"
 
 	node_refs = {}
 	layers = []

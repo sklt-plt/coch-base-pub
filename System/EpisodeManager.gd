@@ -65,6 +65,7 @@ func quit_to_menu():
 	$"/root/Player".hide_loading()
 	$"/root/Player/PauseMenu".visible = false
 	$"/root/Player/GameOver".visible = false
+	$"/root/Player".get_map_container().to_hidden()
 	$"/root/Player/MusicController".crossfade_next_list([])
 	$"/root/Player".get_node("TriggerDetector").flush_cache()
 	$"/root/AIManager".clear_registrations()
