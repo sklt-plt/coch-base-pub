@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Base/Actors/Player/HUD/MapContainer.gd" type="Script" id=1]
 [ext_resource path="res://Content/custom/UI/UITheme.tres" type="Theme" id=2]
+[ext_resource path="res://Base/UI/minimap_mask.png" type="Texture" id=3]
+
+[sub_resource type="CanvasItemMaterial" id=6]
+light_mode = 2
+
+[sub_resource type="CanvasItemMaterial" id=5]
+light_mode = 2
+
+[sub_resource type="CanvasItemMaterial" id=4]
 
 [node name="MapContainer" type="Control"]
 anchor_right = 1.0
@@ -9,15 +18,21 @@ anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
 
+[node name="Light2DMM" type="Light2D" parent="."]
+texture = ExtResource( 3 )
+mode = 3
+
 [node name="BG1" type="ColorRect" parent="."]
+material = SubResource( 6 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0.721569, 0.698039, 0.345098, 1 )
 
 [node name="BG2" type="ColorRect" parent="."]
-anchor_left = 0.148958
-anchor_top = -0.000961538
-anchor_right = 0.851042
+material = SubResource( 5 )
+use_parent_material = true
+anchor_left = 0.00104167
+anchor_right = 0.999479
 anchor_bottom = 1.00096
 color = Color( 0.305882, 0.305882, 0.305882, 0.34902 )
 __meta__ = {
@@ -25,10 +40,16 @@ __meta__ = {
 }
 
 [node name="LinesContainer" type="Node2D" parent="."]
+use_parent_material = true
 
 [node name="Root" type="Control" parent="."]
+use_parent_material = true
+anchor_left = 0.001
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.963
+margin_left = -0.92
+margin_right = 2.0
+margin_bottom = -0.0400391
 
 [node name="LegendMC" type="MarginContainer" parent="."]
 anchor_top = 0.847115
@@ -42,6 +63,7 @@ __meta__ = {
 }
 
 [node name="Legend" type="Label" parent="LegendMC"]
+use_parent_material = true
 margin_left = 100.0
 margin_right = 1820.0
 margin_bottom = 36.0
@@ -68,6 +90,7 @@ columns = 2
 
 [node name="PlayerColorLegend" type="ColorRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer5"]
 unique_name_in_owner = true
+material = SubResource( 4 )
 margin_right = 50.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )

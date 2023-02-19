@@ -15,6 +15,7 @@ const COLOR_LINK = Color(0.4, 0.4, 0.4)
 
 const MINI_X_SCALE = 0.15
 const MINI_Y_SCALE = 0.25
+const MINI_MASK_WIDTH = 512
 
 const DBG_NO_HIDE = false
 
@@ -25,6 +26,7 @@ enum MODE {
 }
 
 var current_players_node
+var node_material
 
 var current_mode
 
@@ -33,6 +35,10 @@ func _ready():
 	$"%ExploredColorLegend".color = COLOR_EXPLORED
 	$"%TreasureColorLegend".color = COLOR_TREASURE
 	$"%PlayerColorLegend".color = COLOR_PLAYER
+
+	node_material = CanvasItemMaterial.new()
+	node_material.blend_mode = CanvasItemMaterial.BLEND_MODE_MIX
+	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_LIGHT_ONLY
 
 func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Array):
 	# color previoud node
@@ -75,7 +81,11 @@ func to_fullscreen():
 	self.show()
 	current_mode = MODE.FULLSCREEN
 	$BG1.visible = true
+	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
+
 	$BG2.visible = false
+	#$Light2DMM.enabled = false
+
 	$LegendMC.visible = true
 	self.rect_position = Vector2.ZERO
 	self.rect_scale = Vector2.ONE
@@ -94,8 +104,13 @@ func to_mini():
 	var y_offset = self.rect_size.y / 2 - self.rect_size.y*MINI_Y_SCALE
 	self.rect_position = Vector2(x_offset, y_offset)
 	self.rect_scale = Vector2(MINI_X_SCALE, MINI_Y_SCALE)
+
 	$BG1.visible = false
+	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_LIGHT_ONLY
+
 	$BG2.visible = true
+	#$Light2DMM.enabled = true
+
 	$LegendMC.visible = false
 	get_tree().set_input_as_handled()
 
@@ -104,6 +119,10 @@ func to_hidden():
 	current_mode = MODE.HIDDEN
 
 func create_map(var map_root):
+	#center mask
+	$Light2DMM.position = Vector2(OS.window_size.x / 2, OS.window_size.y / 2)
+	$Light2DMM.scale = Vector2(OS.window_size.x / (MINI_MASK_WIDTH / 2), OS.window_size.y / (MINI_MASK_WIDTH / 2))
+
 	flush_old_map()
 
 	self.to_fullscreen()
@@ -159,6 +178,7 @@ func connect_the_fuckers():
 		$LinesContainer.add_child(line)
 		line.owner = $LinesContainer.owner
 		line.default_color = COLOR_LINK
+		line.material = node_material
 
 func arrange_layers():
 	for y in range(0, layers.size()):
@@ -199,12 +219,14 @@ func create_nodes(var map_node, var layer_idx):
 	node.margin_top = -NODE_Y_SIZE / 2
 	node.margin_bottom = NODE_Y_SIZE / 2
 	node.name = "color_rect_for_"+map_node.name
+	node.material = node_material
 
 	var label = Label.new()
 	label.text = map_node.name
 	label.size_flags_vertical = SIZE_EXPAND_FILL
 	node.add_child(label)
 	label.owner = node.owner
+	label.material = node_material
 
 	var children = map_node.get_children()
 
