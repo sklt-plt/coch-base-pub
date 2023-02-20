@@ -81,9 +81,8 @@ func _input(event):
 	if current_mode == MODE.HIDDEN and event.is_action_pressed("Show Map"):
 		to_fullscreen()
 
-	elif current_mode == MODE.FULLSCREEN:
-		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("Show Map"):
-			to_mini()
+	elif current_mode == MODE.FULLSCREEN and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("Show Map")):
+		to_mini()
 
 	elif current_mode == MODE.MINI and event.is_action_pressed("Show Map"):
 		to_hidden()
@@ -111,6 +110,7 @@ func to_fullscreen():
 	current_mode = MODE.FULLSCREEN
 	$BG1.visible = true
 	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_NORMAL
+	$ControlsMC/RichTextLabel.visible = true
 
 	$BG2.visible = false
 
@@ -135,6 +135,7 @@ func to_mini():
 
 	$BG1.visible = false
 	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_LIGHT_ONLY
+	$ControlsMC/RichTextLabel.visible = false
 
 	$BG2.visible = true
 
