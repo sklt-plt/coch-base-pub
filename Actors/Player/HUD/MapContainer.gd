@@ -17,6 +17,11 @@ const MINI_X_SCALE = 0.15
 const MINI_Y_SCALE = 0.25
 const MINI_MASK_WIDTH = 512
 
+const MAP_MOVE_SPEED_X = 0.15
+const MAP_MOVE_SPEED_Y = MAP_MOVE_SPEED_X * 1.777
+
+const CONTROLS_TEXT = "Map controls:\n {KEY_FWD} / {KEY_BWD} / {KEY_LEFT} / {KEY_RIGHT} - move\n {KEY_QMELEE} - reset\n {KEY_MAP} - close"
+
 const DBG_CREATE_LABELS = false
 
 enum MODE {
@@ -39,6 +44,8 @@ func _ready():
 	node_material = CanvasItemMaterial.new()
 	node_material.blend_mode = CanvasItemMaterial.BLEND_MODE_MIX
 	node_material.light_mode = CanvasItemMaterial.LIGHT_MODE_LIGHT_ONLY
+
+	$ControlsMC/RichTextLabel.text = CONTROLS_TEXT.format(InputHelper.get_input_string_formatting())
 
 func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Array):
 	# color previoud node
@@ -68,14 +75,33 @@ func is_treasure_chest_and_active(var maybe_chest):
 	return maybe_chest is TreasureChest and not maybe_chest.is_open
 
 func _input(event):
-	if current_mode == MODE.HIDDEN and event.is_action_pressed("ShowMap"):
+	if current_mode == MODE.HIDDEN and event.is_action_pressed("Show Map"):
 		to_fullscreen()
 
-	elif current_mode == MODE.FULLSCREEN and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("ShowMap")):
-		to_mini()
+	elif current_mode == MODE.FULLSCREEN:
+		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("Show Map"):
+			to_mini()
 
-	elif current_mode == MODE.MINI and event.is_action_pressed("ShowMap"):
+	elif current_mode == MODE.MINI and event.is_action_pressed("Show Map"):
 		to_hidden()
+
+func _process(delta):
+	if current_mode == MODE.FULLSCREEN:
+		if Input.is_action_pressed("Forward") or Input.is_action_pressed("ui_up"):
+			$Root.rect_position.y -= OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+			$LinesContainer.position.y -= OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+		if Input.is_action_pressed("Backwards") or Input.is_action_pressed("ui_down"):
+			$Root.rect_position.y += OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+			$LinesContainer.position.y += OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+		if Input.is_action_pressed("Strafe Left") or Input.is_action_pressed("ui_left"):
+			$Root.rect_position.x -= OS.window_size.x * MAP_MOVE_SPEED_X * delta
+			$LinesContainer.position.x -= OS.window_size.x * MAP_MOVE_SPEED_X * delta
+		if Input.is_action_pressed("Strafe Right") or Input.is_action_pressed("ui_right"):
+			$Root.rect_position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
+			$LinesContainer.position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
+		if Input.is_action_just_pressed("Quick Melee"):
+			$Root.rect_position = Vector2.ZERO
+			$LinesContainer.position = Vector2.ZERO
 
 func to_fullscreen():
 	self.show()
@@ -234,5 +260,5 @@ func create_nodes(var map_node, var layer_idx):
 		create_nodes(children[i], layer_idx + 1)
 
 func restore():
-	if current_mode != MODE.HIDDEN:
-		self.visible = true
+	if current_mode == MODE.MINI:
+		self.to_mini()
