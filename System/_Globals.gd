@@ -39,7 +39,7 @@ var user_settings = {
 
 const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
 	"Jump" : "", "Run" : "", "Select Revolver" : "", "Select Shotgun" : "", "Select Crossbow" : "", "Select Melee" : "", "Strafe Left" : "", "Strafe Right" : "",
-	"Select Prev" : "", "Select Next" : ""}
+	"Select Prev" : "", "Select Next" : "", "Show Map" : ""}
 
 const USER_INPUT_FILENAME = "user://user_input.cfg"
 const USER_SETTINGS_FILENAME = "user://user_settings.cfg"

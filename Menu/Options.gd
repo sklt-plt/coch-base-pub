@@ -50,6 +50,7 @@ var scrossbow_button : Button
 var smelee_button : Button
 var snext_button : Button
 var sprev_button : Button
+var map_button : Button
 
 #misc
 var legacy_campaign_cb: Button
@@ -102,6 +103,7 @@ func _ready():
 	smelee_button = $"TC/Controls/SC/GC/SMeleeButton"
 	snext_button = $"TC/Controls/SC/GC/SNextButton"
 	sprev_button = $"TC/Controls/SC/GC/SPrevButton"
+	map_button = $"TC/Controls/SC/GC/MapButton"
 
 	legacy_campaign_cb = $"TC/Misc/SC/GC/LegacyCampaignCB"
 
@@ -164,6 +166,7 @@ func set_all_input_buttons_texts():
 	smelee_button.text = InputHelper.get_input_buttons_text("Select Melee")
 	snext_button.text = InputHelper.get_input_buttons_text("Select Next")
 	sprev_button.text = InputHelper.get_input_buttons_text("Select Prev")
+	map_button.text = InputHelper.get_input_buttons_text("Show Map")
 
 func _on_DisplayModeOption_item_selected(index):
 	var new_settings = {"screen_mode" : index}

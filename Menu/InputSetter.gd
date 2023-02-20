@@ -71,3 +71,6 @@ func _on_SNextButton_button_up():
 
 func _on_SPrevButton_button_up():
 	listen("Select Prev")
+
+func _on_MapButton_button_up():
+	listen("Show Map")

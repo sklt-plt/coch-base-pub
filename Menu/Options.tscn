@@ -700,7 +700,7 @@ __meta__ = {
 
 [node name="GC" type="GridContainer" parent="TC/Controls/SC"]
 margin_right = 272.0
-margin_bottom = 775.0
+margin_bottom = 810.0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 custom_constants/vseparation = 15
@@ -1105,6 +1105,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="MapLabel" type="Label" parent="TC/Controls/SC/GC"]
+margin_top = 790.0
+margin_right = 113.0
+margin_bottom = 810.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Toggle Map"
+valign = 1
+
+[node name="MapButton" type="Button" parent="TC/Controls/SC/GC"]
+margin_left = 163.0
+margin_top = 790.0
+margin_right = 272.0
+margin_bottom = 810.0
+text = "M.Wheel Up"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Misc" type="Tabs" parent="TC"]
 visible = false
 anchor_right = 1.0
@@ -1290,6 +1309,7 @@ valign = 1
 [connection signal="button_up" from="TC/Controls/SC/GC/SMeleeButton" to="InputSetter" method="_on_SMeleeButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SNextButton" to="InputSetter" method="_on_SNextButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SPrevButton" to="InputSetter" method="_on_SPrevButton_button_up"]
+[connection signal="button_up" from="TC/Controls/SC/GC/MapButton" to="InputSetter" method="_on_MapButton_button_up"]
 [connection signal="toggled" from="TC/Misc/SC/GC/LegacyCampaignCB" to="." method="_on_LegacyCampaignCB_toggled"]
 [connection signal="button_up" from="GC/ApplySettingsButton" to="." method="_on_ApplySettingsButton_button_up"]
 [connection signal="button_up" from="GC/DiscardSettingsButton" to="." method="_on_DiscardSettingsButton_button_up"]

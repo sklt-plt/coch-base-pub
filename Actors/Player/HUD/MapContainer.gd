@@ -75,6 +75,9 @@ func is_treasure_chest_and_active(var maybe_chest):
 	return maybe_chest is TreasureChest and not maybe_chest.is_open
 
 func _input(event):
+	if $"../InputProxy".is_locked:
+		return
+
 	if current_mode == MODE.HIDDEN and event.is_action_pressed("Show Map"):
 		to_fullscreen()
 
