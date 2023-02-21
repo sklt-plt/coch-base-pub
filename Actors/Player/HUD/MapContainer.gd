@@ -3,7 +3,7 @@ extends PauseScreen
 var layers : Array
 var node_refs : Dictionary
 
-const NODE_X_SIZE = 150
+const NODE_X_SIZE = 120
 const NODE_Y_SIZE = 60
 
 const COLOR_UNEXPLORED = Color(0.5, 0.5, 0.5)
@@ -14,9 +14,10 @@ const COLOR_GOAL = Color(0.19, 0.70, 0.06)
 const COLOR_LINK = Color(0.4, 0.4, 0.4)
 
 const MINI_X_SCALE = 0.15
-const MINI_Y_SCALE = 0.25
+const MINI_Y_SCALE = 0.2
 const MINI_MASK_WIDTH = 512
 
+const MAP_X_SCALE = 0.6
 const MAP_MOVE_SPEED_X = 0.15
 const MAP_MOVE_SPEED_Y = MAP_MOVE_SPEED_X * 1.777
 
@@ -34,6 +35,7 @@ var current_players_node
 var node_material
 
 var current_mode
+var last_resolution_x
 
 func _ready():
 	$"%UnexploredColorLegend".color = COLOR_UNEXPLORED
@@ -102,8 +104,7 @@ func _process(delta):
 			$Root.rect_position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
 			$LinesContainer.position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
 		if Input.is_action_just_pressed("Quick Melee"):
-			$Root.rect_position = Vector2.ZERO
-			$LinesContainer.position = Vector2.ZERO
+			reset_map_position($Root, $LinesContainer)
 
 func to_fullscreen():
 	self.show()
@@ -147,9 +148,9 @@ func to_hidden():
 	current_mode = MODE.HIDDEN
 
 func create_map(var map_root):
-	#center mask
-	$Light2DMM.position = Vector2(OS.window_size.x / 2, OS.window_size.y / 2)
-	$Light2DMM.scale = Vector2(OS.window_size.x / (MINI_MASK_WIDTH / 2), OS.window_size.y / (MINI_MASK_WIDTH / 2))
+	reset_mask_position()
+
+	last_resolution_x = OS.window_size.x
 
 	flush_old_map()
 
@@ -166,18 +167,27 @@ func create_map(var map_root):
 	current_players_node = layers[0][0]
 	current_players_node.color = COLOR_PLAYER
 
-func flush_old_map():
+func recreate_lines_container():
 	$LinesContainer.free()
 	var new_lines_container = Node2D.new()
 	self.add_child(new_lines_container)
 	new_lines_container.owner = self.owner
 	new_lines_container.name = "LinesContainer"
+	return new_lines_container
 
+func recreate_node_root():
 	$Root.free()
 	var new_root = Control.new()
 	self.add_child(new_root)
 	new_root.owner = self.owner
 	new_root.name = "Root"
+	return new_root
+
+func flush_old_map():
+	var new_lines_container = recreate_lines_container()
+	var new_root = recreate_node_root()
+
+	reset_map_position(new_root, new_lines_container)
 
 	new_root.anchor_right = 1
 	new_root.anchor_bottom = 1
@@ -263,6 +273,25 @@ func create_nodes(var map_node, var layer_idx):
 	for i in range (0, children.size()):
 		create_nodes(children[i], layer_idx + 1)
 
+func reset_map_position(var root_node, var lines_node):
+	var target_scale = (OS.window_size / Vector2(1920/MAP_X_SCALE, 1080))
+	lines_node.scale = target_scale
+	lines_node.position = Vector2((OS.window_size.x * (1-target_scale.x)) / 2, 0)
+	root_node.rect_scale = target_scale
+	root_node.rect_position = Vector2((OS.window_size.x * (1-target_scale.x)) / 2, 0)
+
+func reset_mask_position():
+	$Light2DMM.position = Vector2(OS.window_size.x / 2, OS.window_size.y / 2)
+	$Light2DMM.scale = Vector2(OS.window_size.x / (MINI_MASK_WIDTH / 2), OS.window_size.y / (MINI_MASK_WIDTH / 2))
+
 func restore():
 	if current_mode == MODE.MINI:
-		self.to_mini()
+		if not is_equal_approx(OS.window_size.x, last_resolution_x):
+			last_resolution_x = OS.window_size.x
+			var lc = recreate_lines_container()
+			reset_map_position($Root, lc)
+			reset_mask_position()
+			arrange_layers()
+			connect_the_fuckers()
+
+		to_mini()
