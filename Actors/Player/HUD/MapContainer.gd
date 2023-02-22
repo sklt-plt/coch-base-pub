@@ -3,8 +3,9 @@ extends PauseScreen
 var layers : Array
 var node_refs : Dictionary
 
-const NODE_X_SIZE = 120
-const NODE_Y_SIZE = 60
+const NODE_X_MARGIN = 120
+const NODE_Y_MARGIN = 60
+const NODE_MIN_SIZE = 50
 
 const COLOR_UNEXPLORED = Color(0.5, 0.5, 0.5)
 const COLOR_EXPLORED = Color(0.25, 0.59, 0.75)
@@ -18,10 +19,12 @@ const MINI_Y_SCALE = 0.2
 const MINI_MASK_WIDTH = 512
 
 const MAP_X_SCALE = 0.6
+
 const MAP_MOVE_SPEED_X = 0.15
 const MAP_MOVE_SPEED_Y = MAP_MOVE_SPEED_X * 1.777
+const MAP_SCALE_SPEED = 0.2
 
-const CONTROLS_TEXT = "Map controls:\n {KEY_FWD} / {KEY_BWD} / {KEY_LEFT} / {KEY_RIGHT} - move\n {KEY_QMELEE} - reset\n {KEY_MAP} - close"
+const CONTROLS_TEXT = "Map controls:\n {KEY_FWD} / {KEY_BWD} / {KEY_LEFT} / {KEY_RIGHT} - move\n{KEY_RUN} / {KEY_CRAWL} - scale\n {KEY_QMELEE} - reset\n {KEY_MAP} - close"
 
 const DBG_CREATE_LABELS = false
 
@@ -49,6 +52,164 @@ func _ready():
 
 	$ControlsMC/RichTextLabel.text = CONTROLS_TEXT.format(InputHelper.get_input_string_formatting())
 
+func create_map(var map_root):
+	reset_mask_position()
+
+	last_resolution_x = OS.window_size.x
+
+	flush_old_map()
+
+	self.to_mini()
+
+	create_nodes(map_root, 0)
+
+	trim_layers()
+
+	arrange_layers()
+
+	connect_the_fuckers()
+
+	current_players_node = layers[0][0]
+	current_players_node.color = COLOR_PLAYER
+
+func reset_mask_position():
+	$Light2DMM.position = Vector2(OS.window_size.x / 2, OS.window_size.y / 2)
+	$Light2DMM.scale = Vector2(OS.window_size.x / (MINI_MASK_WIDTH / 2), OS.window_size.y / (MINI_MASK_WIDTH / 2))
+
+func flush_old_map():
+	var new_lines_container = recreate_lines_container()
+	var new_root = recreate_node_root()
+
+	new_root.anchor_right = 1
+	new_root.anchor_bottom = 1
+
+	node_refs = {}
+	layers = []
+	layers.resize(50)
+
+	yield(get_tree(), "idle_frame")
+
+func recreate_lines_container():
+	$GenCont/LinesContainer.free()
+	var new_lines_container = Node2D.new()
+	$GenCont.add_child(new_lines_container)
+	new_lines_container.owner = self.owner
+	new_lines_container.name = "LinesContainer"
+	return new_lines_container
+
+func recreate_node_root():
+	$GenCont/Root.free()
+	var new_root = Control.new()
+	$GenCont.add_child(new_root)
+	new_root.owner = self.owner
+	new_root.name = "Root"
+	return new_root
+
+func create_nodes(var map_node, var layer_idx):
+	if layers.size() == layer_idx:
+		layers.resize(layers.size()+50)  # shouldn't be needed but still...
+
+	var node = ColorRect.new()
+	node.color = COLOR_UNEXPLORED
+
+	node_refs[map_node.get_path()] = node
+
+	$GenCont/Root.add_child(node)
+
+	if layers[layer_idx] == null:
+		layers[layer_idx] = []
+
+	layers[layer_idx].push_back(node)
+
+	node.size_flags_horizontal = SIZE_EXPAND_FILL
+	node.size_flags_vertical = SIZE_EXPAND_FILL
+	node.owner = $GenCont/Root.owner
+
+	node.name = "color_rect_for_"+map_node.name
+	node.material = node_material
+
+	if DBG_CREATE_LABELS:
+		var label = Label.new()
+		label.text = map_node.name
+		label.size_flags_vertical = SIZE_EXPAND_FILL
+		node.add_child(label)
+		label.owner = node.owner
+		label.material = node_material
+
+	var children = map_node.get_children()
+
+	#for c in children:
+	for i in range (0, children.size()):
+		create_nodes(children[i], layer_idx + 1)
+
+func trim_layers():
+	for i in range(0, layers.size()):
+		if layers[i] == null:
+			layers.resize(i)
+			return
+
+func arrange_layers():
+	reset_node_size($GenCont/Root, $GenCont/LinesContainer)
+
+	for y in range(0, layers.size()):
+		var x_offset = $GenCont/Root.rect_size.x / 2
+		x_offset = $GenCont/Root.rect_size.x / (layers[y].size() + 1)
+
+		var y_offset = $GenCont/Root.rect_size.y / 2
+		y_offset = $GenCont/Root.rect_size.y / (layers.size() + 1)
+
+		for x in range(0, layers[y].size()):
+			layers[y][x].rect_position = Vector2(x_offset * (x+1) - NODE_X_MARGIN / 2, y_offset * (y+1) - NODE_Y_MARGIN / 2)
+
+func reset_node_size(var root_node, var lines_node):
+	#return
+	var max_nodes_in_layer = 0
+	for layer in layers:
+		max_nodes_in_layer = max(layer.size(), max_nodes_in_layer)
+
+	var max_node_width = max($GenCont/Root.rect_size.x / (max_nodes_in_layer + 3), NODE_MIN_SIZE)
+	var max_node_height = max($GenCont/Root.rect_size.y / (layers.size() + 3), NODE_MIN_SIZE)
+
+	for node_key in node_refs.keys():
+		node_refs[node_key].margin_left = -max_node_width / 2
+		node_refs[node_key].margin_right = max_node_width / 2
+		node_refs[node_key].margin_top = -max_node_height / 2
+		node_refs[node_key].margin_bottom = max_node_height / 2
+
+func reset_node_position_scale():
+	$GenCont/Root.rect_position = Vector2.ZERO
+	$GenCont/LinesContainer.position = Vector2.ZERO
+	$GenCont/Root.rect_scale = Vector2.ONE
+	$GenCont/LinesContainer.scale = Vector2.ONE
+	for node_key in node_refs.keys():
+		node_refs[node_key].rect_scale = Vector2.ONE
+
+func connect_the_fuckers():
+	for key in node_refs.keys():
+		var node_a = node_refs[key]
+		var point_a = Vector2(
+			(node_a.margin_left + node_a.margin_right) / 2,
+			(node_a.margin_top + node_a.margin_bottom) / 2)
+
+		var as_string = String(key)
+		var point_a_parent = as_string.substr(0, as_string.rfind("/"))
+
+		if point_a_parent.find("starting_room") == -1:
+			continue
+
+		var node_b = node_refs[NodePath(point_a_parent)]
+		var point_b = Vector2(
+			(node_b.margin_left + node_b.margin_right) / 2,
+			(node_b.margin_top + node_b.margin_bottom) / 2)
+
+		var line = Line2D.new()
+		line.points = [point_a, point_b]
+
+		$GenCont/LinesContainer.add_child(line)
+		line.owner = $GenCont/LinesContainer.owner
+		line.default_color = COLOR_LINK
+		line.material = node_material
+
 func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Array):
 	# color previoud node
 	current_players_node.color = COLOR_EXPLORED
@@ -70,12 +231,6 @@ func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Arr
 	current_players_node = node_refs[new_players_node.tree_ref]
 	current_players_node.color = COLOR_PLAYER
 
-func is_key_and_active(var maybe_key):
-	return maybe_key is ResourcePickup and maybe_key.visible and maybe_key.contents.has("r_keys")
-
-func is_treasure_chest_and_active(var maybe_chest):
-	return maybe_chest is TreasureChest and not maybe_chest.is_open
-
 func _input(event):
 	if $"../InputProxy".is_locked:
 		return
@@ -92,19 +247,38 @@ func _input(event):
 func _process(delta):
 	if current_mode == MODE.FULLSCREEN:
 		if Input.is_action_pressed("Forward") or Input.is_action_pressed("ui_up"):
-			$Root.rect_position.y -= OS.window_size.y * MAP_MOVE_SPEED_Y * delta
-			$LinesContainer.position.y -= OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+			$GenCont/Root.rect_position.y -= OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+			$GenCont/LinesContainer.position.y -= OS.window_size.y * MAP_MOVE_SPEED_Y * delta
 		if Input.is_action_pressed("Backwards") or Input.is_action_pressed("ui_down"):
-			$Root.rect_position.y += OS.window_size.y * MAP_MOVE_SPEED_Y * delta
-			$LinesContainer.position.y += OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+			$GenCont/Root.rect_position.y += OS.window_size.y * MAP_MOVE_SPEED_Y * delta
+			$GenCont/LinesContainer.position.y += OS.window_size.y * MAP_MOVE_SPEED_Y * delta
 		if Input.is_action_pressed("Strafe Left") or Input.is_action_pressed("ui_left"):
-			$Root.rect_position.x -= OS.window_size.x * MAP_MOVE_SPEED_X * delta
-			$LinesContainer.position.x -= OS.window_size.x * MAP_MOVE_SPEED_X * delta
+			$GenCont/Root.rect_position.x -= OS.window_size.x * MAP_MOVE_SPEED_X * delta
+			$GenCont/LinesContainer.position.x -= OS.window_size.x * MAP_MOVE_SPEED_X * delta
 		if Input.is_action_pressed("Strafe Right") or Input.is_action_pressed("ui_right"):
-			$Root.rect_position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
-			$LinesContainer.position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
+			$GenCont/Root.rect_position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
+			$GenCont/LinesContainer.position.x += OS.window_size.x * MAP_MOVE_SPEED_X * delta
+		if Input.is_action_pressed("Run"):
+			scale_nodes(MAP_SCALE_SPEED, delta)
+		if Input.is_action_pressed("Crawl"):
+			scale_nodes(-MAP_SCALE_SPEED, delta)
 		if Input.is_action_just_pressed("Quick Melee"):
-			reset_map_position($Root, $LinesContainer)
+			reset_node_position_scale()
+
+func scale_nodes(var direction, var delta):
+	for node_key in node_refs.keys():
+		node_refs[node_key].rect_scale.x -= direction * delta
+		node_refs[node_key].rect_scale.y -= direction * delta
+	$GenCont/Root.rect_scale.x += direction * delta
+	$GenCont/Root.rect_scale.y += direction * delta
+	$GenCont/LinesContainer.scale.x += direction * delta
+	$GenCont/LinesContainer.scale.y += direction * delta
+
+func is_key_and_active(var maybe_key):
+	return maybe_key is ResourcePickup and maybe_key.visible and maybe_key.contents.has("r_keys")
+
+func is_treasure_chest_and_active(var maybe_chest):
+	return maybe_chest is TreasureChest and not maybe_chest.is_open
 
 func to_fullscreen():
 	self.show()
@@ -147,149 +321,15 @@ func to_hidden():
 	self.visible = false
 	current_mode = MODE.HIDDEN
 
-func create_map(var map_root):
-	reset_mask_position()
-
-	last_resolution_x = OS.window_size.x
-
-	flush_old_map()
-
-	self.to_mini()
-
-	create_nodes(map_root, 0)
-
-	trim_layers()
-
-	arrange_layers()
-
-	connect_the_fuckers()
-
-	current_players_node = layers[0][0]
-	current_players_node.color = COLOR_PLAYER
-
-func recreate_lines_container():
-	$LinesContainer.free()
-	var new_lines_container = Node2D.new()
-	self.add_child(new_lines_container)
-	new_lines_container.owner = self.owner
-	new_lines_container.name = "LinesContainer"
-	return new_lines_container
-
-func recreate_node_root():
-	$Root.free()
-	var new_root = Control.new()
-	self.add_child(new_root)
-	new_root.owner = self.owner
-	new_root.name = "Root"
-	return new_root
-
-func flush_old_map():
-	var new_lines_container = recreate_lines_container()
-	var new_root = recreate_node_root()
-
-	reset_map_position(new_root, new_lines_container)
-
-	new_root.anchor_right = 1
-	new_root.anchor_bottom = 1
-
-	node_refs = {}
-	layers = []
-	layers.resize(50)
-
-	yield(get_tree(), "idle_frame")
-
-func connect_the_fuckers():
-	for key in node_refs.keys():
-		var point_a = node_refs[key].rect_position + Vector2(NODE_X_SIZE/2, NODE_Y_SIZE/2)
-
-		var as_string = String(key)
-		var point_a_parent = as_string.substr(0, as_string.rfind("/"))
-
-		if point_a_parent.find("starting_room") == -1:
-			continue
-
-		var point_b = node_refs[NodePath(point_a_parent)].rect_position + Vector2(NODE_X_SIZE/2, NODE_Y_SIZE/2)
-
-		var line = Line2D.new()
-		line.points = [point_a, point_b]
-
-		$LinesContainer.add_child(line)
-		line.owner = $LinesContainer.owner
-		line.default_color = COLOR_LINK
-		line.material = node_material
-
-func arrange_layers():
-	for y in range(0, layers.size()):
-		var x_offset = $Root.rect_size.x / 2
-		x_offset = $Root.rect_size.x / (layers[y].size() + 1)
-
-		for x in range(0, layers[y].size()):
-			layers[y][x].rect_position = Vector2(x_offset * (x+1) - NODE_X_SIZE / 2, NODE_Y_SIZE * 1.5 * (y+1))
-
-func trim_layers():
-	for i in range(0, layers.size()):
-		if layers[i] == null:
-			layers.resize(i)
-			return
-
-func create_nodes(var map_node, var layer_idx):
-	if layers.size() == layer_idx:
-		layers.resize(layers.size()+50)  # shouldn't be needed but still...
-
-	var node = ColorRect.new()
-	node.color = COLOR_UNEXPLORED
-
-	node_refs[map_node.get_path()] = node
-
-	$Root.add_child(node)
-
-	if layers[layer_idx] == null:
-		layers[layer_idx] = []
-
-	layers[layer_idx].push_back(node)
-
-	node.size_flags_horizontal = SIZE_EXPAND_FILL
-	node.size_flags_vertical = SIZE_EXPAND_FILL
-	node.owner = $Root.owner
-
-	node.margin_left = -NODE_X_SIZE / 2
-	node.margin_right = NODE_X_SIZE / 2
-	node.margin_top = -NODE_Y_SIZE / 2
-	node.margin_bottom = NODE_Y_SIZE / 2
-	node.name = "color_rect_for_"+map_node.name
-	node.material = node_material
-
-	if DBG_CREATE_LABELS:
-		var label = Label.new()
-		label.text = map_node.name
-		label.size_flags_vertical = SIZE_EXPAND_FILL
-		node.add_child(label)
-		label.owner = node.owner
-		label.material = node_material
-
-	var children = map_node.get_children()
-
-	#for c in children:
-	for i in range (0, children.size()):
-		create_nodes(children[i], layer_idx + 1)
-
-func reset_map_position(var root_node, var lines_node):
-	var target_scale = (OS.window_size / Vector2(1920/MAP_X_SCALE, 1080))
-	lines_node.scale = target_scale
-	lines_node.position = Vector2((OS.window_size.x * (1-target_scale.x)) / 2, 0)
-	root_node.rect_scale = target_scale
-	root_node.rect_position = Vector2((OS.window_size.x * (1-target_scale.x)) / 2, 0)
-
-func reset_mask_position():
-	$Light2DMM.position = Vector2(OS.window_size.x / 2, OS.window_size.y / 2)
-	$Light2DMM.scale = Vector2(OS.window_size.x / (MINI_MASK_WIDTH / 2), OS.window_size.y / (MINI_MASK_WIDTH / 2))
-
 func restore():
 	if current_mode == MODE.MINI:
 		if not is_equal_approx(OS.window_size.x, last_resolution_x):
 			last_resolution_x = OS.window_size.x
 			var lc = recreate_lines_container()
-			reset_map_position($Root, lc)
+			var root = $GenCont/Root
+			$GenCont.remove_child(root)
+			$GenCont.add_child(root)
+			reset_node_position_scale()
 			reset_mask_position()
 			arrange_layers()
 			connect_the_fuckers()

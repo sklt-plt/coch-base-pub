@@ -39,16 +39,23 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="LinesContainer" type="Node2D" parent="."]
+[node name="GenCont" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LinesContainer" type="Node2D" parent="GenCont"]
 use_parent_material = true
 
-[node name="Root" type="Control" parent="."]
+[node name="Root" type="Control" parent="GenCont"]
 use_parent_material = true
 anchor_left = 0.001
 anchor_right = 1.0
 anchor_bottom = 0.963
-margin_left = -0.92
-margin_right = 2.0
+margin_left = 0.96
+margin_right = 3.88
 margin_bottom = -0.0400391
 
 [node name="LegendMC" type="MarginContainer" parent="."]
@@ -216,7 +223,6 @@ __meta__ = {
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="ControlsMC"]
-show_behind_parent = true
 light_mask = 0
 margin_left = 70.0
 margin_top = 50.0
