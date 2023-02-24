@@ -425,7 +425,9 @@ func face_target(var target):
 		if parent_node is KinematicEnemy:
 			parent_node.look_at(new_target, Vector3.UP)
 		elif parent_node is StaticEnemy:
-			$"../Model/Head".look_at(new_target, Vector3.UP)
+			var head = get_node_or_null("../Model/Head")
+			if head:
+				head.look_at(new_target, Vector3.UP)
 
 func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 	if .is_physics_processing() and current_state == States.AWAKE:

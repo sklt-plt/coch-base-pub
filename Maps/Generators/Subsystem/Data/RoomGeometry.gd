@@ -224,6 +224,10 @@ func toggle_collisions(var enable):
 				c.collision_layer = 0
 				c.collision_mask = 0
 
+		if c is BossSpawn:
+			if enable:
+				c.on_room_cull_in()
+
 	is_enabled = enable
 
 func get_total_area_for_detail():
