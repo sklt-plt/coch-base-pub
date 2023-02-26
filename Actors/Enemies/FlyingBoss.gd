@@ -17,8 +17,9 @@ var current_state = States.Idle
 
 const MOVEMENT_SPEED = 10
 const RISING_SPEED = 17
-const FLOAT_HEIGHT = 50
-const DISTANCE_TO_KEEP = 45
+const FLOAT_HEIGHT = 22.5
+const DISTANCE_TO_KEEP = 30
+const LOS_OFFSET = Vector3(0, 2.65, 0)
 
 func _physics_process(delta):
 	match current_state:
@@ -46,19 +47,38 @@ func _physics_process(delta):
 				begin_state(States.Following_With_Snipers)
 
 		States.Following_With_Snipers:
-			var my_xz_translation = Vector3(self.global_translation.x, 0, self.global_translation.z)
-			var player_xz_translation = Vector3($"/root/Player".global_translation.x, 0, $"/root/Player".global_translation.z)
+			var player_node = $"/root/Player"
 
-			if my_xz_translation.distance_to(player_xz_translation) > DISTANCE_TO_KEEP:
-				self.translate((player_xz_translation - my_xz_translation).normalized() * MOVEMENT_SPEED * delta)
-			elif my_xz_translation.distance_to(player_xz_translation) < DISTANCE_TO_KEEP:
-				self.translate((my_xz_translation - player_xz_translation).normalized() * MOVEMENT_SPEED * delta)
+			var my_xz_translation = Vector3(self.global_translation.x, FLOAT_HEIGHT, self.global_translation.z)
+			var player_xz_translation = Vector3(player_node.global_translation.x, FLOAT_HEIGHT, player_node.global_translation.z)
+			var target_xz = player_xz_translation
+
+			var space_state = get_world().direct_space_state
+			var result = space_state.intersect_ray(self.global_translation, player_node.global_translation + LOS_OFFSET, [self])
+
+			# can we see player?
+			if !result or (result and result.collider != player_node):
+				target_xz = find_visible_spot_above_player(space_state, player_node)
+				if my_xz_translation.distance_to(target_xz) > 1.0:
+					self.translate((target_xz - my_xz_translation).normalized() * MOVEMENT_SPEED * delta)
+
+			elif my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
+				self.translate((target_xz - my_xz_translation).normalized() * MOVEMENT_SPEED * delta)
 
 			if self.health < STARTING_HEALTH * 0.7:
 				begin_state(States.Stagger)
 				$"%SniperBoner/AI".health = 0
 				$"%SniperBoner2/AI".health = 0
 
+func find_visible_spot_above_player(var space_state, var player_node):
+	var offset = Vector3(DISTANCE_TO_KEEP, FLOAT_HEIGHT, 0)
+	for rot in range(0, 120):
+		var test = player_node.global_translation + offset.rotated(Vector3.UP, deg2rad(rot * 3))
+		var test_result = space_state.intersect_ray(test, player_node.global_translation + LOS_OFFSET, [self])
+		if test_result and test_result.collider == player_node:
+			return Vector3(test.x, FLOAT_HEIGHT, test.z)
+
+	return Vector3(player_node.global_translation.x, FLOAT_HEIGHT, player_node.global_translation.z)
 
 func begin_state(var state):
 	match state:
