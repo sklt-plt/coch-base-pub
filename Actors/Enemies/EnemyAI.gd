@@ -307,7 +307,11 @@ func begin_state(var desired_state):
 					play_animation(ANIM_DIE)
 				elif gib_effect:
 					parent_node.get_node("Model").visible = false
-					parent_node.add_child(gib_effect.instance())
+					var gib_instance = gib_effect.instance()
+					gib_instance.global_transform = parent_node.global_transform
+					gib_instance.scale = Vector3(2,2,2)  # map scale haxxs
+					get_tree().current_scene.add_child(gib_instance)
+
 					begin_state(States.DEAD)
 
 				play_audio(audio_death)
