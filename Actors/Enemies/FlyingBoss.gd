@@ -9,18 +9,25 @@ enum States {
 	Stagger,
 	Retreating_For_Bombs,
 	Rising_With_Bombs,
+	Bombing_Prep,
 	Bombing
 }
 
 var health = STARTING_HEALTH
 var current_state = States.Idle
 var retreat_xz
+var bombing_direction
+var bombing_destination
+var model_node
 
 const STARTING_HEALTH = 50.0
-const MOVEMENT_SPEED = 20
-const RETREATING_SPEED = 35
-const RISING_SPEED = 17
-const FLOAT_HEIGHT = 22.5
+
+const MOVEMENT_SPEED = 25
+const RETREATING_SPEED = 40
+const RISING_SPEED = 25
+const BOMBING_SPEED = 32
+
+const FLOAT_HEIGHT = 25
 const DISTANCE_TO_KEEP = 30
 const DISTANCE_TO_HIDE = 8
 const HIDE_OFFSET = 100
@@ -55,8 +62,8 @@ func _physics_process(delta):
 			var player_node = $"/root/Player"
 
 			var my_xz_translation = find_own_xz_translation()
-			var player_xz_translation = find_player_xz_translation()
-			var target_xz = player_xz_translation
+			var target_xz = find_player_xz_translation()
+			model_node.look_at(target_xz, Vector3.UP)
 
 			var space_state = get_world().direct_space_state
 			var result = space_state.intersect_ray(self.global_translation, player_node.global_translation + LOS_OFFSET, [self])
@@ -79,6 +86,8 @@ func _physics_process(delta):
 				$"%SniperBoner2/AI".health = 0
 
 		States.Retreating_For_Bombs:
+			model_node.look_at(retreat_xz, Vector3.UP)
+
 			if self.global_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
 				move_to_target(retreat_xz, self.global_translation, delta, RETREATING_SPEED)
 
@@ -89,14 +98,26 @@ func _physics_process(delta):
 			if self.global_translation.y < $"/root/Player".global_translation.y + FLOAT_HEIGHT:
 				self.translate(Vector3(0, RISING_SPEED, 0) * delta)
 			else:
-				begin_state(States.Bombing)
+				begin_state(States.Bombing_Prep)
 
-		States.Bombing:
+		States.Bombing_Prep:
 			var my_xz_translation = find_own_xz_translation()
 			var target_xz = find_player_xz_translation()
+			model_node.look_at(target_xz, Vector3.UP)
 
 			if my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
 				move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
+
+			else:
+				begin_state(States.Bombing)
+
+		States.Bombing:
+			model_node.look_at(bombing_destination, Vector3.UP)
+
+			if self.global_translation.distance_to(bombing_destination) > 1.0:
+				self.translate(bombing_direction * delta * BOMBING_SPEED)
+			else:
+				begin_state(States.Bombing_Prep)
 
 func begin_state(var state):
 	match state:
@@ -106,9 +127,15 @@ func begin_state(var state):
 			$"%SniperBoner".set_awake(true)
 			$"%SniperBoner2".set_awake(true)
 			set_retreat_xz()
+			model_node = $Skeleton
 
 		States.Stagger:
 			$AnimationPlayer.play("Stagger")
+
+		States.Bombing:
+			bombing_direction = (find_player_xz_translation() - find_own_xz_translation())
+			bombing_destination = (Vector3(self.global_translation.x, 0, self.global_translation.z) + bombing_direction * 2) + Vector3(0, FLOAT_HEIGHT, 0)
+			bombing_direction = bombing_direction.normalized()
 
 	current_state = state
 	print("Current State: ",state)
@@ -120,8 +147,7 @@ func find_own_xz_translation():
 	return Vector3(self.global_translation.x, FLOAT_HEIGHT, self.global_translation.z)
 
 func find_player_xz_translation():
-	return Vector3($"/root/Player".global_translation.x, FLOAT_HEIGHT,
-		$"/root/Player".global_translation.z)
+	return Vector3($"/root/Player".global_translation.x, FLOAT_HEIGHT, $"/root/Player".global_translation.z)
 
 func move_to_target(var target_xz, var my_xz_translation, var delta, var speed):
 	self.translate((target_xz - my_xz_translation).normalized() * speed * delta)

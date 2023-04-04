@@ -11,7 +11,7 @@ export (PackedScene) var boss_scene
 export (Variants) var variant = 0
 
 var spawned = false
-var spawn_transform
+var spawn_translation
 
 func _ready():
 	if variant == Variants.Static:
@@ -32,7 +32,7 @@ func on_room_cull_in():
 	if variant == Variants.Static:
 		return  # nothing to do
 
-	spawn_transform = $BossSpawner.global_transform
+	spawn_translation = $BossSpawner.global_translation
 	$VisibilityCheckTimer.start()
 
 func _on_VisibilityCheckTimer_timeout():
@@ -47,6 +47,6 @@ func spawn_flying_boss():
 	var boss = boss_scene.instance()
 	boss.name = "boss"
 	get_tree().current_scene.add_child(boss)
-	boss.global_transform = spawn_transform
+	boss.global_translation = spawn_translation
 	boss.owner = self.owner
 	boss.begin_state(1)
