@@ -72,34 +72,29 @@ func _physics_process(delta):
 			# otherwise just chase
 			elif my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
 				move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
-				
+
 			if self.health < STARTING_HEALTH * 0.7:
 				begin_state(States.Stagger)
 				$"%SniperBoner/AI".health = 0
 				$"%SniperBoner2/AI".health = 0
-				
+
 		States.Retreating_For_Bombs:
-			var my_xz_translation = find_own_xz_translation()
-			
-			if my_xz_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
-				move_to_target(retreat_xz, my_xz_translation, delta, RETREATING_SPEED)
-				
-			elif not is_zero_approx(retreat_xz.y):
-				retreat_xz.y = 0.0
-					
+			if self.global_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
+				move_to_target(retreat_xz, self.global_translation, delta, RETREATING_SPEED)
+
 			else:
 				begin_state(States.Rising_With_Bombs)
-				
+
 		States.Rising_With_Bombs:
 			if self.global_translation.y < $"/root/Player".global_translation.y + FLOAT_HEIGHT:
 				self.translate(Vector3(0, RISING_SPEED, 0) * delta)
 			else:
 				begin_state(States.Bombing)
-				  
+
 		States.Bombing:
 			var my_xz_translation = find_own_xz_translation()
 			var target_xz = find_player_xz_translation()
-			
+
 			if my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
 				move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
 
@@ -110,38 +105,22 @@ func begin_state(var state):
 			$"/root/Player".give("s_kills_possible", 1)
 			$"%SniperBoner".set_awake(true)
 			$"%SniperBoner2".set_awake(true)
+			set_retreat_xz()
 
 		States.Stagger:
 			$AnimationPlayer.play("Stagger")
 
-		States.Retreating_For_Bombs:
-			set_retreat_xz()
-
 	current_state = state
 	print("Current State: ",state)
-	
+
 func set_retreat_xz():
-	var rng = RandomNumberGenerator.new()
-	rng.randomize()
-			
-	var offset = Vector3(0, FLOAT_HEIGHT, 0)
-	if randi()%1 != 0:
-		offset.x = -HIDE_OFFSET
-	else: 
-		offset.x = HIDE_OFFSET
-				
-	if randi()%1 != 0:
-		offset.z = -HIDE_OFFSET
-	else:
-		offset.z = HIDE_OFFSET
-	
-	retreat_xz = self.global_translation + offset
+	retreat_xz = self.global_translation
 
 func find_own_xz_translation():
 	return Vector3(self.global_translation.x, FLOAT_HEIGHT, self.global_translation.z)
-	
+
 func find_player_xz_translation():
-	return Vector3($"/root/Player".global_translation.x, FLOAT_HEIGHT, 
+	return Vector3($"/root/Player".global_translation.x, FLOAT_HEIGHT,
 		$"/root/Player".global_translation.z)
 
 func move_to_target(var target_xz, var my_xz_translation, var delta, var speed):
@@ -160,5 +139,5 @@ func find_visible_spot_above_player(var space_state, var player_node):
 func _on_BossBat_tree_exiting():
 	$"/root/Player/HUD".deregister_boss_health()
 
-func _on_HurtboxSkeleton_deal_damage(damage, push_force, from_direction, from_ent):
+func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from_ent):
 	self.health -= damage
