@@ -49,7 +49,8 @@ func _physics_process(delta):
 			begin_state(States.Rising_With_Snipers)
 
 		States.Stagger:
-			if $AnimationPlayer.current_animation != "Stagger":
+			if anim_player.current_animation != "Stagger":
+				anim_player.play("FlyA")
 				#decide next phase
 				if health < STARTING_HEALTH * 0.33:
 					begin_state(States.Retreating_For_Two_Snipers)
@@ -67,7 +68,6 @@ func _physics_process(delta):
 
 		States.Retreating_For_Bombs:
 			update_target_yaw(retreat_xz)
-			#model_node.look_at(retreat_xz, Vector3.UP)
 
 			if self.global_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
 				move_to_target(retreat_xz, self.global_translation, delta, RETREATING_SPEED)
@@ -85,7 +85,6 @@ func _physics_process(delta):
 			var my_xz_translation = find_own_xz_translation()
 			var target_xz = find_player_xz_translation()
 			update_target_yaw(target_xz)
-			#model_node.look_at(target_xz, Vector3.UP)
 
 			if my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
 				move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
@@ -95,7 +94,6 @@ func _physics_process(delta):
 
 		States.Bombing:
 			update_target_yaw(bombing_destination)
-			#model_node.look_at(bombing_destination, Vector3.UP)
 
 			if self.global_translation.distance_to(bombing_destination) > 1.0:
 				self.translate(bombing_direction * delta * BOMBING_SPEED)
@@ -104,7 +102,6 @@ func _physics_process(delta):
 
 		States.Retreating_For_Two_Snipers:
 			update_target_yaw(retreat_xz)
-			#model_node.look_at(retreat_xz, Vector3.UP)
 
 			if self.global_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
 				move_to_target(retreat_xz, self.global_translation, delta, RETREATING_SPEED)
@@ -140,6 +137,10 @@ func begin_state(var state):
 		States.Stagger:
 			anim_player.play("Stagger")
 
+		States.Rising_With_Bombs:
+			$"%FillerBoner".visible = true
+			$"%FillerBoner/AnimationPlayer".play("skelly_ride_yee_haw")
+
 		States.Bombing:
 			bombing_direction = (find_player_xz_translation() - find_own_xz_translation())
 			bombing_destination = (Vector3(self.global_translation.x, 0, self.global_translation.z) + bombing_direction * 2) + Vector3(0, FLOAT_HEIGHT, 0)
@@ -166,11 +167,9 @@ func follow_with_snipers(var delta):
 	# can we see player?
 	# if so let's find spot we can see them from
 	if !result or (result and result.collider != player_node):
-		#model_node.look_at(target_xz, Vector3.UP)
 		target_xz = find_visible_spot_above_player(space_state, player_node)
 		if my_xz_translation.distance_to(target_xz) > 1.0:
 			move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
-			#self.translate((target_xz - my_xz_translation).normalized() * MOVEMENT_SPEED * delta)
 
 	# otherwise just chase
 	elif my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
@@ -218,6 +217,7 @@ func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from
 		begin_state(States.Stagger)
 
 	if last_health > STARTING_HEALTH * 0.33 and health < STARTING_HEALTH * 0.33:
+		$"%FillerBoner".visible = false
 		begin_state(States.Stagger)
 
 	if health < 0.0:
