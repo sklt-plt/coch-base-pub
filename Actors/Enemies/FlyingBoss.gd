@@ -20,9 +20,12 @@ var health = STARTING_HEALTH
 var last_health
 var current_state = States.Idle
 var retreat_xz
+var last_yaw = 0
+var target_yaw = 0
 var bombing_direction
 var bombing_destination
 var model_node
+var anim_player
 
 const STARTING_HEALTH = 50.0
 
@@ -63,7 +66,8 @@ func _physics_process(delta):
 			follow_with_snipers(delta)
 
 		States.Retreating_For_Bombs:
-			model_node.look_at(retreat_xz, Vector3.UP)
+			update_target_yaw(retreat_xz)
+			#model_node.look_at(retreat_xz, Vector3.UP)
 
 			if self.global_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
 				move_to_target(retreat_xz, self.global_translation, delta, RETREATING_SPEED)
@@ -80,7 +84,8 @@ func _physics_process(delta):
 		States.Bombing_Prep:
 			var my_xz_translation = find_own_xz_translation()
 			var target_xz = find_player_xz_translation()
-			model_node.look_at(target_xz, Vector3.UP)
+			update_target_yaw(target_xz)
+			#model_node.look_at(target_xz, Vector3.UP)
 
 			if my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
 				move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
@@ -89,7 +94,8 @@ func _physics_process(delta):
 				begin_state(States.Bombing)
 
 		States.Bombing:
-			model_node.look_at(bombing_destination, Vector3.UP)
+			update_target_yaw(bombing_destination)
+			#model_node.look_at(bombing_destination, Vector3.UP)
 
 			if self.global_translation.distance_to(bombing_destination) > 1.0:
 				self.translate(bombing_direction * delta * BOMBING_SPEED)
@@ -97,7 +103,8 @@ func _physics_process(delta):
 				begin_state(States.Bombing_Prep)
 
 		States.Retreating_For_Two_Snipers:
-			model_node.look_at(retreat_xz, Vector3.UP)
+			update_target_yaw(retreat_xz)
+			#model_node.look_at(retreat_xz, Vector3.UP)
 
 			if self.global_translation.distance_to(retreat_xz) > DISTANCE_TO_HIDE:
 				move_to_target(retreat_xz, self.global_translation, delta, RETREATING_SPEED)
@@ -114,6 +121,10 @@ func _physics_process(delta):
 		States.Following_With_Two_Snipers:
 			follow_with_snipers(delta)
 
+	#rotate smoothly
+	model_node.rotation_degrees.y = lerp(model_node.rotation_degrees.y, target_yaw, 2*delta)
+	last_yaw = model_node.rotation_degrees.y
+
 func begin_state(var state):
 	match state:
 		States.Begin:
@@ -121,11 +132,13 @@ func begin_state(var state):
 			$"/root/Player".give("s_kills_possible", 1)
 			$"%SniperBoner".set_awake(true)
 			set_retreat_xz()
-			model_node = $Skeleton
+			model_node = $batAnims
+			anim_player = $batAnims/AnimationPlayer
+			anim_player.play("FlyA")
 			last_health = health
 
 		States.Stagger:
-			$AnimationPlayer.play("Stagger")
+			anim_player.play("Stagger")
 
 		States.Bombing:
 			bombing_direction = (find_player_xz_translation() - find_own_xz_translation())
@@ -144,14 +157,16 @@ func follow_with_snipers(var delta):
 
 	var my_xz_translation = find_own_xz_translation()
 	var target_xz = find_player_xz_translation()
-	model_node.look_at(target_xz, Vector3.UP)
 
 	var space_state = get_world().direct_space_state
 	var result = space_state.intersect_ray(self.global_translation, player_node.global_translation + LOS_OFFSET, [self])
 
+	update_target_yaw(target_xz)
+
 	# can we see player?
 	# if so let's find spot we can see them from
 	if !result or (result and result.collider != player_node):
+		#model_node.look_at(target_xz, Vector3.UP)
 		target_xz = find_visible_spot_above_player(space_state, player_node)
 		if my_xz_translation.distance_to(target_xz) > 1.0:
 			move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
@@ -160,6 +175,15 @@ func follow_with_snipers(var delta):
 	# otherwise just chase
 	elif my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
 		move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
+
+	else:
+		#take aiming position
+		target_yaw += 35
+
+func update_target_yaw(var target_xz):
+	model_node.look_at(target_xz, Vector3.UP)
+	target_yaw = model_node.rotation_degrees.y
+	model_node.rotation_degrees.y = last_yaw
 
 func set_retreat_xz():
 	retreat_xz = self.global_translation
