@@ -38,7 +38,7 @@ const FLOAT_HEIGHT = 25
 const DISTANCE_TO_KEEP = 30
 const DISTANCE_TO_HIDE = 8
 const HIDE_OFFSET = 100
-const LOS_OFFSET = Vector3(0, 2.65, 0)
+const LOS_OFFSET = Vector3(0, 0, 0)
 
 func _physics_process(delta):
 	match current_state:
@@ -200,8 +200,8 @@ func move_to_target(var target_xz, var my_xz_translation, var delta, var speed):
 
 func find_visible_spot_above_player(var space_state, var player_node):
 	var offset = Vector3(DISTANCE_TO_KEEP, FLOAT_HEIGHT, 0)
-	for rot in range(0, 120):
-		var test = player_node.global_translation + offset.rotated(Vector3.UP, deg2rad(rot * 3))
+	for rot in range(0, 4):
+		var test = player_node.global_translation + offset.rotated(Vector3.UP, deg2rad(rot * 90))
 		var test_result = space_state.intersect_ray(test, player_node.global_translation + LOS_OFFSET, [self])
 		if test_result and test_result.collider == player_node:
 			return Vector3(test.x, FLOAT_HEIGHT, test.z)
