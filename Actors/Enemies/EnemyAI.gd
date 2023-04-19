@@ -75,9 +75,10 @@ var audio_callouts = []					# random audio 'grunts'
 var audio_death: AudioStream			# plays when die
 var audio_attack_begin: AudioStream 	# plays when attacking begins
 
-var gib_effect: PackedScene			# scene that holds gib effect
+var gib_effect: PackedScene				# scene that holds gib effect
 
-var is_dynamic = false				#allow de-spawning after death
+var is_dynamic = false					#allow de-spawning after death
+var disable_face_target = false			#look_at player when attacking
 var DEBUG_set_awake = false
 
 var kill_immediate_resources = {		# resources to give() player after kill
@@ -421,6 +422,8 @@ func get_awake_movement():
 			return States.AWAKE
 
 func face_target(var target):
+	if disable_face_target:
+		return
 	if target:
 		var new_target = Vector3()
 		new_target = target
@@ -512,7 +515,8 @@ func _on_RangedAttackTelegraph_timeout():
 			var pos = missile_spawn_cords.get_global_transform().translated(
 				Vector3(0,0,-missile_spawn_z_offset)).origin
 
-			var p = ProjectileSpawnHelper.spawn_projectile(projectile, parent_node.get_parent(), pos,
+#			var p = ProjectileSpawnHelper.spawn_projectile(projectile, parent_node.get_parent(), pos,
+			var p = ProjectileSpawnHelper.spawn_projectile(projectile, get_tree().current_scene, pos,
 				last_player_pos + Vector3(0.0, targeting_height_offset, 0.0))
 
 			if p is Boomerang:

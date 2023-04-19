@@ -27,7 +27,7 @@ var bombing_destination
 var model_node
 var anim_player
 
-const STARTING_HEALTH = 50.0
+const STARTING_HEALTH = 550.0
 
 const MOVEMENT_SPEED = 25
 const RETREATING_SPEED = 50
@@ -95,7 +95,7 @@ func _physics_process(delta):
 		States.Bombing:
 			update_target_yaw(bombing_destination)
 
-			if self.global_translation.distance_to(bombing_destination) > 1.0:
+			if self.global_translation.distance_to(bombing_destination) > 5.0:
 				self.translate(bombing_direction * delta * BOMBING_SPEED)
 			else:
 				begin_state(States.Bombing_Prep)
@@ -140,10 +140,12 @@ func begin_state(var state):
 		States.Rising_With_Bombs:
 			$"%FillerBoner".visible = true
 			$"%FillerBoner/AnimationPlayer".play("skelly_ride_yee_haw")
+			$"%Mushroom".set_awake(true)
+			$"%Mushroom2".set_awake(true)
 
 		States.Bombing:
 			bombing_direction = (find_player_xz_translation() - find_own_xz_translation())
-			bombing_destination = (Vector3(self.global_translation.x, 0, self.global_translation.z) + bombing_direction * 2) + Vector3(0, FLOAT_HEIGHT, 0)
+			bombing_destination = (Vector3(self.global_translation.x, 0, self.global_translation.z) + bombing_direction.normalized() * 100) + Vector3(0, FLOAT_HEIGHT, 0)
 			bombing_direction = bombing_direction.normalized()
 
 		States.Rising_With_Two_Snipers:
@@ -212,17 +214,23 @@ func _on_BossBat_tree_exiting():
 func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from_ent):
 	self.health -= damage
 
-	if last_health > STARTING_HEALTH * 0.7 and health < STARTING_HEALTH * 0.7:
+	if health < STARTING_HEALTH * 0.7:
 		$"%SniperBoner/AI".health = 0
-		begin_state(States.Stagger)
 
-	if last_health > STARTING_HEALTH * 0.33 and health < STARTING_HEALTH * 0.33:
+	if health < STARTING_HEALTH * 0.33:
 		$"%FillerBoner".visible = false
-		begin_state(States.Stagger)
+		$"%Mushroom/AI".health = 0
+		$"%Mushroom".visible = false
+		$"%Mushroom2/AI".health = 0
+		$"%Mushroom2".visible = false
 
 	if health < 0.0:
-		begin_state(States.Stagger)
 		$"%SniperBoner2/AI".health = 0
 		$"%SniperBoner3/AI".health = 0
+
+	if (health < 0.0
+		|| last_health > STARTING_HEALTH * 0.7 and health < STARTING_HEALTH * 0.7
+		|| last_health > STARTING_HEALTH * 0.33 and health < STARTING_HEALTH * 0.33):
+			begin_state(States.Stagger)
 
 	last_health = health
