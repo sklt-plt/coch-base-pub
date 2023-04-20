@@ -251,11 +251,11 @@ func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from
 		$"%SniperBoner2/AI".health = 0
 		$"%SniperBoner3/AI".health = 0
 
-	if last_health > 0.0 and health < 0.0:
+	if last_health > 0.0 and (is_zero_approx(health) or health < 0.0):
 		begin_state(States.Dead)
 
-	elif (last_health > STARTING_HEALTH * 0.7 and health < STARTING_HEALTH * 0.7
-		|| last_health > STARTING_HEALTH * 0.33 and health < STARTING_HEALTH * 0.33):
+	elif (last_health > STARTING_HEALTH * 0.7 and (is_equal_approx(health, STARTING_HEALTH * 0.7) or health < STARTING_HEALTH * 0.7)
+		|| last_health > STARTING_HEALTH * 0.33 and (is_equal_approx(health, STARTING_HEALTH * 0.33) or health < STARTING_HEALTH * 0.33)):
 			begin_state(States.Stagger)
 
 	last_health = health
