@@ -69,11 +69,11 @@ func _on_switch_input():
 	# one shot switching animation
 	animation_tree.set("parameters/SwitchGun/active", true)
 
-func play_slowmo():
+func play_slowmo(var time):
 	if not playing_slowmo:
 		playing_slowmo = true
 		Engine.time_scale = 0.4
-		yield(get_tree().create_timer(SLOWMO_TOTAL_TIME), "timeout")
+		yield(get_tree().create_timer(time), "timeout")
 		Engine.time_scale = 1.0
 		playing_slowmo = false
 

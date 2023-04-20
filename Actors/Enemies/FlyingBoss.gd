@@ -13,8 +13,23 @@ enum States {
 	Bombing,
 	Retreating_For_Two_Snipers,
 	Rising_With_Two_Snipers,
-	Following_With_Two_Snipers
+	Following_With_Two_Snipers,
+	Dead
 }
+export (AudioStream) var kill_track
+
+const STARTING_HEALTH = 750
+
+const MOVEMENT_SPEED = 25
+const RETREATING_SPEED = 50
+const RISING_SPEED = 25
+const BOMBING_SPEED = 32
+
+const FLOAT_HEIGHT = 25
+const DISTANCE_TO_KEEP = 30
+const DISTANCE_TO_HIDE = 8
+const HIDE_OFFSET = 100
+const LOS_OFFSET = Vector3(0, 0, 0)
 
 var health = STARTING_HEALTH
 var last_health
@@ -27,18 +42,10 @@ var bombing_destination
 var model_node
 var anim_player
 
-const STARTING_HEALTH = 550.0
-
-const MOVEMENT_SPEED = 25
-const RETREATING_SPEED = 50
-const RISING_SPEED = 25
-const BOMBING_SPEED = 32
-
-const FLOAT_HEIGHT = 25
-const DISTANCE_TO_KEEP = 30
-const DISTANCE_TO_HIDE = 8
-const HIDE_OFFSET = 100
-const LOS_OFFSET = Vector3(0, 0, 0)
+export (Dictionary) var kill_immediate_resources = {
+	"s_score" : 10000,
+	"s_kills" : 1
+}
 
 func _physics_process(delta):
 	match current_state:
@@ -152,8 +159,24 @@ func begin_state(var state):
 			$"%SniperBoner2".set_awake(true)
 			$"%SniperBoner3".set_awake(true)
 
+		States.Dead:
+			anim_player.play("Die")
+			finish_map()
+
 	current_state = state
-	print("Current State: ",state)
+
+func finish_map():
+	$"/root/Player/HUD".deregister_boss_health()
+
+	for r in kill_immediate_resources:
+		$"/root/Player".give(r, kill_immediate_resources[r])
+
+	var dying_time = $"/root/Player/PlayerAnimations".SLOWMO_TOTAL_TIME *1.15
+	$"/root/Player".play_slowmo_effect(dying_time)
+	$"/root/Player/MusicController".play_once_and_finish(kill_track)
+
+	yield(get_tree().create_timer(dying_time), "timeout")
+	$"/root/EpisodeManager".next_map()
 
 func follow_with_snipers(var delta):
 	var player_node = $"/root/Player"
@@ -228,8 +251,10 @@ func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from
 		$"%SniperBoner2/AI".health = 0
 		$"%SniperBoner3/AI".health = 0
 
-	if (health < 0.0
-		|| last_health > STARTING_HEALTH * 0.7 and health < STARTING_HEALTH * 0.7
+	if last_health > 0.0 and health < 0.0:
+		begin_state(States.Dead)
+
+	elif (last_health > STARTING_HEALTH * 0.7 and health < STARTING_HEALTH * 0.7
 		|| last_health > STARTING_HEALTH * 0.33 and health < STARTING_HEALTH * 0.33):
 			begin_state(States.Stagger)
 

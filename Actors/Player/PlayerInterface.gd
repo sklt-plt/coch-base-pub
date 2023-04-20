@@ -122,5 +122,6 @@ func start_arcade_mode():
 	$"PlayerResources".use_time_limit = true
 	$"HUD/Arcade".visible = true
 
-func play_slowmo_effect():
-	$"PlayerAnimations".play_slowmo()
+func play_slowmo_effect(var time):
+	$"PlayerAnimations".play_slowmo(time)
+

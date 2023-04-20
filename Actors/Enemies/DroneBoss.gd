@@ -44,10 +44,11 @@ func deal_damage(damage, _push_force, _from_direction, _from_ent):
 				if is_instance_valid(c):
 					c.destroy()
 
-		$"/root/Player".play_slowmo_effect()
+		var dying_time = $"/root/Player/PlayerAnimations".SLOWMO_TOTAL_TIME
+		$"/root/Player".play_slowmo_effect(dying_time)
 		$"/root/Player/MusicController".play_once_and_finish(kill_track)
 
-		yield(get_tree().create_timer($"/root/Player/PlayerAnimations".SLOWMO_TOTAL_TIME), "timeout")
+		yield(get_tree().create_timer(dying_time), "timeout")
 		$"/root/EpisodeManager".next_map()
 
 func _on_Boss_tree_exiting():

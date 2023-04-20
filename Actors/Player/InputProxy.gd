@@ -39,7 +39,7 @@ func _unhandled_input(_event):
 				print("Noclip off")
 
 		if Input.is_action_just_pressed("DBG_2"):
-			$"/root/Player".play_slowmo_effect()
+			$"/root/Player".play_slowmo_effect(2.5)
 
 		if Input.is_action_just_pressed("DBG_3"):
 			Globals.set_ep_completed(1, not Globals.player_progress["1"])
