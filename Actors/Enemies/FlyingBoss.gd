@@ -30,6 +30,7 @@ const DISTANCE_TO_KEEP = 30
 const DISTANCE_TO_HIDE = 8
 const HIDE_OFFSET = 100
 const LOS_OFFSET = Vector3(0, 0, 0)
+const AIMING_POSITION_YAW = 15
 
 var health = STARTING_HEALTH
 var last_health
@@ -65,7 +66,7 @@ func _physics_process(delta):
 					begin_state(States.Retreating_For_Bombs)
 
 		States.Rising_With_Snipers:
-			if self.global_translation.y < $"/root/Player".global_translation.y + FLOAT_HEIGHT:
+			if self.global_translation.y < FLOAT_HEIGHT:
 				self.translate(Vector3(0, RISING_SPEED, 0) * delta)
 			else:
 				begin_state(States.Following_With_Snipers)
@@ -83,7 +84,7 @@ func _physics_process(delta):
 				begin_state(States.Rising_With_Bombs)
 
 		States.Rising_With_Bombs:
-			if self.global_translation.y < $"/root/Player".global_translation.y + FLOAT_HEIGHT:
+			if self.global_translation.y < FLOAT_HEIGHT:
 				self.translate(Vector3(0, RISING_SPEED, 0) * delta)
 			else:
 				begin_state(States.Bombing_Prep)
@@ -117,7 +118,7 @@ func _physics_process(delta):
 				begin_state(States.Rising_With_Two_Snipers)
 
 		States.Rising_With_Two_Snipers:
-			if self.global_translation.y < $"/root/Player".global_translation.y + FLOAT_HEIGHT:
+			if self.global_translation.y < FLOAT_HEIGHT:
 				self.translate(Vector3(0, RISING_SPEED, 0) * delta)
 			else:
 				begin_state(States.Following_With_Two_Snipers)
@@ -202,7 +203,7 @@ func follow_with_snipers(var delta):
 
 	else:
 		#take aiming position
-		target_yaw += 35
+		target_yaw += AIMING_POSITION_YAW
 
 func update_target_yaw(var target_xz):
 	model_node.look_at(target_xz, Vector3.UP)
@@ -224,7 +225,7 @@ func move_to_target(var target_xz, var my_xz_translation, var delta, var speed):
 func find_visible_spot_above_player(var space_state, var player_node):
 	var offset = Vector3(DISTANCE_TO_KEEP, FLOAT_HEIGHT, 0)
 	for rot in range(0, 4):
-		var test = player_node.global_translation + offset.rotated(Vector3.UP, deg2rad(rot * 90))
+		var test = player_node.global_translation + offset.rotated(Vector3.UP, deg2rad(rot * -90))
 		var test_result = space_state.intersect_ray(test, player_node.global_translation + LOS_OFFSET, [self])
 		if test_result and test_result.collider == player_node:
 			return Vector3(test.x, FLOAT_HEIGHT, test.z)
