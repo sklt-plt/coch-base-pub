@@ -1,5 +1,6 @@
 extends KinematicActor
 class_name KinematicEnemy
+tool
 
 func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 	var ai_node = get_node_or_null("AI")
@@ -10,7 +11,7 @@ func set_awake(var to_awake):
 	$AI.set_awake(to_awake)
 
 func get_player_resource_costs():
-	return $AI.player_resource_costs
+	return $PlayerResourceCosts.player_resource_costs
 
 func get_current_move_vector():
 	return $AI.current_move_vector

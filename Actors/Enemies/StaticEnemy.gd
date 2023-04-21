@@ -10,7 +10,7 @@ func set_awake(var to_awake):
 	$AI.set_awake(to_awake)
 
 func get_player_resource_costs():
-	return $AI.player_resource_costs
+	return $PlayerResourceCosts.player_resource_costs
 
 func get_current_move_vector():
 	return Vector3.ZERO

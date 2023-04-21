@@ -167,7 +167,7 @@ func toggle_collisions(var enable):
 		if (c is TreasureChest or c is Area
 		or c is ResourcePickup or c is RigidBody
 		or c is KinematicEnemy or c is MeshInstance
-		or c is StaticEnemy):
+		or c is StaticEnemy or c is FakeEnemy):
 			if enable:
 				self.add_child(c)
 			else:

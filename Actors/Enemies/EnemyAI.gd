@@ -87,14 +87,6 @@ var kill_immediate_resources = {		# resources to give() player after kill
 	"s_kills" : 1
 }
 
-var player_resource_costs = {			# how much to compensate in map generation
-	"r_health": 2,
-	"r_armor" : 2,
-	"r_pistol_ammo" : 2,
-	"r_shotgun_ammo": 2,
-	"r_crossbow_ammo": 2
-}
-
 var dynamic_self_poison = 2.0				# how much damage take when awake and is dynamic
 
 ## END OF SETTINGS
@@ -143,7 +135,8 @@ func _ready():
 	set_awake(DEBUG_set_awake)
 
 	if not is_dynamic:
-		$"/root/Player".give("s_kills_possible", 1)
+		if health != INF:
+			$"/root/Player".give("s_kills_possible", 1)
 		audio_stream_player.stream_paused = true
 		if parent_node is KinematicEnemy:
 			parent_node.simulate_movement = false
