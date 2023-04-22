@@ -1,6 +1,5 @@
 extends Spatial
 class_name BossSpawn
-tool
 
 enum Variants {
 	Static,
@@ -25,8 +24,13 @@ func spawn_static_boss():
 	instance.owner = get_parent().get_parent().owner
 
 	var room_geometry = get_parent()
+	instance.global_translation = Vector3(
+		room_geometry.global_translation.x + room_geometry.size.x / 2,
+		0,
+		room_geometry.global_translation.z)# - room_geometry.size.z / 2)
 
 	instance.scale = Vector3(24,24,24)
+	instance.rotate_y(deg2rad(180))
 
 func on_room_cull_in():
 	if variant == Variants.Static:
