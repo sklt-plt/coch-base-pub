@@ -27,7 +27,7 @@ func spawn_static_boss():
 	instance.global_translation = Vector3(
 		room_geometry.global_translation.x + room_geometry.size.x / 2,
 		0,
-		room_geometry.global_translation.z)# - room_geometry.size.z / 2)
+		room_geometry.global_translation.z)
 
 	instance.scale = Vector3(24,24,24)
 	instance.rotate_y(deg2rad(180))
