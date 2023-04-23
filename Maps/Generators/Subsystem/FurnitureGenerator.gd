@@ -43,7 +43,7 @@ func get_elements(var root):
 	if root is FurnitureObject:
 		parent = FurnitureObject.new()
 		parent.size = root.size
-	elif root is KinematicEnemy:
+	elif root is KinematicEnemy or root is TreasureChest:
 		parent = FurnitureEntitySpawn.new()
 		parent.translation = root.translation
 		parent.rotation = root.rotation

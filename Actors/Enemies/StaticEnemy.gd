@@ -1,5 +1,6 @@
 extends StaticBody
 class_name StaticEnemy
+tool
 
 func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 	var ai_node = get_node_or_null("AI")

@@ -35,14 +35,16 @@ var _owner
 var _rng
 
 func _ready():
-	# flush old map
-	var oldMap = get_parent().find_node("generated_map*")
-	if oldMap:
-		oldMap.queue_free()
+	flush_old_map()
 
 	if not Engine.is_editor_hint():
 		generate = true
 		hide_after_generation = true
+
+func flush_old_map():
+	var oldMap = get_parent().find_node("generated_map*")
+	if oldMap:
+		oldMap.queue_free()
 
 func clear_refs():
 	pass
@@ -54,6 +56,7 @@ func _process(_delta):
 	var t = OS.get_ticks_msec()
 
 	if generate:
+		flush_old_map()
 		initialize_subsystems()
 
 		var maybe_overrides = self.get_node_or_null("GeneratorOverrides")
