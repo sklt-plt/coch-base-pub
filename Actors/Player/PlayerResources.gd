@@ -28,8 +28,8 @@ const TIME_LEFT_MAX = 5.0*60
 
 func reset():
 	#(re)set values to default
-	r_health = 100
-	r_armor = 50
+	r_health = 50 #100
+	r_armor = 30 #50
 	r_pistol_ammo = 50
 	r_shotgun_ammo = 25
 	r_crossbow_ammo = 25
@@ -43,8 +43,8 @@ func reset():
 	r_time_freeze = 0.01
 
 	resources_limits = {
-		"r_health" : 100,
-		"r_armor"  : 50,
+		"r_health" : 50, #100
+		"r_armor"  : 30, #50
 		"r_pistol_ammo" : 50,
 		"r_shotgun_ammo" : 25,
 		"r_crossbow_ammo" : 25,
