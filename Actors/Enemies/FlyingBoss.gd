@@ -162,6 +162,7 @@ func begin_state(var state):
 
 		States.Dead:
 			anim_player.play("Die")
+			$"/root/Player/MusicController".play_once_and_finish(kill_track)
 			finish_map()
 
 	current_state = state
