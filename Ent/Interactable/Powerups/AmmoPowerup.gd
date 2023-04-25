@@ -6,6 +6,7 @@ func activate():
 
 	$"/root/Player".give("r_pistol_ammo", 5)
 	$"/root/Player".give("r_shotgun_ammo", 5)
+	$"/root/Player".give("r_crossbow_ammo", 5)
 
 	.playSfx()
 
