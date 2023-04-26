@@ -508,7 +508,6 @@ func _on_RangedAttackTelegraph_timeout():
 			var pos = missile_spawn_cords.get_global_transform().translated(
 				Vector3(0,0,-missile_spawn_z_offset)).origin
 
-#			var p = ProjectileSpawnHelper.spawn_projectile(projectile, parent_node.get_parent(), pos,
 			var p = ProjectileSpawnHelper.spawn_projectile(projectile, get_tree().current_scene, pos,
 				last_player_pos + Vector3(0.0, targeting_height_offset, 0.0))
 

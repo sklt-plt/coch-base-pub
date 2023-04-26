@@ -47,7 +47,7 @@ func _process(delta):
 	if $"../AI".current_state == EnemyAI.States.ATTACK_BEGIN:
 		tween += delta * SHADER_TWEEN_SPEED
 	else:
-		tween = 0
+		tween -= delta * SHADER_TWEEN_SPEED
 
 	tween = clamp(tween, 0.0, 1.0)
 
