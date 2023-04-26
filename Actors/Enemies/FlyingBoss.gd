@@ -42,6 +42,7 @@ var bombing_direction
 var bombing_destination
 var model_node
 var anim_player
+var seen_player = false
 
 export (Dictionary) var kill_immediate_resources = {
 	"s_score" : 10000,
@@ -191,20 +192,31 @@ func follow_with_snipers(var delta):
 
 	update_target_yaw(target_xz)
 
+	var chase_timer = $batAnims/ChaseTimer
+	var damage_timer = $batAnims/DamageTimer
+
 	# can we see player?
-	# if so let's find spot we can see them from
-	if !result or (result and result.collider != player_node):
+	# have we just lost line of sight?
+	# if so wait before chasing
+	if seen_player and chase_timer.is_stopped() and damage_timer.is_stopped():
+		chase_timer.start()
+
+	# if not then go to spot from which we can see them
+	if (!result or (result and result.collider != player_node)):
+		seen_player = false
 		target_xz = find_visible_spot_above_player(space_state, player_node)
-		if my_xz_translation.distance_to(target_xz) > 1.0:
+		if chase_timer.is_stopped() and my_xz_translation.distance_to(target_xz) > 1.0:
 			move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
 
 	# otherwise just chase
-	elif my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP:
+	elif my_xz_translation.distance_to(target_xz) > DISTANCE_TO_KEEP * 1.25:
 		move_to_target(target_xz, my_xz_translation, delta, MOVEMENT_SPEED)
+		seen_player = true
 
 	else:
 		#take aiming position
 		target_yaw += AIMING_POSITION_YAW
+		seen_player = true
 
 func update_target_yaw(var target_xz):
 	model_node.look_at(target_xz, Vector3.UP)
@@ -238,6 +250,8 @@ func _on_BossBat_tree_exiting():
 
 func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from_ent):
 	self.health -= damage
+	$batAnims/ChaseTimer.stop()
+	$batAnims/DamageTimer.start()
 
 	if health < STARTING_HEALTH * 0.7:
 		$"%SniperBoner/AI".health = 0
@@ -249,7 +263,7 @@ func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from
 		$"%Mushroom2/AI".health = 0
 		$"%Mushroom2".visible = false
 
-	if health < 0.0:
+	if health < 0.0 or is_zero_approx(health):
 		$"%SniperBoner2/AI".health = 0
 		$"%SniperBoner3/AI".health = 0
 
