@@ -17,7 +17,7 @@ var r_time_freeze: float
 var resources_limits = {}
 var resource_max_upgrades = {}
 
-const ARMOR_EFFICENCY = 2.0
+const ARMOR_DAMAGE_PERCENTAGE = 0.66
 
 export (AudioStream) var audio_hurt
 export (AudioStream) var audio_death
@@ -28,8 +28,8 @@ const TIME_LEFT_MAX = 5.0*60
 
 func reset():
 	#(re)set values to default
-	r_health = 50 #100
-	r_armor = 30 #50
+	r_health = 30 #100
+	r_armor = 50
 	r_pistol_ammo = 50
 	r_shotgun_ammo = 25
 	r_crossbow_ammo = 25
@@ -43,8 +43,8 @@ func reset():
 	r_time_freeze = 0.01
 
 	resources_limits = {
-		"r_health" : 50, #100
-		"r_armor"  : 30, #50
+		"r_health" : 30, #100
+		"r_armor"  : 50,
 		"r_pistol_ammo" : 50,
 		"r_shotgun_ammo" : 25,
 		"r_crossbow_ammo" : 25,
@@ -84,14 +84,17 @@ func upgrade_resource(var resource, var value):
 
 func deal_damage(var value):
 	if r_health > 0.0:
-		if r_armor > 0:
-			r_armor = max(0.0, r_armor - value/ARMOR_EFFICENCY)
-			r_health = r_health - value/ARMOR_EFFICENCY
-			$"../HUD/HurtEffect".color.a += value/ARMOR_EFFICENCY/resources_limits["r_health"]
+		var armor_damage = value * ARMOR_DAMAGE_PERCENTAGE
+		var actual_armor_damage = min(r_armor, armor_damage)
+		var health_damage = value - actual_armor_damage
 
-		else:
-			r_health -= value
-			$"../HUD/HurtEffect".color.a += value/resources_limits["r_health"]
+		r_armor -= actual_armor_damage
+		r_health -= health_damage
+
+		$"../HUD/HurtEffect".color.a += health_damage/resources_limits["r_health"]
+
+		print("Took armor damage: ", actual_armor_damage)
+		print("Took health damage: ", health_damage)
 
 		if r_health <= 0.0:
 			$"../InputProxy".is_locked = true
