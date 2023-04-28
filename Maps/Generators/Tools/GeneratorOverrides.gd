@@ -81,8 +81,11 @@ func randomize_values():
 	else:
 		use_prefabs = false
 
-	if $"/root/Player".check("s_level") == 4:
+	if EpisodeManager.current_ep == 101 and $"/root/Player".check("s_level") == 4:
 		$"/root/Player".give("e_double_barrel_level", 1)
+
+	if EpisodeManager.current_ep == 102 and $"/root/Player".check("s_level") == 4:
+		$"/root/Player".give("e_crossbow_level", 1)
 
 func apply():
 	var generator = get_parent()

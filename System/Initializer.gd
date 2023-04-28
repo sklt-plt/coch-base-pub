@@ -1,6 +1,6 @@
 extends Node
 
-const DEBUG_DEMO_EP = 0
+const DEBUG_DEMO_EP = -1
 
 func _ready():
 	# load content pack

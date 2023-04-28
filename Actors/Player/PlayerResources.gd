@@ -93,9 +93,6 @@ func deal_damage(var value):
 
 		$"../HUD/HurtEffect".color.a += health_damage/resources_limits["r_health"]
 
-		print("Took armor damage: ", actual_armor_damage)
-		print("Took health damage: ", health_damage)
-
 		if r_health <= 0.0:
 			$"../InputProxy".is_locked = true
 			$"../PlayerMovement".set_dead()

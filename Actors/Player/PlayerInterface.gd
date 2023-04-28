@@ -55,8 +55,9 @@ func enable():
 	$"SFXPlayer3".stop()
 
 func deal_damage(var damage, var push_force, var from_direction, var _from_ent):
-	$"PlayerResources".deal_damage(damage)
-	$"PlayerStats".give("s_damage_taken", damage)
+	var actual_damage = damage * Globals.difficulty
+	$"PlayerResources".deal_damage(actual_damage)
+	$"PlayerStats".give("s_damage_taken", actual_damage)
 	.push_linear(from_direction, push_force)
 
 func upgrade_resource(var resource, var value):

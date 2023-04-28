@@ -18,17 +18,12 @@ func next_map_in_ep():
 func next_map():
 	$"/root/Player".give("s_level", 1)
 
-	match current_ep:
-		1:
-			next_map_in_ep()
-		2:
-			next_map_in_ep()
-		101:
-			#endless ep1
-			restart_current_map()
-		201:
-			#custom map ep1
-			restart_episode()
+	if current_ep <= 100:
+		next_map_in_ep()
+	elif current_ep > 100 and current_ep <= 200:
+		restart_current_map()
+	elif current_ep > 200:
+		next_map_in_ep()
 
 func restart_episode():
 	start_episode(current_ep)
@@ -73,7 +68,7 @@ func quit_to_menu():
 		print("Can't load: ", Globals.content_pack_path + "/MainMenu/MainMenu.tscn")
 
 func load_object_cache(var ep_idx: int):
-	var cache_filename = Globals.content_pack_path + "/Ent/ObjectCacheEp" + String(ep_idx) + ".tscn"
+	var cache_filename = Globals.content_pack_path + "/Ent/ObjectCacheEp" + String(ep_idx%100) + ".tscn"
 	var object_cache = load(cache_filename)
 	if object_cache:
 		$"/root".call_deferred("add_child", object_cache.instance())

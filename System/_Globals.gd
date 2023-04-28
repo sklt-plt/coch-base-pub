@@ -1,6 +1,8 @@
 tool
 extends Node
 
+var difficulty = 0.6
+
 #var content_pack_path = "res://Content/default"
 var content_pack_path = "res://Content/custom"
 
@@ -25,7 +27,7 @@ var user_settings = {
 	"fov": 90,
 	#audio
 	"master_volume": 0.4,
-	"music_volume": 1.0,
+	"music_volume": 0.5,
 	"effects_volume": 1.0,
 	#controls
 	"mouse_sensitivity": 0.225,
