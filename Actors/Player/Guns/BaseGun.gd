@@ -2,6 +2,7 @@ extends Spatial
 class_name BaseGun
 
 signal AltFire
+signal Reloaded
 
 export (PackedScene) var projectile_scene				# projectile to spawn, leave empty to use raycast
 export var bullet_damage = 5							# damage to deal per bullet
@@ -133,6 +134,9 @@ func reload():
 				reloading_timer.start()
 
 func finish_reload():
+	get_parent()._on_AnyGun_Reloaded()
+
+func reassing_ammo():
 	if $"/root/Player".check(ammo_type) >= magazine_size:
 		current_magazine = magazine_size
 	else:
@@ -141,7 +145,9 @@ func finish_reload():
 func show():
 	self.visible = true
 	play_anim_pair(anims_idle)
-	if current_magazine == 0:
+	if instant_reload:
+		reassing_ammo()
+	elif current_magazine == 0:
 		reload()
 
 func are_all_timers_stopped():

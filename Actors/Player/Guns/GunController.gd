@@ -115,3 +115,8 @@ func hide_all_guns_except(var index : int):
 				guns[i].show()
 			else:
 				guns[i].visible = false
+
+func _on_AnyGun_Reloaded():
+	for i in range(0, guns.size()):
+		if guns[i] is BaseGun:
+			guns[i].reassing_ammo()

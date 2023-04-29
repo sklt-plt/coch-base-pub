@@ -125,4 +125,3 @@ func start_arcade_mode():
 
 func play_slowmo_effect(var time):
 	$"PlayerAnimations".play_slowmo(time)
-
