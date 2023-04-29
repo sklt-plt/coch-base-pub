@@ -5,7 +5,7 @@ func build_text_and_show():
 
 	match $"/root/EpisodeManager".episode_clear_idx:
 		1:
-			label.text = "Congratulations! \n You've unlocked: \n \n Episode 2 \n Episode 1 Arcade Mode \n Episode 1 Custom Mode"
+			label.text = "Congratulations! \n You've unlocked: \n \n Episode 1 Arcade Mode \n Episode 1 Custom Mode"
 		2:
 			label.text = "Congratulations! \n You've unlocked: \n \n Episode 2 Arcade Mode \n Episode 2 Custom Mode"
 		_:

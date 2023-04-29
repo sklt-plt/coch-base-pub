@@ -7,7 +7,7 @@ export (String) var readme_dir = "/README"
 export (String) var feedback_url = ""
 
 func _ready():
-	$"LevelSelect/Ep2Button".disabled = !Globals.player_progress["1"]
+	$"LevelSelect/Ep2Button".disabled = false
 	$"LevelSelect/Ep3Button".disabled = true#!Globals.player_progress["2"]
 	$"LevelSelectEp1/PlayEp1Endless".disabled = !Globals.player_progress["1"]
 	$"LevelSelectEp1/PlayEp1Custom".disabled = !Globals.player_progress["1"]

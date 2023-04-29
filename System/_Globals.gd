@@ -13,6 +13,7 @@ var player_progress = {
 }
 
 var applying_setings = false
+var first_setup = true
 
 var user_settings = {
 	#video
@@ -26,7 +27,7 @@ var user_settings = {
 	"ao": true,
 	"fov": 90,
 	#audio
-	"master_volume": 0.4,
+	"master_volume": 0.5,
 	"music_volume": 0.5,
 	"effects_volume": 1.0,
 	#controls
@@ -53,7 +54,7 @@ func set_ep_completed(var episode_idx: int, var value : bool):
 
 func load_user_progress():
 	if not FileHelper.load_file(USER_PROGRESS_FILENAME, player_progress):
-		print("Can't load player progress")
+		save_user_progress()
 
 func save_user_progress():
 	FileHelper.save_file(USER_PROGRESS_FILENAME, player_progress)
@@ -77,7 +78,7 @@ func load_user_inputs():
 	#load game settings from file
 
 	if not FileHelper.load_file(USER_INPUT_FILENAME, player_input_settings):
-		print("Can't load user inputs, using defaults")
+		save_user_inputs()
 		return
 
 	for setting in player_input_settings:
@@ -100,7 +101,7 @@ func apply_user_settings(var new_settings : Dictionary):
 
 	for setting in new_settings:
 		#compare if anything changed
-		if new_settings[setting] != user_settings[setting]:
+		if first_setup or new_settings[setting] != user_settings[setting]:
 
 			user_settings[setting] = new_settings[setting]
 
@@ -190,13 +191,19 @@ func apply_user_settings(var new_settings : Dictionary):
 			# toggle_aim, invert_mouse_y, toggle_run, invert_run, legacy_campaign
 
 	applying_setings = false
+	first_setup = false
 
 func load_user_settings():
-	#load game settings from file
+	#load game settings from file if possible
 	var loaded_settings = user_settings.duplicate()
 
 	if FileHelper.load_file(USER_SETTINGS_FILENAME, loaded_settings):
 		apply_user_settings(loaded_settings)
+
+	#if not, setup defaults
+	else:
+		apply_user_settings(user_settings)
+		save_user_settings()
 
 func save_user_settings():
 	FileHelper.save_file(USER_SETTINGS_FILENAME, user_settings)

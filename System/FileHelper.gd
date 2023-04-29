@@ -28,4 +28,5 @@ static func load_file(var file_name: String, var contents_holder: Dictionary):
 		file.close()
 		return true
 	else:
+		print("Cannot load ", file_name, " Creating default")
 		return false
