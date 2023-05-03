@@ -27,7 +27,7 @@ var hints = {
 func _ready():
 	var current_ep = $"/root/EpisodeManager".current_ep
 	var current_level_idx = $"/root/EpisodeManager".current_level_idx
-	if current_ep > 100 and $"/root/Player".check("s_level") == 1:
+	if current_ep > 100 and current_ep < 200 and $"/root/Player".check("s_level") == 1:
 		$Label3D.text = hints[101][0]
 	elif hints.has(current_ep) and hints[current_ep].size() > current_level_idx and hints[current_ep][current_level_idx] != "":
 		$Label3D.text = hints[current_ep][current_level_idx].format(InputHelper.get_input_string_formatting())

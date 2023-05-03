@@ -56,16 +56,16 @@ func _process(_delta):
 	var t = OS.get_ticks_msec()
 
 	if generate:
+		var maybe_overrides = self.get_node_or_null("GeneratorOverrides")
+
+		if maybe_overrides and not maybe_overrides.done:
+			return
+
 		flush_old_map()
 		initialize_subsystems()
 
-		var maybe_overrides = self.get_node_or_null("GeneratorOverrides")
-
-		if maybe_overrides:
-			if not maybe_overrides.done:
-				return
-			else:
-				maybe_overrides.apply()
+		if maybe_overrides and maybe_overrides.done:
+			maybe_overrides.apply()
 
 		if (prepare_subsystems()):
 			_generated_tree_root = _rooms_data_generator.generate_design_tree()
