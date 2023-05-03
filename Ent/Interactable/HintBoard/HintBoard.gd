@@ -18,7 +18,7 @@ var hints = {
 		"You have plenty of time to get out Sniper's line of sight. Sort of"#,
 		#"Backpack weapon reloading is totally intended",
 	],
-	101:
+	199:
 	[
 		"Arcade rules:\n\n - Defeat enemies to score\n - Score multiplier increases each level\n - You have 4 minutes but killing enemies and picking up items freezes timer\n\n Good luck!"
 	]
@@ -28,8 +28,11 @@ func _ready():
 	var current_ep = $"/root/EpisodeManager".current_ep
 	var current_level_idx = $"/root/EpisodeManager".current_level_idx
 	if current_ep > 100 and current_ep < 200 and $"/root/Player".check("s_level") == 1:
-		$Label3D.text = hints[101][0]
-	elif hints.has(current_ep) and hints[current_ep].size() > current_level_idx and hints[current_ep][current_level_idx] != "":
+		$Label3D.text = hints[199][0]
+		return
+
+	if hints.has(current_ep) and hints[current_ep].size() > current_level_idx and hints[current_ep][current_level_idx] != "":
 		$Label3D.text = hints[current_ep][current_level_idx].format(InputHelper.get_input_string_formatting())
-	else:
-		queue_free()
+		return
+
+	queue_free()
