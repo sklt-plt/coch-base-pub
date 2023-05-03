@@ -9,7 +9,7 @@ var effect_coroutine
 func activate():
 	if $"/root/EpisodeManager".is_endless_episode_playing():
 		$"/root/Player".give("s_leveled_score", 100)
-		$"/root/Player".give("r_time_left", 5.0)
+		$"/root/Player".give("r_time_freeze", 1.0)
 
 func _ready():
 	if self.global_transform.origin.distance_to($"/root/Player".global_transform.origin) < $"ManualTrigger/CollisionShape".shape.radius*2:

@@ -24,7 +24,7 @@ export (AudioStream) var audio_death
 
 export (bool) var use_time_limit
 
-const TIME_LEFT_MAX = 5.0*60
+const TIME_LEFT_MAX = 4.0*60
 
 func reset():
 	#(re)set values to default

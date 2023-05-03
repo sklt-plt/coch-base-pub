@@ -18,10 +18,8 @@ func show_guns(var active_gun_idx: int):
 	self.visible = true
 
 	# check if we should enable icon
-	if $"/root/Player".has("e_double_barrel_level", 1):
-		$DoubleBarrel.visible = true
-	if $"/root/Player".has("e_crossbow_level", 1):
-		$Gun3.visible = true
+	$DoubleBarrel.visible = $"/root/Player".has("e_double_barrel_level", 1)
+	$Gun3.visible = $"/root/Player".has("e_crossbow_level", 1)
 
 	# set all to inactive
 	for i in range (0, guns.size()):
