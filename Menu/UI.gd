@@ -15,6 +15,8 @@ func _ready():
 	$"LevelSelectEp2/PlayEp2Custom".disabled = !Globals.player_progress["2"]
 	$"Options".visible = false
 	$"LevelSelectEp1".visible = false
+	$"LevelSelectEp2".visible = false
+	$"CampaignSeed".visible = false
 	$"LevelSelect".visible = false
 
 func show_ep_clear_notif():
@@ -44,17 +46,20 @@ func show_level_select():
 	$"LevelSelectEp1".visible = false
 	$"LevelSelectEp2".visible = false
 	$"EpClearNotif".visible = false
+	$"CampaignSeed".visible = false
 	emit_signal("focus_camera", "CameraPositionMain")
 
 func show_ep1():
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionEp1")
 	$"LevelSelectEp1".visible = true
+	$"CampaignSeed".visible = true
 
 func show_ep2():
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionEp2")
 	$"LevelSelectEp2".visible = true
+	$"CampaignSeed".visible = true
 
 func _on_LSBackButton_button_up():
 	show_main_menu()

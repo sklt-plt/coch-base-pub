@@ -11,11 +11,9 @@ anchor_bottom = 1.0
 mouse_filter = 2
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MainMenu" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -202,7 +200,6 @@ __meta__ = {
 }
 
 [node name="LevelSelectEp1" type="Control" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -223,9 +220,9 @@ __meta__ = {
 
 [node name="PlayEp1" type="Button" parent="LevelSelectEp1"]
 anchor_left = 0.4
-anchor_top = 0.540178
+anchor_top = 0.49787
 anchor_right = 0.6
-anchor_bottom = 0.62287
+anchor_bottom = 0.580562
 text = "Play Campaign"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -233,9 +230,9 @@ __meta__ = {
 
 [node name="PlayEp1Endless" type="Button" parent="LevelSelectEp1"]
 anchor_left = 0.4
-anchor_top = 0.643768
+anchor_top = 0.652422
 anchor_right = 0.6
-anchor_bottom = 0.72646
+anchor_bottom = 0.735114
 text = "Play Arcade"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -243,16 +240,15 @@ __meta__ = {
 
 [node name="PlayEp1Custom" type="Button" parent="LevelSelectEp1"]
 anchor_left = 0.4
-anchor_top = 0.746653
+anchor_top = 0.755307
 anchor_right = 0.6
-anchor_bottom = 0.829345
+anchor_bottom = 0.837999
 text = "Play Custom"
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="LevelSelectEp2" type="Control" parent="."]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -273,9 +269,9 @@ __meta__ = {
 
 [node name="PlayEp2" type="Button" parent="LevelSelectEp2"]
 anchor_left = 0.4
-anchor_top = 0.540178
+anchor_top = 0.49787
 anchor_right = 0.6
-anchor_bottom = 0.62287
+anchor_bottom = 0.580562
 text = "Play Campaign"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -283,9 +279,9 @@ __meta__ = {
 
 [node name="PlayEp2Endless" type="Button" parent="LevelSelectEp2"]
 anchor_left = 0.4
-anchor_top = 0.643768
+anchor_top = 0.652422
 anchor_right = 0.6
-anchor_bottom = 0.72646
+anchor_bottom = 0.735114
 text = "Play Arcade"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -293,9 +289,9 @@ __meta__ = {
 
 [node name="PlayEp2Custom" type="Button" parent="LevelSelectEp2"]
 anchor_left = 0.4
-anchor_top = 0.746653
+anchor_top = 0.755307
 anchor_right = 0.6
-anchor_bottom = 0.829345
+anchor_bottom = 0.837999
 text = "Play Custom"
 __meta__ = {
 "_edit_use_anchors_": true
@@ -356,6 +352,54 @@ text = "OK!"
 __meta__ = {
 "_edit_use_anchors_": true
 }
+
+[node name="CampaignSeed" type="Control" parent="."]
+anchor_left = 0.4
+anchor_top = 0.580769
+anchor_right = 0.602521
+anchor_bottom = 0.644308
+margin_right = 0.159912
+margin_bottom = 3.91992
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="MC" type="MarginContainer" parent="CampaignSeed"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 15
+custom_constants/margin_top = 8
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 22
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="GC" type="GridContainer" parent="CampaignSeed/MC"]
+margin_left = 15.0
+margin_top = 8.0
+margin_right = 374.0
+margin_bottom = 48.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+
+[node name="Label" type="Label" parent="CampaignSeed/MC/GC"]
+margin_top = 13.0
+margin_right = 105.0
+margin_bottom = 27.0
+text = "Campaign Seed: "
+
+[node name="LineEdit" type="LineEdit" parent="CampaignSeed/MC/GC"]
+margin_left = 109.0
+margin_right = 359.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+align = 1
+max_length = 20
+clear_button_enabled = true
+placeholder_text = "Random"
 
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
