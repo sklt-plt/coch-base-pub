@@ -53,7 +53,7 @@ var sprev_button : Button
 var map_button : Button
 
 #misc
-var legacy_campaign_cb: Button
+var use_custom_campaign_seed: Button
 
 func _ready():
 	#get control nodes
@@ -105,7 +105,7 @@ func _ready():
 	sprev_button = $"TC/Controls/SC/GC/SPrevButton"
 	map_button = $"TC/Controls/SC/GC/MapButton"
 
-	legacy_campaign_cb = $"TC/Misc/SC/GC/LegacyCampaignCB"
+	use_custom_campaign_seed = $"TC/Misc/SC/GC/CustomCampaignCB"
 
 func _on_Options_visibility_changed():
 	if self.visible:
@@ -144,7 +144,7 @@ func _on_Options_visibility_changed():
 		invert_run_check_box.visible = not toggle_run_check_box.pressed
 		invert_run_label.visible = not toggle_run_check_box.pressed
 
-		legacy_campaign_cb.pressed = user_settings["legacy_campaign"]
+		use_custom_campaign_seed.pressed = user_settings["use_custom_campaign"]
 
 		set_all_input_buttons_texts()
 
@@ -265,7 +265,8 @@ func _on_DiscardSettingsButton_button_up():
 func _on_InputSetter_set_action(action):
 	set_all_input_buttons_texts()
 
-func _on_LegacyCampaignCB_toggled(button_pressed):
-	var new_settings = {"legacy_campaign" : button_pressed}
+func _on_CustomCampaignCB_toggled(button_pressed):
+	var new_settings = {"use_custom_campaign" : button_pressed}
+	if not button_pressed:
+		new_settings["campaign_seed"] = ""
 	Globals.apply_user_settings(new_settings)
-

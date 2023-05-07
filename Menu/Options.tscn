@@ -1149,9 +1149,9 @@ __meta__ = {
 }
 
 [node name="GC" type="GridContainer" parent="TC/Misc/SC"]
-margin_right = 438.0
+margin_right = 486.0
 margin_bottom = 42.0
-size_flags_horizontal = 4
+size_flags_horizontal = 7
 size_flags_vertical = 0
 custom_constants/vseparation = 15
 custom_constants/hseparation = 15
@@ -1161,26 +1161,25 @@ __meta__ = {
 "_editor_description_": ""
 }
 
-[node name="LegacyCampaignL" type="Label" parent="TC/Misc/SC/GC"]
-margin_right = 215.0
+[node name="CustomCampaignL" type="Label" parent="TC/Misc/SC/GC"]
+margin_right = 187.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "Do not randomize campaing seed"
+size_flags_vertical = 3
+text = "Use Custom Campaign Seed: "
 valign = 1
 
-[node name="LegacyCampaignCB" type="CheckBox" parent="TC/Misc/SC/GC"]
-margin_left = 230.0
-margin_right = 254.0
+[node name="CustomCampaignCB" type="CheckBox" parent="TC/Misc/SC/GC"]
+margin_left = 202.0
+margin_right = 226.0
 margin_bottom = 24.0
-size_flags_horizontal = 0
-size_flags_vertical = 2
-clip_text = true
+size_flags_horizontal = 2
+size_flags_vertical = 3
 align = 1
 
 [node name="DummyControl2" type="Control" parent="TC/Misc/SC/GC"]
-margin_left = 415.0
-margin_right = 438.0
+margin_left = 387.0
+margin_right = 486.0
 margin_bottom = 24.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1188,22 +1187,22 @@ __meta__ = {
 
 [node name="DummyControl10" type="Control" parent="TC/Misc/SC/GC"]
 margin_top = 39.0
-margin_right = 215.0
+margin_right = 187.0
 margin_bottom = 42.0
 
 [node name="VSeparator" type="VSeparator" parent="TC/Misc/SC/GC"]
-margin_left = 230.0
+margin_left = 202.0
 margin_top = 39.0
-margin_right = 400.0
+margin_right = 372.0
 margin_bottom = 42.0
 size_flags_horizontal = 11
 custom_constants/separation = 170
 custom_styles/separator = SubResource( 1 )
 
 [node name="VSeparator2" type="VSeparator" parent="TC/Misc/SC/GC"]
-margin_left = 415.0
+margin_left = 387.0
 margin_top = 39.0
-margin_right = 438.0
+margin_right = 486.0
 margin_bottom = 42.0
 size_flags_horizontal = 11
 custom_constants/separation = 23
@@ -1310,7 +1309,7 @@ valign = 1
 [connection signal="button_up" from="TC/Controls/SC/GC/SNextButton" to="InputSetter" method="_on_SNextButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/SPrevButton" to="InputSetter" method="_on_SPrevButton_button_up"]
 [connection signal="button_up" from="TC/Controls/SC/GC/MapButton" to="InputSetter" method="_on_MapButton_button_up"]
-[connection signal="toggled" from="TC/Misc/SC/GC/LegacyCampaignCB" to="." method="_on_LegacyCampaignCB_toggled"]
+[connection signal="toggled" from="TC/Misc/SC/GC/CustomCampaignCB" to="." method="_on_CustomCampaignCB_toggled"]
 [connection signal="button_up" from="GC/ApplySettingsButton" to="." method="_on_ApplySettingsButton_button_up"]
 [connection signal="button_up" from="GC/DiscardSettingsButton" to="." method="_on_DiscardSettingsButton_button_up"]
 [connection signal="set_action" from="InputSetter" to="." method="_on_InputSetter_set_action"]

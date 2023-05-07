@@ -37,7 +37,8 @@ var user_settings = {
 	"toggle_run": false,
 	"invert_run": false,
 	#misc
-	"legacy_campaign": false
+	"use_custom_campaign" : false,
+	"campaign_seed": ""
 }
 
 const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
@@ -188,7 +189,7 @@ func apply_user_settings(var new_settings : Dictionary):
 				$"/root/Player/PlayerMovement".mouse_sensitivity = user_settings["mouse_sensitivity"]
 
 			# handled elsewhere:
-			# toggle_aim, invert_mouse_y, toggle_run, invert_run, legacy_campaign
+			# toggle_aim, invert_mouse_y, toggle_run, invert_run, custom_campaign
 
 	applying_setings = false
 	first_setup = false

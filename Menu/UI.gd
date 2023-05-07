@@ -18,6 +18,7 @@ func _ready():
 	$"LevelSelectEp2".visible = false
 	$"CampaignSeed".visible = false
 	$"LevelSelect".visible = false
+	$"%CampaignSeedLE".text = Globals.user_settings["campaign_seed"]
 
 func show_ep_clear_notif():
 	$"MainMenu".visible = false
@@ -53,13 +54,17 @@ func show_ep1():
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionEp1")
 	$"LevelSelectEp1".visible = true
-	$"CampaignSeed".visible = true
+	if $"/root/Globals".user_settings["use_custom_campaign"]:
+		$"%CampaignSeedLE".text = Globals.user_settings["campaign_seed"]
+		$"CampaignSeed".visible = true
 
 func show_ep2():
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionEp2")
 	$"LevelSelectEp2".visible = true
-	$"CampaignSeed".visible = true
+	if $"/root/Globals".user_settings["use_custom_campaign"]:
+		$"%CampaignSeedLE".text = Globals.user_settings["campaign_seed"]
+		$"CampaignSeed".visible = true
 
 func _on_LSBackButton_button_up():
 	show_main_menu()
@@ -130,3 +135,8 @@ func _on_Button_button_up():
 	if readme_dir != "":
 		if OS.shell_open(feedback_url) != OK:
 			print("Can't open feedback url")
+
+func _on_CampaignSeedLE_text_changed(var new_text):
+	var new_settings = {"campaign_seed" : new_text}
+	Globals.apply_user_settings(new_settings)
+	Globals.save_user_settings()

@@ -67,6 +67,8 @@ func _process(_delta):
 		if maybe_overrides and maybe_overrides.done:
 			maybe_overrides.apply()
 
+		setup_rng_seed()
+
 		if (prepare_subsystems()):
 			_generated_tree_root = _rooms_data_generator.generate_design_tree()
 
@@ -134,20 +136,13 @@ func randomize_seed():
 	print("Generating with seed: ", gen_seed)
 	_rng.set_seed(gen_seed.hash())
 
-func initialize_subsystems():
-	# clear ai cache
+func setup_rng_seed():
 	if not Engine.is_editor_hint():
-		$"/root/AIManager".clear_registrations()
-
-	for door in locked_doors:
-		door["ref"] = load(Globals.content_pack_path + door["path"])
-
-	# prepare rng
-	_rng = RandomNumberGenerator.new()
-
-	if not Engine.is_editor_hint():
-		if ((EpisodeManager.is_normal_episode_playing() and Globals.user_settings["legacy_campaign"] and not gen_seed.empty()) or
-			EpisodeManager.is_custom_episode_playing() and not gen_seed.empty()):
+		if (EpisodeManager.is_normal_episode_playing() and Globals.user_settings["use_custom_campaign"] and
+			Globals.user_settings["campaign_seed"] != "" and not gen_seed.empty()):
+			var mixed_seed = gen_seed + Globals.user_settings["campaign_seed"]
+			_rng.set_seed(mixed_seed.hash())
+		elif EpisodeManager.is_custom_episode_playing() and not gen_seed.empty():
 			_rng.set_seed(gen_seed.hash())
 		else:
 			randomize_seed()
@@ -157,9 +152,18 @@ func initialize_subsystems():
 		else:
 			_rng.set_seed(gen_seed.hash())
 
+func initialize_subsystems():
+	# clear ai cache
+	if not Engine.is_editor_hint():
+		$"/root/AIManager".clear_registrations()
+
+	for door in locked_doors:
+		door["ref"] = load(Globals.content_pack_path + door["path"])
+
+	_rng = RandomNumberGenerator.new()  # only needing reference for now...
+
 	# needed for every new node?
 	_owner = get_parent()
-
 
 	# create helper objects
 	_rooms_data_generator = get_parent().find_node("rooms_data_generator*")
