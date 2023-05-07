@@ -7,12 +7,20 @@ const NODE_X_MARGIN = 120
 const NODE_Y_MARGIN = 60
 const NODE_MIN_SIZE = 50
 
-const COLOR_UNEXPLORED = Color(0.5, 0.5, 0.5)
-const COLOR_EXPLORED = Color(0.25, 0.59, 0.75)
-const COLOR_TREASURE = Color(0.88, 0.91, 0.42)
-const COLOR_PLAYER = Color(0.73, 0.16, 0.16)
-const COLOR_GOAL = Color(0.19, 0.70, 0.06)
-const COLOR_LINK = Color(0.4, 0.4, 0.4)
+export (Color) var COLOR_UNEXPLORED = Color(0.5, 0.5, 0.5)
+export (Color) var COLOR_EXPLORED = Color(0.25, 0.59, 0.75)
+export (Color) var COLOR_TREASURE = Color(0.93, 0.470, 0.098)
+export (Color) var COLOR_KEY = Color(0.88, 0.91, 0.42)
+export (Color) var COLOR_PLAYER = Color(0.73, 0.16, 0.16)
+export (Color) var COLOR_GOAL = Color(0.19, 0.70, 0.06)
+export (Color) var COLOR_LINK = Color(0.4, 0.4, 0.4)
+
+export (Texture) var IMAGE_CLEAR
+export (Texture) var IMAGE_KEY
+export (Texture) var IMAGE_TREASURE
+export (Texture) var IMAGE_PLAYER
+export (Texture) var IMAGE_EXIT
+const ICON_MARGIN = 15
 
 const MINI_X_SCALE = 0.15
 const MINI_Y_SCALE = 0.2
@@ -44,7 +52,15 @@ func _ready():
 	$"%UnexploredColorLegend".color = COLOR_UNEXPLORED
 	$"%ExploredColorLegend".color = COLOR_EXPLORED
 	$"%TreasureColorLegend".color = COLOR_TREASURE
+	$"%KeyColorLegend".color = COLOR_KEY
 	$"%PlayerColorLegend".color = COLOR_PLAYER
+	$"%ExitColorLegend".color = COLOR_GOAL
+
+	$"%TextureRectExplored".texture = IMAGE_CLEAR
+	$"%TextureRectTreasure".texture = IMAGE_TREASURE
+	$"%TextureRectKey".texture = IMAGE_KEY
+	$"%TextureRectPlayer".texture = IMAGE_PLAYER
+	$"%TextureRectGoal".texture = IMAGE_EXIT
 
 	node_material = CanvasItemMaterial.new()
 	node_material.blend_mode = CanvasItemMaterial.BLEND_MODE_MIX
@@ -136,6 +152,30 @@ func create_nodes(var map_node, var layer_idx):
 		label.owner = node.owner
 		label.material = node_material
 
+	var margin = MarginContainer.new()
+	margin.name = "MC"
+	margin.set("custom_constants/margin_right", ICON_MARGIN)
+	margin.set("custom_constants/margin_top", ICON_MARGIN)
+	margin.set("custom_constants/margin_left", ICON_MARGIN)
+	margin.set("custom_constants/margin_bottom", ICON_MARGIN)
+	margin.size_flags_vertical = SIZE_EXPAND_FILL
+	margin.size_flags_horizontal = SIZE_EXPAND_FILL
+
+	node.add_child(margin)
+	margin.anchor_right = 1
+	margin.anchor_bottom = 1
+	margin.owner = node.owner
+
+	var texture_rect = TextureRect.new()
+	texture_rect.name = "TR"
+	texture_rect.size_flags_vertical = SIZE_EXPAND_FILL
+	texture_rect.size_flags_horizontal = SIZE_EXPAND_FILL
+	texture_rect.expand = true
+	texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
+	margin.add_child(texture_rect)
+	texture_rect.owner = margin.owner
+
 	var children = map_node.get_children()
 
 	#for c in children:
@@ -213,6 +253,7 @@ func connect_the_fuckers():
 func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Array):
 	# color previoud node
 	current_players_node.color = COLOR_EXPLORED
+	current_players_node.get_node("MC/TR").texture = IMAGE_CLEAR
 
 	# color neighbour nodes
 	for node in now_visible_nodes:
@@ -221,15 +262,22 @@ func update_map(var new_players_node : RoomGeometry, var now_visible_nodes : Arr
 
 		for child in node.children:
 			if is_instance_valid(child):
-				if is_key_and_active(child) or is_treasure_chest_and_active(child):
+				if is_key_and_active(child):
+					node_refs[node.tree_ref].color = COLOR_KEY
+					node_refs[node.tree_ref].get_node("MC/TR").texture = IMAGE_KEY
+
+				elif is_treasure_chest_and_active(child):
 					node_refs[node.tree_ref].color = COLOR_TREASURE
+					node_refs[node.tree_ref].get_node("MC/TR").texture = IMAGE_TREASURE
 
 				elif child is LevelExit or child is FakeExit:
 					node_refs[node.tree_ref].color = COLOR_GOAL
+					node_refs[node.tree_ref].get_node("MC/TR").texture = IMAGE_EXIT
 
 	# color current node
 	current_players_node = node_refs[new_players_node.tree_ref]
 	current_players_node.color = COLOR_PLAYER
+	current_players_node.get_node("MC/TR").texture = IMAGE_PLAYER
 
 func _input(event):
 	if $"../InputProxy".is_locked:

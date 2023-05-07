@@ -1,8 +1,13 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Base/Actors/Player/HUD/MapContainer.gd" type="Script" id=1]
 [ext_resource path="res://Content/custom/UI/UITheme.tres" type="Theme" id=2]
 [ext_resource path="res://Base/UI/minimap_mask.png" type="Texture" id=3]
+[ext_resource path="res://Content/custom/Actors/Player/HUD/map_exit.png" type="Texture" id=4]
+[ext_resource path="res://Content/custom/Actors/Player/HUD/map_chest.png" type="Texture" id=5]
+[ext_resource path="res://Content/custom/Actors/Player/HUD/map_key.png" type="Texture" id=6]
+[ext_resource path="res://Content/custom/Actors/Player/HUD/map_player.png" type="Texture" id=7]
+[ext_resource path="res://Content/custom/Actors/Player/HUD/map_check.png" type="Texture" id=8]
 
 [sub_resource type="CanvasItemMaterial" id=6]
 light_mode = 2
@@ -17,6 +22,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 script = ExtResource( 1 )
+IMAGE_CLEAR = ExtResource( 8 )
+IMAGE_KEY = ExtResource( 6 )
+IMAGE_TREASURE = ExtResource( 5 )
+IMAGE_PLAYER = ExtResource( 7 )
+IMAGE_EXIT = ExtResource( 4 )
 
 [node name="Light2DMM" type="Light2D" parent="."]
 texture = ExtResource( 3 )
@@ -88,7 +98,7 @@ custom_constants/margin_top = 50
 margin_top = 50.0
 margin_right = 1780.0
 margin_bottom = 109.0
-columns = 5
+columns = 6
 
 [node name="GridContainer5" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
 margin_right = 109.0
@@ -103,7 +113,23 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.72549, 0.164706, 0.164706, 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="LegendMC/MarginContainer/GridContainer/GridContainer5/PlayerColorLegend"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 6
+custom_constants/margin_top = 6
+custom_constants/margin_left = 6
+custom_constants/margin_bottom = 6
+
+[node name="TextureRectPlayer" type="TextureRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer5/PlayerColorLegend/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 44.0
+margin_bottom = 44.0
+expand = true
+stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer5"]
 margin_left = 58.0
@@ -127,7 +153,6 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.643137, 0.176471, 0.176471, 1 )
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer2"]
 margin_left = 58.0
@@ -151,7 +176,23 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.643137, 0.176471, 0.176471, 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="LegendMC/MarginContainer/GridContainer/GridContainer3/ExploredColorLegend"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 6
+custom_constants/margin_top = 6
+custom_constants/margin_left = 6
+custom_constants/margin_bottom = 6
+
+[node name="TextureRectExplored" type="TextureRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer3/ExploredColorLegend/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 44.0
+margin_bottom = 44.0
+expand = true
+stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer3"]
 margin_left = 58.0
@@ -175,7 +216,23 @@ margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.643137, 0.176471, 0.176471, 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="LegendMC/MarginContainer/GridContainer/GridContainer4/TreasureColorLegend"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 6
+custom_constants/margin_top = 6
+custom_constants/margin_left = 6
+custom_constants/margin_bottom = 6
+
+[node name="TextureRectTreasure" type="TextureRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer4/TreasureColorLegend/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 44.0
+margin_bottom = 44.0
+expand = true
+stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer4"]
 margin_left = 58.0
@@ -188,20 +245,76 @@ valign = 2
 
 [node name="GridContainer6" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
 margin_left = 698.0
-margin_right = 816.0
+margin_right = 805.0
 margin_bottom = 50.0
 columns = 2
 
-[node name="ExitColorLegend" type="ColorRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer6"]
+[node name="KeyColorLegend" type="ColorRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer6"]
 unique_name_in_owner = true
 margin_right = 50.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 50, 50 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.188235, 0.705882, 0.0588235, 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="LegendMC/MarginContainer/GridContainer/GridContainer6/KeyColorLegend"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 6
+custom_constants/margin_top = 6
+custom_constants/margin_left = 6
+custom_constants/margin_bottom = 6
+
+[node name="TextureRectKey" type="TextureRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer6/KeyColorLegend/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 44.0
+margin_bottom = 44.0
+expand = true
+stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer6"]
+margin_left = 58.0
+margin_top = 7.0
+margin_right = 107.0
+margin_bottom = 43.0
+size_flags_horizontal = 2
+text = "Key"
+valign = 2
+
+[node name="GridContainer7" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
+margin_left = 813.0
+margin_right = 931.0
+margin_bottom = 50.0
+columns = 2
+
+[node name="ExitColorLegend" type="ColorRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer7"]
+unique_name_in_owner = true
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 50 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="LegendMC/MarginContainer/GridContainer/GridContainer7/ExitColorLegend"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 6
+custom_constants/margin_top = 6
+custom_constants/margin_left = 6
+custom_constants/margin_bottom = 6
+
+[node name="TextureRectGoal" type="TextureRect" parent="LegendMC/MarginContainer/GridContainer/GridContainer7/ExitColorLegend/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 44.0
+margin_bottom = 44.0
+expand = true
+stretch_mode = 6
+
+[node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer7"]
 margin_left = 58.0
 margin_top = 7.0
 margin_right = 118.0
