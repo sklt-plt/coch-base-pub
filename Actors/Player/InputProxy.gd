@@ -39,7 +39,18 @@ func _unhandled_input(_event):
 				print("Noclip off")
 
 		if Input.is_action_just_pressed("DBG_2"):
-			$"/root/Player".play_slowmo_effect(2.5)
+			if not get_tree().paused:
+				$"/root/Player".pause_mode = Node.PAUSE_MODE_PROCESS
+				$"/root/Player".visible = false
+				$"/root/Player/HUD".visible = false
+				$"/root/Player/MapContainer".visible = false
+				get_tree().paused = true
+			else:
+				$"/root/Player".pause_mode = Node.PAUSE_MODE_INHERIT
+				$"/root/Player".visible = true
+				$"/root/Player/HUD".visible = true
+				$"/root/Player/MapContainer".visible = true
+				get_tree().paused = false
 
 		if Input.is_action_just_pressed("DBG_3"):
 			Globals.set_ep_completed(1, not Globals.player_progress["1"])
