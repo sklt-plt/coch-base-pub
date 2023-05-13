@@ -79,8 +79,8 @@ func _unhandled_input(_event):
 			$"/root/Player".reset()
 
 		if Input.is_action_just_pressed("DBG_7"):
-			#$"/root/Player/HUD".visible = false
-			#$"/root/Player/MapContainer".visible = false
+			$"/root/Player/HUD".visible = false
+			$"/root/Player/MapContainer".visible = false
 			$"/root/Player/PlayerResources".r_health = INF
 			$"/root/Player/PlayerResources".resources_limits = {
 				"r_health" : 99999, #100
