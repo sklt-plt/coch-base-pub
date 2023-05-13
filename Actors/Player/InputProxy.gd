@@ -69,12 +69,44 @@ func _unhandled_input(_event):
 			$"/root/Player".give("r_keys", 1)
 
 		if Input.is_action_just_pressed("DBG_5"):
+			if $"/root/EpisodeManager".is_custom_episode_playing():
+				$"/root/EpisodeManager".current_level_idx = -1
 			EpisodeManager.next_map()
 
 		if Input.is_action_just_pressed("DBG_6"):
 			EpisodeManager.change_map("res://Content/custom/Maps/TestMap.tscn")
 			$"/root/Player".hide_loading()
 			$"/root/Player".reset()
+
+		if Input.is_action_just_pressed("DBG_7"):
+			#$"/root/Player/HUD".visible = false
+			#$"/root/Player/MapContainer".visible = false
+			$"/root/Player/PlayerResources".r_health = INF
+			$"/root/Player/PlayerResources".resources_limits = {
+				"r_health" : 99999, #100
+				"r_armor"  : 99999,
+				"r_pistol_ammo" : 99999,
+				"r_shotgun_ammo" : 99999,
+				"r_crossbow_ammo" : 99999,
+				"r_keys" : 100,
+				"e_melee_level" : 1,
+				"e_pistol_level" : 1,
+				"e_double_barrel_level" : 1,
+				"e_crossbow_level" : 1,
+				"r_time_left" : 1,
+				"r_time_freeze": 1.04
+			}
+			$"/root/Player/PlayerResources".r_health = 99999
+			$"/root/Player/PlayerResources".r_armor = 99999
+			$"/root/Player/PlayerResources".r_pistol_ammo = 99999
+			$"/root/Player/PlayerResources".r_shotgun_ammo = 99999
+			$"/root/Player/PlayerResources".r_crossbow_ammo = 99999
+
+		if Input.is_action_just_pressed("DBG_9"):
+			if Engine.time_scale < 1:
+				Engine.time_scale = 1
+			else:
+				Engine.time_scale = 0.5
 
 func _process(delta):
 	if not is_locked:
