@@ -1,6 +1,9 @@
 extends KinematicActor
 class_name PlayerInterface
 
+func _init():
+	reduce_modifier_time = 0.3
+
 func on_water_entered():
 	$PlayerMovement.enteredWater()
 

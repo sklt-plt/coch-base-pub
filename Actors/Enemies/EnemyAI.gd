@@ -291,6 +291,9 @@ func begin_state(var desired_state):
 			States.DYING:
 				current_state = States.DYING
 
+				if parent_node is KinematicActor:
+					parent_node.reduce_modifier_time = 1
+
 				if wander_timer:
 					wander_timer.stop()
 

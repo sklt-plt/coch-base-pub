@@ -3,7 +3,7 @@ class_name KinematicActor
 
 var move_modifier_linear = Vector3(0,0,0)
 var move_modifier_instant = Vector3(0,0,0)
-var reduce_modifier_time = 0.3
+var reduce_modifier_time = 0.05
 var simulate_movement = true
 
 func _physics_process(_delta):
