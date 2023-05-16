@@ -16,6 +16,7 @@ var boss_health_group : Control
 var boss_health_bar1 : TextureProgress
 var boss_health_bar2 : TextureProgress
 
+var keys_container: Control
 var keys_current: Label
 
 var arcade_container : Control
@@ -40,6 +41,7 @@ func _ready():
 	ammo_type = get_node("Ammo/Type")
 	ammo_bar = get_node("Ammo/Bar")
 
+	keys_container = get_node("Keys")
 	keys_current = get_node("Keys/KeyCount/Current")
 
 	if not ammo_sprites.empty():
@@ -100,6 +102,7 @@ func _physics_process(delta):
 			ammo_bar.value = $"/root/Player".check("r_crossbow_ammo")
 			ammo_bar.max_value = $"/root/Player".check_limit("r_crossbow_ammo")+bonus_ammo_cap
 
+	keys_container.visible = $"/root/Player".has("r_keys", 1)
 	keys_current.text = String(max($"/root/Player".check("r_keys"), 0.0))
 
 	if boss_enemy_node:
