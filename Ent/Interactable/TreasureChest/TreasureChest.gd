@@ -4,7 +4,7 @@ class_name TreasureChest
 const LID_LAUNCH_MAX_FORCE = 2.0
 
 var is_open = false
-export (bool) var prioritize_new_weapon = false
+export (bool) var give_weapon = false
 
 export (Array, Dictionary) var powerups = [
 	{"path": "/Ent/Interactable/Powerups/HealthPowerup.tscn", "resource_name": "r_health"},
@@ -13,7 +13,8 @@ export (Array, Dictionary) var powerups = [
 ]
 
 export (Array, Dictionary) var gun_powerups = [
-	{"path": "/Ent/Interactable/Powerups/ShotgunPowerup.tscn", "resource_name": "e_double_barrel_level"}
+	{"path": "/Ent/Interactable/Powerups/ShotgunPowerup.tscn", "resource_name": "e_double_barrel_level"},
+	{"path": "/Ent/Interactable/Powerups/CrossbowPowerup.tscn", "resource_name": "e_crossbow_level"}
 ]
 
 var spawn_pos
@@ -47,7 +48,7 @@ func activate():
 	#collect only legal powerups for spawning
 	var allowed_powerups = []
 
-	if prioritize_new_weapon:
+	if give_weapon:
 		for p in gun_powerups:
 			if $"/root/Player".check(p["resource_name"]) == 0:
 				allowed_powerups.append(p["ref"])
