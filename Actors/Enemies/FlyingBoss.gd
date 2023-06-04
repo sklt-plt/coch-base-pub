@@ -134,7 +134,7 @@ func _physics_process(delta):
 func begin_state(var state):
 	match state:
 		States.Begin:
-			$"/root/Player/HUD".register_boss_health(self, "Flap Mouse")
+			$"/root/Player/HUD".register_boss_health(self, "Batrick")
 			$"/root/Player".give("s_kills_possible", 1)
 			$"%SniperBoner".set_awake(true)
 			set_retreat_xz()
