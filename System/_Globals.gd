@@ -175,6 +175,7 @@ func apply_user_settings(var new_settings : Dictionary):
 
 			if setting == "fov":
 				$"/root/Player".set_fov(user_settings["fov"])
+				$"/root/Player/PlayerAnimations".base_fov = user_settings["fov"]
 
 			if setting == "master_volume":
 				AudioServer.set_bus_volume_db(0, linear2db(user_settings["master_volume"]))
@@ -187,6 +188,7 @@ func apply_user_settings(var new_settings : Dictionary):
 
 			if setting == "mouse_sensitivity":
 				$"/root/Player/PlayerMovement".mouse_sensitivity = user_settings["mouse_sensitivity"]
+				$"/root/Player/PlayerAnimations".base_sensitivity = user_settings["mouse_sensitivity"]
 
 			# handled elsewhere:
 			# toggle_aim, invert_mouse_y, toggle_run, invert_run, custom_campaign
