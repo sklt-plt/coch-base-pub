@@ -13,6 +13,7 @@ var s_treasure_possible: int
 var s_damage_dealt: int
 var s_damage_taken: int
 var s_deaths: int
+var s_max_combo: int
 
 func reset():
 	#(re)set values to default
@@ -28,6 +29,7 @@ func reset():
 	s_damage_dealt = 0
 	s_damage_taken = 0
 	s_deaths = 0
+	s_max_combo = 0
 
 func _process(delta):
 	s_time_total += delta

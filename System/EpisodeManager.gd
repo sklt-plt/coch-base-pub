@@ -5,6 +5,11 @@ var episode_levels
 var current_level_idx
 var episode_clear_idx = -1
 
+const CAMPAIGN_ENEMY_REQUIREMENTS = [
+	300,
+	450
+]
+
 func reset_episode_cache():
 	current_ep = -1
 	episode_levels = []
@@ -82,7 +87,10 @@ func start_episode(var ep_idx: int):
 	current_ep = ep_idx
 
 	if is_endless_episode_playing():
-		$"/root/Player".start_arcade_mode()
+		$"/root/Player".setup_arcade_mode()
+
+	elif is_normal_episode_playing():
+		$"/root/Player".setup_campaign_mode(CAMPAIGN_ENEMY_REQUIREMENTS[ep_idx-1])
 
 	next_map_in_ep()
 

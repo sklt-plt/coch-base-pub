@@ -25,6 +25,11 @@ var arcade_time : Label
 var arcade_time_freeze : Label
 var arcade_score : Label
 
+var progress_score: Label
+var progress_total: Label
+var progress_multiplier: Label
+var progress_multiplier_decay: ProgressBar
+
 var boss_enemy_node
 
 var current_gun_index = 0
@@ -56,6 +61,11 @@ func _ready():
 	arcade_time = get_node("Arcade/TimerP/MC/TimeC/TimeVal")
 	arcade_time_freeze = get_node("Arcade/TimerP/MC/TimeC/TextureRect/TimeFreezeVal")
 	arcade_score = get_node("Arcade/ScoreP/MC/ScoreC/Score")
+
+	progress_score = $"%ProgressCurrent"
+	progress_total = $"%ProgressTotal"
+	progress_multiplier = $"%MultiplierValue"
+	progress_multiplier_decay = $"%MultiplierProgressBar"
 
 func register_boss_health(var node : Node, var boss_name: String):
 	boss_enemy_node = node
@@ -116,6 +126,13 @@ func _physics_process(delta):
 		var time_left = $"/root/Player".check("r_time_left")
 		arcade_time.text = TimeHelper.float_to_min_sec_str(time_left)
 		arcade_time_freeze.text = "%.1f" % $"/root/Player".check("r_time_freeze")
+
+	var r_progress_multiplier = $"/root/Player".check("r_progress_multiplier")
+	progress_score.text = String($"/root/Player".check_limit("r_progress") - $"/root/Player".check("r_progress"))
+	progress_total.text = String($"/root/Player".check_limit("r_progress"))
+
+	progress_multiplier.text = String(int(floor(r_progress_multiplier))) + "x"
+	progress_multiplier_decay.value = r_progress_multiplier - floor(r_progress_multiplier)
 
 func update_gun_index(var gun_index: int):
 	current_gun_index = gun_index

@@ -43,6 +43,7 @@ func revive():
 func reset():
 	$"HUD/HurtEffect".color.a = 0.0
 	$"HUD/Arcade".visible = false
+	$"HUD/Progress".visible = false
 	$"PlayerResources".reset()
 	$"PlayerStats".reset()
 	$BodyCollision/LookHeight/LookDirection/GunController.switch_guns(1, false)
@@ -122,9 +123,13 @@ func _ready():
 func set_fov(var fov : float):
 	$"BodyCollision/LookHeight/LookDirection/WorldCamera".fov = fov
 
-func start_arcade_mode():
+func setup_arcade_mode():
 	$"PlayerResources".use_time_limit = true
 	$"HUD/Arcade".visible = true
+
+func setup_campaign_mode(var enemy_requirement):
+	$"PlayerResources".resources_limits["r_progress"] = enemy_requirement
+	$"HUD/Progress".visible = true
 
 func play_slowmo_effect(var time):
 	$"PlayerAnimations".play_slowmo(time)

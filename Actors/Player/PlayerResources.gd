@@ -13,6 +13,8 @@ var e_double_barrel_level : int
 var e_crossbow_level : int
 var r_time_left : float
 var r_time_freeze: float
+var r_progress: int
+var r_progress_multiplier: float
 
 var resources_limits = {}
 var resource_max_upgrades = {}
@@ -25,6 +27,12 @@ export (AudioStream) var audio_death
 export (bool) var use_time_limit
 
 const TIME_LEFT_MAX = 4.0*60
+
+var progress_multiplier_decay = 0.0
+const PROGRESS_MULTIPLIER_DECAY_SPEED_3x = 0.15
+const PROGRESS_MULTIPLIER_DECAY_SPEED_2x = 0.1
+const PROGRESS_MULTIPLIER_DECAY_SPEED_1x = 0.075
+var current_multiplier_decay_speed = 0.1
 
 func reset():
 	#(re)set values to default
@@ -41,6 +49,8 @@ func reset():
 	e_crossbow_level = 0
 	r_time_left = TIME_LEFT_MAX
 	r_time_freeze = 0.01
+	r_progress = 0
+	r_progress_multiplier = 1
 
 	resources_limits = {
 		"r_health" : 30, #100
@@ -54,7 +64,9 @@ func reset():
 		"e_double_barrel_level" : 1,
 		"e_crossbow_level" : 1,
 		"r_time_left" : TIME_LEFT_MAX,
-		"r_time_freeze": 1.04
+		"r_time_freeze": 1.04,
+		"r_progress": 300,
+		"r_progress_multiplier": 3.9,
 	}
 
 	resource_max_upgrades = {
@@ -74,6 +86,13 @@ func _process(delta):
 			if not take("r_time_freeze", delta) and not take("r_time_left", delta):
 				$"../GameOverStats".reason = "Time Up!"
 				deal_damage(10000)
+
+	if r_progress_multiplier > 1.0:
+		take("r_progress_multiplier", progress_multiplier_decay * delta)
+		progress_multiplier_decay = min(1, progress_multiplier_decay + current_multiplier_decay_speed * delta)
+	else:
+		r_progress_multiplier = 1.0
+
 
 func upgrade_resource(var resource, var value):
 	if resource == "ammo_bonus_cap":
@@ -108,6 +127,8 @@ func deal_damage(var value):
 			$"../SFXPlayer".stream = audio_hurt
 			$"../SFXPlayer".play()
 
+		r_progress_multiplier -= 1.0
+
 func take(var resource, var value):
 	var res = get(resource)
 	if !res:
@@ -135,7 +156,6 @@ func set(var resource, var value):
 	switch_to_new_weapon(resource)
 
 func give(var resource, var value):
-
 	if value > 0:
 		var resource_value = get(resource)
 		if resource_value == null:
@@ -155,6 +175,20 @@ func give(var resource, var value):
 				return false || use_time_limit
 
 			resource_value = min(resource_value + value, resources_limits[resource]+ammo_bonus_cap)
+		elif resource == "r_progress":
+			resource_value = min(resource_value + value * floor((r_progress_multiplier)), resources_limits[resource])
+
+			give("r_progress_multiplier", 0.75)
+
+			if (r_progress_multiplier < 0.45 * resources_limits["r_progress_multiplier"]):
+				current_multiplier_decay_speed = PROGRESS_MULTIPLIER_DECAY_SPEED_1x
+			elif (r_progress_multiplier < 0.65 * resources_limits["r_progress_multiplier"]):
+				current_multiplier_decay_speed = PROGRESS_MULTIPLIER_DECAY_SPEED_2x
+			elif (r_progress_multiplier < 0.85 * resources_limits["r_progress_multiplier"]):
+				current_multiplier_decay_speed = PROGRESS_MULTIPLIER_DECAY_SPEED_3x
+
+			progress_multiplier_decay = 0.0
+
 		else:
 			if get(resource) == resources_limits[resource]:
 				#player is full
@@ -190,11 +224,3 @@ func check_limit(var resource):
 		return ammo_bonus_cap
 	else:
 		return resources_limits[resource]
-
-func save_resources():
-	var res_dict = {
-		"r_health" : r_health,
-		"r_armor" : r_armor
-	}
-
-	return res_dict

@@ -6,4 +6,9 @@ func activate():
 		$"/root/Player/GameOverStats".reason = "Finish!"
 		$"/root/Player/GameOverStats".show()
 	else:
-		$"/root/EpisodeManager".next_map()
+		var settings = get_tree().current_scene.get_node_or_null("ExtraSettings")
+		if settings and settings.require_score and not $"/root/Player".has("r_progress", $"/root/Player".check_limit("r_progress")):
+			$"/root/EpisodeManager".restart_current_map()
+		else:
+			$"/root/EpisodeManager".next_map()
+

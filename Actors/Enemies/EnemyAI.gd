@@ -321,6 +321,8 @@ func begin_state(var desired_state):
 					for r in kill_immediate_resources:
 						$"/root/Player".give(r, kill_immediate_resources[r])
 
+					$"/root/Player".give("r_progress", 1)
+
 			States.AWAKE:
 				parent_node.visible = true
 				play_animation(ANIM_IDLE)
