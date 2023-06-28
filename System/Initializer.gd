@@ -27,6 +27,7 @@ func on_player_ready():
 	$"/root/Globals".load_user_settings()
 	$"/root/Globals".load_user_inputs()
 	$"/root/Globals".load_user_progress()
+	$"/root/Globals".load_user_modifiers()
 
 	#debug load demo
 	if DEBUG_DEMO_EP > 0:

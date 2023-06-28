@@ -264,9 +264,3 @@ func _on_DiscardSettingsButton_button_up():
 
 func _on_InputSetter_set_action(action):
 	set_all_input_buttons_texts()
-
-func _on_CustomCampaignCB_toggled(button_pressed):
-	var new_settings = {"use_custom_campaign" : button_pressed}
-	if not button_pressed:
-		new_settings["campaign_seed"] = ""
-	Globals.apply_user_settings(new_settings)

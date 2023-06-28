@@ -59,7 +59,12 @@ func enable():
 	$"SFXPlayer3".stop()
 
 func deal_damage(var damage, var push_force, var from_direction, var _from_ent):
-	var actual_damage = damage * Globals.difficulty
+	var actual_damage
+	if $"/root/EpisodeManager".is_normal_episode_playing():
+		actual_damage = damage * ((1 + Globals.user_modifiers["campaign_difficulty"]) * Globals.DIFFICULTY_BASE)
+	else:
+		actual_damage = damage * Globals.DIFFICULTY_BASE * 2
+
 	$"PlayerResources".deal_damage(actual_damage)
 	$"PlayerStats".give("s_damage_taken", actual_damage)
 	.push_linear(from_direction, push_force)

@@ -1,7 +1,7 @@
 tool
 extends Node
 
-var difficulty = 0.6
+const DIFFICULTY_BASE = 0.3
 
 #var content_pack_path = "res://Content/default"
 var content_pack_path = "res://Content/custom"
@@ -37,7 +37,11 @@ var user_settings = {
 	"toggle_run": false,
 	"invert_run": false,
 	#misc
-	"use_custom_campaign" : false,
+}
+
+var user_modifiers = {
+	"campaign_difficulty": 1,
+	"use_additional_modifiers": false,
 	"campaign_seed": ""
 }
 
@@ -48,6 +52,7 @@ const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "",
 const USER_INPUT_FILENAME = "user://user_input.cfg"
 const USER_SETTINGS_FILENAME = "user://user_settings.cfg"
 const USER_PROGRESS_FILENAME = "user://user_progress.sav"
+const USER_MODIFIERS_FILENAME = "user://user_modifiers.cfg"
 
 func set_ep_completed(var episode_idx: int, var value : bool):
 	player_progress[String(episode_idx)] = value
@@ -56,6 +61,13 @@ func set_ep_completed(var episode_idx: int, var value : bool):
 func load_user_progress():
 	if not FileHelper.load_file(USER_PROGRESS_FILENAME, player_progress):
 		save_user_progress()
+
+func load_user_modifiers():
+	if not FileHelper.load_file(USER_MODIFIERS_FILENAME, user_modifiers):
+		save_user_modifiers()
+
+func save_user_modifiers():
+	FileHelper.save_file(USER_MODIFIERS_FILENAME, user_modifiers)
 
 func save_user_progress():
 	FileHelper.save_file(USER_PROGRESS_FILENAME, player_progress)
@@ -92,6 +104,20 @@ func load_user_inputs():
 			event.scancode = int(player_input_settings[setting])
 
 		InputHelper.set_input(setting, event)
+
+func apply_user_modifiers(var new_settings : Dictionary):
+	#chaos control
+	if applying_setings:
+		return
+
+	applying_setings = true
+
+	for setting in new_settings:
+		#compare if anything changed
+		if first_setup or new_settings[setting] != user_settings[setting]:
+			user_settings[setting] = new_settings[setting]
+
+	applying_setings = false
 
 func apply_user_settings(var new_settings : Dictionary):
 	#chaos control

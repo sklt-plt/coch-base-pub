@@ -6,6 +6,8 @@ signal focus_camera (target_node)
 export (String) var readme_dir = "/README"
 export (String) var feedback_url = ""
 
+var selected_ep = -1
+
 func _ready():
 	$"LevelSelect/Ep2Button".disabled = false
 	$"LevelSelect/Ep3Button".disabled = true#!Globals.player_progress["2"]
@@ -18,7 +20,9 @@ func _ready():
 	$"LevelSelectEp2".visible = false
 	$"CampaignSeed".visible = false
 	$"LevelSelect".visible = false
-	$"%CampaignSeedLE".text = Globals.user_settings["campaign_seed"]
+	$"CampaignSetup".visible = false
+	$"%CampaignSeedLE".text = Globals.user_modifiers["campaign_seed"]
+	$"%DifficultyOption".selected = Globals.user_modifiers["campaign_difficulty"]
 
 func show_ep_clear_notif():
 	$"MainMenu".visible = false
@@ -54,17 +58,23 @@ func show_ep1():
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionEp1")
 	$"LevelSelectEp1".visible = true
-	if $"/root/Globals".user_settings["use_custom_campaign"]:
-		$"%CampaignSeedLE".text = Globals.user_settings["campaign_seed"]
-		$"CampaignSeed".visible = true
+	#if $"/root/Globals".user_settings["use_custom_campaign"]:
+	#	$"%CampaignSeedLE".text = Globals.user_modifiers["campaign_seed"]
+	#	$"CampaignSeed".visible = true
 
 func show_ep2():
 	$"LevelSelect".visible = false
 	emit_signal("focus_camera", "CameraPositionEp2")
 	$"LevelSelectEp2".visible = true
-	if $"/root/Globals".user_settings["use_custom_campaign"]:
-		$"%CampaignSeedLE".text = Globals.user_settings["campaign_seed"]
-		$"CampaignSeed".visible = true
+	#if $"/root/Globals".user_settings["use_custom_campaign"]:
+	#	$"%CampaignSeedLE".text = Globals.user_modifiers["campaign_seed"]
+	#	$"CampaignSeed".visible = true
+
+func show_campaign_setup():
+	$"LevelSelectEp1".visible = false
+	$"LevelSelectEp2".visible = false
+
+	$"CampaignSetup".visible = true
 
 func _on_LSBackButton_button_up():
 	show_main_menu()
@@ -73,9 +83,11 @@ func _on_ContinueButton_button_up():
 	show_level_select()
 
 func _on_PlayEp1_button_up():
-	self.visible = false
-	emit_signal("unsetup_menu")
-	EpisodeManager.start_episode(1)
+	#self.visible = false
+	#emit_signal("unsetup_menu")
+	#EpisodeManager.start_episode(1)#
+	selected_ep = 1
+	show_campaign_setup()
 
 func _on_PlayEp1Endless_button_up():
 	self.visible = false
@@ -94,9 +106,11 @@ func _on_LSE1BackButton_button_up():
 	show_level_select()
 
 func _on_PlayEp2_button_up():
-	self.visible = false
-	emit_signal("unsetup_menu")
-	EpisodeManager.start_episode(2)
+	#self.visible = false
+	#emit_signal("unsetup_menu")
+	#EpisodeManager.start_episode(2)
+	selected_ep = 2
+	show_campaign_setup()
 
 func _on_PlayEp2Endless_button_up():
 	self.visible = false
@@ -113,6 +127,12 @@ func _on_Ep2Button_button_up():
 
 func _on_LSE2BackButton_button_up():
 	show_level_select()
+
+func _on_PlayCampaign_button_up():
+	self.visible = false
+	Globals.save_user_modifiers()
+	emit_signal("unsetup_menu")
+	EpisodeManager.start_episode(selected_ep)
 
 func _on_QuitButton_button_up():
 	get_tree().quit()
@@ -137,6 +157,17 @@ func _on_Button_button_up():
 			print("Can't open feedback url")
 
 func _on_CampaignSeedLE_text_changed(var new_text):
-	var new_settings = {"campaign_seed" : new_text}
-	Globals.apply_user_settings(new_settings)
-	Globals.save_user_settings()
+	Globals.user_modifiers["campaign_seed"] = new_text
+
+func _on_CSBack_button_up():
+	$"CampaignSetup".visible = false
+	Globals.save_user_modifiers()
+
+	match selected_ep:
+		1:
+			show_ep1()
+		2:
+			show_ep2()
+
+func _on_DifficultyButton_item_selected(index):
+	Globals.user_modifiers["campaign_difficulty"] = index

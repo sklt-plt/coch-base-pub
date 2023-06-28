@@ -138,9 +138,9 @@ func randomize_seed():
 
 func setup_rng_seed():
 	if not Engine.is_editor_hint():
-		if (EpisodeManager.is_normal_episode_playing() and Globals.user_settings["use_custom_campaign"] and
-			Globals.user_settings["campaign_seed"] != "" and not gen_seed.empty()):
-			var mixed_seed = gen_seed + Globals.user_settings["campaign_seed"]
+		if (EpisodeManager.is_normal_episode_playing() and Globals.user_modifiers["use_additional_modifiers"] and
+			Globals.user_modifiers["campaign_seed"] != "" and not gen_seed.empty()):
+			var mixed_seed = gen_seed + Globals.user_modifiers["campaign_seed"]
 			_rng.set_seed(mixed_seed.hash())
 		elif EpisodeManager.is_custom_episode_playing() and not gen_seed.empty():
 			_rng.set_seed(gen_seed.hash())

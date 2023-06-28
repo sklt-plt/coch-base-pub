@@ -200,6 +200,7 @@ __meta__ = {
 }
 
 [node name="LevelSelectEp1" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -249,6 +250,7 @@ __meta__ = {
 }
 
 [node name="LevelSelectEp2" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
@@ -399,6 +401,75 @@ max_length = 20
 clear_button_enabled = true
 placeholder_text = "Random"
 
+[node name="CampaignSetup" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="CSBack" type="Button" parent="CampaignSetup"]
+anchor_left = 0.059375
+anchor_top = 0.832
+anchor_right = 0.152
+anchor_bottom = 0.924038
+text = "Back"
+
+[node name="Play" type="Button" parent="CampaignSetup"]
+anchor_left = 0.4
+anchor_top = 0.689217
+anchor_right = 0.6
+anchor_bottom = 0.771909
+text = "Play"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="DifficultyP" type="Panel" parent="CampaignSetup"]
+anchor_left = 0.396875
+anchor_top = 0.479808
+anchor_right = 0.602771
+anchor_bottom = 0.613
+margin_right = -0.320004
+margin_bottom = 0.479996
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="MC" type="MarginContainer" parent="CampaignSetup/DifficultyP"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="GC" type="GridContainer" parent="CampaignSetup/DifficultyP/MC"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 379.0
+margin_bottom = 123.0
+
+[node name="DifficultyL" type="Label" parent="CampaignSetup/DifficultyP/MC/GC"]
+margin_right = 363.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Difficulty:"
+align = 1
+
+[node name="DifficultyOption" type="OptionButton" parent="CampaignSetup/DifficultyP/MC/GC"]
+unique_name_in_owner = true
+margin_top = 18.0
+margin_right = 363.0
+margin_bottom = 38.0
+text = "Normal"
+align = 1
+items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null ]
+selected = 1
+
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/ManualButton" to="." method="_on_ManualButton_button_up"]
@@ -418,3 +489,6 @@ placeholder_text = "Random"
 [connection signal="exited" from="Options" to="." method="_on_Options_exited"]
 [connection signal="button_up" from="EpClearNotif/EpClearOkButton" to="." method="_on_EpClearOkButton_button_up"]
 [connection signal="text_changed" from="CampaignSeed/MC/GC/CampaignSeedLE" to="." method="_on_CampaignSeedLE_text_changed"]
+[connection signal="button_up" from="CampaignSetup/CSBack" to="." method="_on_CSBack_button_up"]
+[connection signal="button_up" from="CampaignSetup/Play" to="." method="_on_PlayCampaign_button_up"]
+[connection signal="item_selected" from="CampaignSetup/DifficultyP/MC/GC/DifficultyOption" to="." method="_on_DifficultyButton_item_selected"]
