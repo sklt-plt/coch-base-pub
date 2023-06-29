@@ -1,8 +1,6 @@
 tool
 extends Node
 
-const DIFFICULTY_BASE = 0.3
-
 #var content_pack_path = "res://Content/default"
 var content_pack_path = "res://Content/custom"
 
@@ -39,11 +37,30 @@ var user_settings = {
 	#misc
 }
 
-var user_modifiers = {
-	"campaign_difficulty": 1,
-	"use_additional_modifiers": false,
+var campaign_difficulty_idx = 1
+
+var custom_difficulty = {
+	"damage_scale": 100,
 	"campaign_seed": ""
 }
+
+const CAMPAIGN_DIFFICULTIES = [
+	#Easy
+	{
+		"damage_scale": 0.3,
+		"campaign_seed": ""
+	},
+	#Normal
+	{
+		"damage_scale": 0.6,
+		"campaign_seed": ""
+	},
+	#Hard
+	{
+		"damage_scale": 1.2,
+		"campaign_seed": ""
+	}
+]
 
 const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
 	"Jump" : "", "Run" : "", "Select Revolver" : "", "Select Shotgun" : "", "Select Crossbow" : "", "Select Melee" : "", "Strafe Left" : "", "Strafe Right" : "",
@@ -52,7 +69,7 @@ const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "",
 const USER_INPUT_FILENAME = "user://user_input.cfg"
 const USER_SETTINGS_FILENAME = "user://user_settings.cfg"
 const USER_PROGRESS_FILENAME = "user://user_progress.sav"
-const USER_MODIFIERS_FILENAME = "user://user_modifiers.cfg"
+const USER_DIFFICULTY_FILENAME = "user://user_difficulty.cfg"
 
 func set_ep_completed(var episode_idx: int, var value : bool):
 	player_progress[String(episode_idx)] = value
@@ -62,12 +79,12 @@ func load_user_progress():
 	if not FileHelper.load_file(USER_PROGRESS_FILENAME, player_progress):
 		save_user_progress()
 
-func load_user_modifiers():
-	if not FileHelper.load_file(USER_MODIFIERS_FILENAME, user_modifiers):
-		save_user_modifiers()
+func load_user_difficulty():
+	if not FileHelper.load_file(USER_DIFFICULTY_FILENAME, custom_difficulty):
+		save_user_difficulty()
 
-func save_user_modifiers():
-	FileHelper.save_file(USER_MODIFIERS_FILENAME, user_modifiers)
+func save_user_difficulty():
+	FileHelper.save_file(USER_DIFFICULTY_FILENAME, custom_difficulty)
 
 func save_user_progress():
 	FileHelper.save_file(USER_PROGRESS_FILENAME, player_progress)
@@ -105,7 +122,7 @@ func load_user_inputs():
 
 		InputHelper.set_input(setting, event)
 
-func apply_user_modifiers(var new_settings : Dictionary):
+func apply_user_difficulty(var new_settings : Dictionary):
 	#chaos control
 	if applying_setings:
 		return
@@ -217,7 +234,7 @@ func apply_user_settings(var new_settings : Dictionary):
 				$"/root/Player/PlayerAnimations".base_sensitivity = user_settings["mouse_sensitivity"]
 
 			# handled elsewhere:
-			# toggle_aim, invert_mouse_y, toggle_run, invert_run, custom_campaign
+			# toggle_aim, invert_mouse_y, toggle_run, invert_run
 
 	applying_setings = false
 	first_setup = false
@@ -236,3 +253,15 @@ func load_user_settings():
 
 func save_user_settings():
 	FileHelper.save_file(USER_SETTINGS_FILENAME, user_settings)
+
+func uses_custom_difficulty():
+	return campaign_difficulty_idx == 3
+
+func get_difficulty_field(var field: String):
+	if $"/root/EpisodeManager".is_normal_episode_playing():
+		if uses_custom_difficulty():
+			return custom_difficulty[field]
+		else:
+			return CAMPAIGN_DIFFICULTIES[campaign_difficulty_idx][field]
+	else:
+		return CAMPAIGN_DIFFICULTIES[1][field]

@@ -445,12 +445,15 @@ custom_constants/margin_right = 16
 custom_constants/margin_top = 16
 custom_constants/margin_left = 16
 custom_constants/margin_bottom = 16
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [node name="GC" type="GridContainer" parent="CampaignSetup/DifficultyP/MC"]
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 379.0
-margin_bottom = 123.0
+margin_bottom = 122.0
 
 [node name="DifficultyL" type="Label" parent="CampaignSetup/DifficultyP/MC/GC"]
 margin_right = 363.0
@@ -465,10 +468,8 @@ unique_name_in_owner = true
 margin_top = 18.0
 margin_right = 363.0
 margin_bottom = 38.0
-text = "Normal"
 align = 1
-items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null ]
-selected = 1
+items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Custom", null, false, 3, null ]
 
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]

@@ -53,7 +53,6 @@ var sprev_button : Button
 var map_button : Button
 
 #misc
-var use_custom_campaign_seed: Button
 
 func _ready():
 	#get control nodes
@@ -105,8 +104,6 @@ func _ready():
 	sprev_button = $"TC/Controls/SC/GC/SPrevButton"
 	map_button = $"TC/Controls/SC/GC/MapButton"
 
-	use_custom_campaign_seed = $"TC/Misc/SC/GC/CustomCampaignCB"
-
 func _on_Options_visibility_changed():
 	if self.visible:
 		#get globals here
@@ -143,8 +140,6 @@ func _on_Options_visibility_changed():
 		invert_run_check_box.pressed = user_settings["invert_run"]
 		invert_run_check_box.visible = not toggle_run_check_box.pressed
 		invert_run_label.visible = not toggle_run_check_box.pressed
-
-		use_custom_campaign_seed.pressed = user_settings["use_custom_campaign"]
 
 		set_all_input_buttons_texts()
 
