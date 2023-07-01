@@ -1,6 +1,8 @@
 tool
 extends Node
 
+const EDITOR_DIFFICULTY = 1
+
 #var content_pack_path = "res://Content/default"
 var content_pack_path = "res://Content/custom"
 
@@ -40,24 +42,38 @@ var user_settings = {
 var campaign_difficulty_idx = 1
 
 var custom_difficulty = {
-	"damage_scale": 100,
+	"enemy_firepower_scale": 100,
+	"player_firepower_scale": 100,
+	"enemy_am_scale": 0,
+	"item_am_scale": 0,
+	#"level_size_scale": 1,
 	"campaign_seed": ""
+	#"use_score_req": true,
 }
 
 const CAMPAIGN_DIFFICULTIES = [
 	#Easy
 	{
-		"damage_scale": 0.3,
+		"enemy_firepower_scale": 0.3,
+		"player_firepower_scale": 2,
+		"enemy_am_scale": 0.6,
+		"item_am_scale": 2,
 		"campaign_seed": ""
 	},
 	#Normal
 	{
-		"damage_scale": 0.6,
+		"enemy_firepower_scale": 0.6,
+		"player_firepower_scale": 1,
+		"enemy_am_scale": 1,
+		"item_am_scale": 1,
 		"campaign_seed": ""
 	},
 	#Hard
 	{
-		"damage_scale": 1.2,
+		"enemy_firepower_scale": 1.2,
+		"player_firepower_scale": 1,
+		"enemy_am_scale": 2,
+		"item_am_scale": 1,
 		"campaign_seed": ""
 	}
 ]
@@ -258,6 +274,9 @@ func uses_custom_difficulty():
 	return campaign_difficulty_idx == 3
 
 func get_difficulty_field(var field: String):
+	if Engine.editor_hint:
+		return CAMPAIGN_DIFFICULTIES[EDITOR_DIFFICULTY][field]
+
 	if $"/root/EpisodeManager".is_normal_episode_playing():
 		if uses_custom_difficulty():
 			return custom_difficulty[field]

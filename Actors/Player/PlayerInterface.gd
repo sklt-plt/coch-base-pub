@@ -59,7 +59,7 @@ func enable():
 	$"SFXPlayer3".stop()
 
 func deal_damage(var damage, var push_force, var from_direction, var _from_ent):
-	var actual_damage = damage * Globals.get_difficulty_field("damage_scale")
+	var actual_damage = damage * Globals.get_difficulty_field("enemy_firepower_scale")
 
 	$"PlayerResources".deal_damage(actual_damage)
 	$"PlayerStats".give("s_damage_taken", actual_damage)

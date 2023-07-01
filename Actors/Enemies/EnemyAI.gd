@@ -440,7 +440,7 @@ func deal_damage(var damage, var push_force, var from_direction, var from_ent):
 			visible_player = true
 		begin_state(States.AWAKE)
 
-	health -= damage
+	health -= damage * Globals.get_difficulty_field("player_firepower_scale")
 	if parent_node is KinematicEnemy:
 		parent_node.push_linear(from_direction, push_force)
 

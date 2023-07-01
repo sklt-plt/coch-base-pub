@@ -86,10 +86,11 @@ func add_resources_needed_by_monster(var player_resource_costs : Dictionary, var
 		if not Engine.editor_hint and\
 			((c == "r_shotgun_ammo" and not player.has("e_double_barrel_level", 1))\
 			or (c == "r_crossbow_ammo" and not player.has("e_crossbow_level", 1))):
-				room_resources["r_pistol_ammo"] += player_resource_costs[c] * 3
+				room_resources["r_pistol_ammo"] += player_resource_costs[c] * 3 * Globals.get_difficulty_field("item_am_scale")
 		else:
 			# otherwise just append what's needed
-			room_resources[c] += player_resource_costs[c]
+			room_resources[c] += player_resource_costs[c] * Globals.get_difficulty_field("item_am_scale")
+
 
 func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : GeneratedRoom):
 	var difficulty_pool = tree_ref.difficulty
@@ -139,6 +140,12 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 			new_group.push_back(int_objects["explosive_barrel"]["ref"])
 
 		room_monsters.push_back(new_group)
+
+	if room_monsters.empty():
+		#add at least some items
+		var fake_enemy = monster_paths_and_costs[0]
+		var player_resource_costs = fake_enemy["ref"].instance().get_player_resource_costs()
+		add_resources_needed_by_monster(player_resource_costs, room_resources)
 
 	# naive backpack algo for items
 	for pickup_type in pickups:
