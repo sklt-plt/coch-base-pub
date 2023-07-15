@@ -5,9 +5,12 @@ tool
 export (GeneratedRoom.ROOM_TRAITS) var _main_room_type = GeneratedRoom.ROOM_TRAITS.NORMAL_CORRIDORS
 export (GeneratedRoom.ROOM_TRAITS) var _last_room_type = GeneratedRoom.ROOM_TRAITS.ARENA
 
-export (int) var main_path_length = 3
+export (int) var _main_path_length = 3
+var _actual_main_path_length
 export (int) var _sub_path_length = 1
-export (int) var num_of_sub_paths = 1
+var _actual_sub_path_length
+export (int) var _num_of_sub_paths = 1
+var _actual_num_of_sub_paths
 
 export (float) var _enemy_difficulty = 2				# per-room budget for enemies (enemy cost declared above)
 export (float) var _enemy_difficulty_variation = 1				# how much deviation from budget can a room have (rooms balance this in pairs)
@@ -49,7 +52,13 @@ func prepare():
 		pr["ref"] = load(Globals.content_pack_path + pr["path"])
 
 	_actual_difficulty = _enemy_difficulty * Globals.get_difficulty_field("enemy_am_scale")
+	if (Globals.campaign_difficulty_idx >= Globals.CAMPAIGN_DIFFICULTY_ID.HARD &&
+		Globals.campaign_difficulty_idx != Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM):
+			_actual_difficulty = max(2, _actual_difficulty)
 
+	_actual_main_path_length = ceil(_main_path_length * Globals.get_difficulty_field("level_size_scale"))
+	_actual_sub_path_length = ceil(_sub_path_length * Globals.get_difficulty_field("level_size_scale"))
+	_actual_num_of_sub_paths =  ceil(_num_of_sub_paths * Globals.get_difficulty_field("level_size_scale"))
 
 func generate_difficulty_pools(var number_of_rooms: int):
 	var difficulty_pool = []
@@ -176,14 +185,14 @@ func generate_design_tree():
 	add_to_tree(new_room, "starting_room", current_room)
 	current_room = new_room
 
-	generate_path(current_room, main_path_length, EXIT_DOOR_EXTRA_CONTENTS_ID)
+	generate_path(current_room, _actual_main_path_length, EXIT_DOOR_EXTRA_CONTENTS_ID)
 
-	if num_of_sub_paths != 0 and _sub_path_length < 1:
+	if _actual_num_of_sub_paths != 0 and _actual_sub_path_length < 1:
 		print("Can't generate sub-paths if their max length is 0")
 		return generated_tree_root
 
 	#generate_sub_paths
-	for _i in range(0, num_of_sub_paths):
+	for _i in range(0, _actual_num_of_sub_paths):
 		#collect all GeneratedRoom children
 
 		var all_rooms = []
@@ -213,7 +222,7 @@ func generate_design_tree():
 			path_purpose = SUB_PATH_PURPOSE.TREASURE
 
 		# let's try to not have each and every sub path on the map the same length
-		var new_sub_path_length = _rng.randi_range(1, _sub_path_length)
+		var new_sub_path_length = _rng.randi_range(1, _actual_sub_path_length)
 
 		generate_path(sub_path_root, new_sub_path_length, path_purpose)
 

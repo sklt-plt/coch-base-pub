@@ -24,13 +24,15 @@ export (Array, Dictionary) var monster_paths_and_costs = [
 
 # pickups to load, their contents are taken from inside their scripts
 # note: each group needs to be sorted by strongest
-export (Dictionary) var pickups = {
+export (Dictionary) var ammo_pickups = {
 	"r_crossbow_ammo" : [
 		{"path": "/Ent/Interactable/Pickups/Ammo/AmmoCrossbowPickup.tscn"}],
 	"r_shotgun_ammo" : [
 		{"path": "/Ent/Interactable/Pickups/Ammo/AmmoShotgunPickup.tscn"}],
 	"r_pistol_ammo" : [
-		{"path": "/Ent/Interactable/Pickups/Ammo/AmmoPistolPickup.tscn"}],
+		{"path": "/Ent/Interactable/Pickups/Ammo/AmmoPistolPickup.tscn"}]
+	}
+export (Dictionary) var health_pickups = {
 	"r_health" : [
 		{"path": "/Ent/Interactable/Pickups/Health/HealthPickupL.tscn"},
 		{"path": "/Ent/Interactable/Pickups/Health/HealthPickupM.tscn"},
@@ -65,8 +67,12 @@ func prepare():
 		m["ref"] = load(Globals.content_pack_path + m["path"])
 
 	# load pickups
-	for pickup_type in pickups:
-		for pickup in pickups[pickup_type]:
+	load_pickups(ammo_pickups)
+	load_pickups(health_pickups)
+
+func load_pickups(var dictionary):
+	for pickup_type in dictionary:
+		for pickup in dictionary[pickup_type]:
 			pickup["ref"] = load(Globals.content_pack_path + pickup["path"])
 			var temp = pickup["ref"].instance()
 			pickup["contents"] = temp.get("contents").duplicate()
@@ -95,21 +101,23 @@ func add_resources_needed_by_monster(var player_resource_costs : Dictionary, var
 func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : GeneratedRoom):
 	var difficulty_pool = tree_ref.difficulty
 	var room_monsters = []
-	var room_items = []
+	var room_health_items = []
+	var room_ammo_items = []
 	var room_specials = []
 	var room_resources = {
-		"r_health": 0,
-		"r_shotgun_ammo": 0,
 		"r_pistol_ammo": 0,
+		"r_shotgun_ammo": 0,
 		"r_crossbow_ammo": 0,
+		"r_health": 0,
 		"r_armor" : 0}
 
 	# get resource costs from enemies spawned by buildings / furniture
 	var room_children = room_geometry.get_children()
 	for c in room_children:
 		if c is KinematicEnemy or c is StaticEnemy or c is FakeEnemy:
-			for res in c.get_player_resource_costs():
-				room_resources[res] += c.get_player_resource_costs()[res]
+			var costs = c.get_player_resource_costs()
+			for res in costs:
+				room_resources[res] += costs[res]
 
 	# random cherry-pick algo for enemies
 	# until we exhaust pool
@@ -148,28 +156,8 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 		add_resources_needed_by_monster(player_resource_costs, room_resources)
 
 	# naive backpack algo for items
-	for pickup_type in pickups:
-		var weakest_pickup
-		for pickup in pickups[pickup_type]:
-			# remember what is weakest pickup for rounding up impossible remainder
-			if not weakest_pickup or pickup["contents"][pickup_type] < weakest_pickup["contents"][pickup_type]:
-				weakest_pickup = pickup
-
-			# can we put at least one?
-			if (pickup["contents"][pickup_type] > room_resources[pickup_type]):
-				continue
-
-			var room_limit = floor(room_resources[pickup_type] / pickup["contents"][pickup_type])
-
-			for _i in range(0, room_limit):
-				room_items.push_back([pickup["ref"]])
-
-			room_resources[pickup_type] -= pickup["contents"][pickup_type]*room_limit
-
-		var remainder = float(room_resources[pickup_type])/float(weakest_pickup["contents"][pickup_type])
-
-		if remainder > 0.0 and remainder < 1.0:
-			room_items.push_back([weakest_pickup["ref"]])
+	backpack_pickups(ammo_pickups, room_ammo_items, room_resources)
+	backpack_pickups(health_pickups, room_health_items, room_resources)
 
 	# add extra contents like keys
 	for t in tree_ref.traits:
@@ -190,7 +178,31 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 				room_specials.push_back(stat_objects["level_entrance"]["ref"])
 				room_specials.push_back(int_objects["hint_board"]["ref"])
 
-	return {"monsters" : room_monsters, "items" : room_items, "specials" : room_specials}
+	return {"monsters" : room_monsters, "ammo_items" : room_ammo_items, "health_items" : room_health_items, "specials" : room_specials}
+
+func backpack_pickups(var pickups_dictionary, var items_holder, var room_resources):
+	for pickup_type in pickups_dictionary:
+		var weakest_pickup
+		for pickup in pickups_dictionary[pickup_type]:
+			# remember what is weakest pickup for rounding up impossible remainder
+			if not weakest_pickup or pickup["contents"][pickup_type] < weakest_pickup["contents"][pickup_type]:
+				weakest_pickup = pickup
+
+			# can we put at least one?
+			if (pickup["contents"][pickup_type] > room_resources[pickup_type]):
+				continue
+
+			var room_limit = floor(room_resources[pickup_type] / pickup["contents"][pickup_type])
+
+			for _i in range(0, room_limit):
+				items_holder.push_back([pickup["ref"]])
+
+			room_resources[pickup_type] -= pickup["contents"][pickup_type]*room_limit
+
+		var remainder = float(room_resources[pickup_type])/float(weakest_pickup["contents"][pickup_type])
+
+		if remainder > 0.0 and remainder < 1.0:
+			items_holder.push_back([weakest_pickup["ref"]])
 
 # old
 func get_group_ent_offset(var i: int):
@@ -349,23 +361,29 @@ func place_entities(var entities: Dictionary, var room_geometry: RoomGeometry, v
 					monster_available_tiles.remove(target_space_id)
 					offset += 1
 
-	for item_grp in entities["items"]:
-		if item_available_tiles.size() > 0:
-			var origin_space_id = _rng.randi()%(item_available_tiles.size())
-			var origin_space = item_available_tiles[origin_space_id]
-			var offset = 0
-			for ent in item_grp:
-				if item_available_tiles.size() > 0:
-					var target_space_id = item_available_tiles.find(origin_space+get_group_ent_offset(offset))
-					while target_space_id == -1:
-						target_space_id = (origin_space_id+offset)%(item_available_tiles.size())
-						offset += 1
+	place_items(entities["ammo_items"], item_available_tiles, room_geometry)
+	place_items(entities["health_items"], item_available_tiles, room_geometry)
 
-					var new_ent = ent.instance()
+func place_items(var items_holder, var item_available_tiles, var room_geometry):
+	for item_grp in items_holder:
+		if item_available_tiles.size() == 0:
+			return
 
-					room_geometry.add_child(new_ent)
-					new_ent.transform.origin = item_available_tiles[target_space_id]
-					new_ent.set_owner(owner)
-
-					item_available_tiles.remove(target_space_id)
+		var origin_space_id = _rng.randi()%(item_available_tiles.size())
+		var origin_space = item_available_tiles[origin_space_id]
+		var offset = 0
+		for ent in item_grp:
+			if item_available_tiles.size() > 0:
+				var target_space_id = item_available_tiles.find(origin_space+get_group_ent_offset(offset))
+				while target_space_id == -1:
+					target_space_id = (origin_space_id+offset)%(item_available_tiles.size())
 					offset += 1
+
+				var new_ent = ent.instance()
+
+				room_geometry.add_child(new_ent)
+				new_ent.transform.origin = item_available_tiles[target_space_id]
+				new_ent.set_owner(owner)
+
+				item_available_tiles.remove(target_space_id)
+				offset += 1

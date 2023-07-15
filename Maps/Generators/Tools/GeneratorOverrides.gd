@@ -94,9 +94,9 @@ func apply():
 		generator.gen_seed = gen_seed
 		generator._walls_generator._make_ceilings = make_ceilings
 		generator._walls_generator._links_on_floor = links_on_floor
-		generator._rooms_data_generator.main_path_length = main_path_length
+		generator._rooms_data_generator._main_path_length = main_path_length
 		generator._rooms_data_generator._sub_path_length = sub_path_max_length
-		generator._rooms_data_generator.num_of_sub_paths = num_of_sub_paths
+		generator._rooms_data_generator._num_of_sub_paths = num_of_sub_paths
 		generator._rooms_data_generator._room_min_walls_length = min_room_size
 		generator._rooms_data_generator._room_max_walls_length = max_room_size
 		generator._rooms_data_generator._room_min_walls_height = min_room_height

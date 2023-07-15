@@ -3,6 +3,16 @@ extends Node
 
 const EDITOR_DIFFICULTY = 1
 
+enum CAMPAIGN_DIFFICULTY_ID {
+	EASY = 0,
+	NORMAL = 1,
+	HARD = 2,
+#	HARD_IRON = 3,
+#	HARD_OHKO = 4,
+#	HARD_IRON_OHKO = 5,
+	CUSTOM = 3
+}
+
 #var content_pack_path = "res://Content/default"
 var content_pack_path = "res://Content/custom"
 
@@ -46,9 +56,11 @@ var custom_difficulty = {
 	"player_firepower_scale": 100,
 	"enemy_am_scale": 0,
 	"item_am_scale": 0,
-	#"level_size_scale": 1,
-	"campaign_seed": ""
+	"campaign_seed": "",
+	"level_size_scale": 0.1
 	#"use_score_req": true,
+	#"one_hit_ko": false,
+	#"ironman": false,
 }
 
 const CAMPAIGN_DIFFICULTIES = [
@@ -58,7 +70,8 @@ const CAMPAIGN_DIFFICULTIES = [
 		"player_firepower_scale": 2,
 		"enemy_am_scale": 0.6,
 		"item_am_scale": 2,
-		"campaign_seed": ""
+		"campaign_seed": "",
+		"level_size_scale": 0.5,
 	},
 	#Normal
 	{
@@ -66,7 +79,8 @@ const CAMPAIGN_DIFFICULTIES = [
 		"player_firepower_scale": 1,
 		"enemy_am_scale": 1,
 		"item_am_scale": 1,
-		"campaign_seed": ""
+		"campaign_seed": "",
+		"level_size_scale": 1,
 	},
 	#Hard
 	{
@@ -74,8 +88,18 @@ const CAMPAIGN_DIFFICULTIES = [
 		"player_firepower_scale": 1,
 		"enemy_am_scale": 2,
 		"item_am_scale": 1,
-		"campaign_seed": ""
-	}
+		"campaign_seed": "",
+		"level_size_scale": 1.5,
+	}#,
+#	#Hard Ironman
+#	{
+#	},
+#	#Hard OHKO
+#	{
+#	},
+#	#Hard Iron OHKO
+#	{
+#	}
 ]
 
 const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
@@ -270,15 +294,12 @@ func load_user_settings():
 func save_user_settings():
 	FileHelper.save_file(USER_SETTINGS_FILENAME, user_settings)
 
-func uses_custom_difficulty():
-	return campaign_difficulty_idx == 3
-
 func get_difficulty_field(var field: String):
 	if Engine.editor_hint:
 		return CAMPAIGN_DIFFICULTIES[EDITOR_DIFFICULTY][field]
 
 	if $"/root/EpisodeManager".is_normal_episode_playing():
-		if uses_custom_difficulty():
+		if campaign_difficulty_idx == CAMPAIGN_DIFFICULTY_ID.CUSTOM:
 			return custom_difficulty[field]
 		else:
 			return CAMPAIGN_DIFFICULTIES[campaign_difficulty_idx][field]

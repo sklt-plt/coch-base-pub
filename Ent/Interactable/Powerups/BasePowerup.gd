@@ -47,10 +47,12 @@ func material_effect():
 		for m in new_material_icons:
 			m.albedo_color.a += 0.025
 
-		yield(get_tree(), "idle_frame")
+		if (self.is_inside_tree()):
+			yield(get_tree(), "idle_frame")
 
 	while(new_material_icons[0].albedo_color.a < 1.0):
 		for m in new_material_icons:
 			m.albedo_color.a += 0.025
 
-		yield(get_tree(), "idle_frame")
+		if (self.is_inside_tree()):
+			yield(get_tree(), "idle_frame")
