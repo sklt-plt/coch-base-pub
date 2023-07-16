@@ -90,7 +90,7 @@ func start_episode(var ep_idx: int):
 		$"/root/Player".setup_arcade_mode()
 
 	elif is_normal_episode_playing():
-		$"/root/Player".setup_campaign_mode(CAMPAIGN_ENEMY_REQUIREMENTS[ep_idx-1])
+		$"/root/Player".setup_campaign_mode(Globals.get_difficulty_field("score_req")[ep_idx-1])
 
 	next_map_in_ep()
 

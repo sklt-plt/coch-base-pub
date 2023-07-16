@@ -57,8 +57,9 @@ var custom_difficulty = {
 	"enemy_am_scale": 0,
 	"item_am_scale": 0,
 	"campaign_seed": "",
-	"level_size_scale": 0.1
-	#"use_score_req": true,
+	"level_main_path_scale": 0.1,
+	"level_sub_path_scale": 0.5,
+	"score_req": [0, 0],
 	#"one_hit_ko": false,
 	#"ironman": false,
 }
@@ -71,7 +72,9 @@ const CAMPAIGN_DIFFICULTIES = [
 		"enemy_am_scale": 0.6,
 		"item_am_scale": 2,
 		"campaign_seed": "",
-		"level_size_scale": 0.5,
+		"level_main_path_scale": 0.5,
+		"level_sub_path_scale": 0.5,
+		"score_req": [0, 0],
 	},
 	#Normal
 	{
@@ -80,7 +83,9 @@ const CAMPAIGN_DIFFICULTIES = [
 		"enemy_am_scale": 1,
 		"item_am_scale": 1,
 		"campaign_seed": "",
-		"level_size_scale": 1,
+		"level_main_path_scale": 1,
+		"level_sub_path_scale": 1,
+		"score_req": [300, 600],
 	},
 	#Hard
 	{
@@ -89,7 +94,9 @@ const CAMPAIGN_DIFFICULTIES = [
 		"enemy_am_scale": 2,
 		"item_am_scale": 1,
 		"campaign_seed": "",
-		"level_size_scale": 1.5,
+		"level_main_path_scale": 1,
+		"level_sub_path_scale": 1.75,
+		"score_req": [900, 1200],
 	}#,
 #	#Hard Ironman
 #	{

@@ -89,6 +89,9 @@ func check(var property):
 func check_limit(var property):
 	return $"PlayerResources".check_limit(property)
 
+func is_full(var resource):
+	return $"PlayerResources".is_full(resource)
+
 func set(var property, var value):
 	if property == "is_locked":
 		$"InputProxy".is_locked = value
@@ -129,8 +132,9 @@ func setup_arcade_mode():
 	$"HUD/Arcade".visible = true
 
 func setup_campaign_mode(var enemy_requirement):
-	$"PlayerResources".resources_limits["r_progress"] = enemy_requirement
-	$"HUD/Progress".visible = true
+	if enemy_requirement > 0:
+		$"PlayerResources".resources_limits["r_progress"] = enemy_requirement
+		$"HUD/Progress".visible = true
 
 func play_slowmo_effect(var time):
 	$"PlayerAnimations".play_slowmo(time)

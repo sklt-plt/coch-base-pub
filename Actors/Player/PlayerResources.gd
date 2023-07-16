@@ -65,7 +65,7 @@ func reset():
 		"e_crossbow_level" : 1,
 		"r_time_left" : TIME_LEFT_MAX,
 		"r_time_freeze": 1.04,
-		"r_progress": 300,
+		"r_progress": 0,
 		"r_progress_multiplier": 3.9,
 	}
 
@@ -224,3 +224,6 @@ func check_limit(var resource):
 		return ammo_bonus_cap
 	else:
 		return resources_limits[resource]
+
+func is_full(var resource):
+	return check(resource) == check_limit(resource)

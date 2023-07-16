@@ -56,9 +56,9 @@ func prepare():
 		Globals.campaign_difficulty_idx != Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM):
 			_actual_difficulty = max(2, _actual_difficulty)
 
-	_actual_main_path_length = ceil(_main_path_length * Globals.get_difficulty_field("level_size_scale"))
-	_actual_sub_path_length = ceil(_sub_path_length * Globals.get_difficulty_field("level_size_scale"))
-	_actual_num_of_sub_paths =  ceil(_num_of_sub_paths * Globals.get_difficulty_field("level_size_scale"))
+	_actual_main_path_length = ceil(_main_path_length * Globals.get_difficulty_field("level_main_path_scale"))
+	_actual_sub_path_length = ceil(_sub_path_length * Globals.get_difficulty_field("level_sub_path_scale"))
+	_actual_num_of_sub_paths =  ceil(_num_of_sub_paths * Globals.get_difficulty_field("level_sub_path_scale"))
 
 func generate_difficulty_pools(var number_of_rooms: int):
 	var difficulty_pool = []
