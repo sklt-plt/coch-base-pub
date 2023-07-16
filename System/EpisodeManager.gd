@@ -5,11 +5,6 @@ var episode_levels
 var current_level_idx
 var episode_clear_idx = -1
 
-const CAMPAIGN_ENEMY_REQUIREMENTS = [
-	300,
-	450
-]
-
 func reset_episode_cache():
 	current_ep = -1
 	episode_levels = []
