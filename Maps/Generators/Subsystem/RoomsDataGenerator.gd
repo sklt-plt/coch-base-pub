@@ -15,6 +15,7 @@ var _actual_num_of_sub_paths
 export (float) var _enemy_difficulty = 2				# per-room budget for enemies (enemy cost declared above)
 export (float) var _enemy_difficulty_variation = 1				# how much deviation from budget can a room have (rooms balance this in pairs)
 var _actual_difficulty
+var _actual_difficulty_variation
 
 export (int) var _room_min_walls_length = 10
 export (int) var _room_max_walls_length = 30
@@ -56,6 +57,8 @@ func prepare():
 		Globals.campaign_difficulty_idx != Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM):
 			_actual_difficulty = max(2, _actual_difficulty)
 
+	_actual_difficulty_variation = min(_enemy_difficulty_variation, _actual_difficulty)
+
 	_actual_main_path_length = ceil(_main_path_length * Globals.get_difficulty_field("level_main_path_scale"))
 	_actual_sub_path_length = ceil(_sub_path_length * Globals.get_difficulty_field("level_sub_path_scale"))
 	_actual_num_of_sub_paths =  ceil(_num_of_sub_paths * Globals.get_difficulty_field("level_sub_path_scale"))
@@ -70,7 +73,7 @@ func generate_difficulty_pools(var number_of_rooms: int):
 		available_pool_indexes[i] = i
 
 	while not available_pool_indexes.empty():
-		var desired_difficulty = _rng.randf_range(_actual_difficulty-_enemy_difficulty_variation, _actual_difficulty+_enemy_difficulty_variation)
+		var desired_difficulty = _rng.randf_range(_actual_difficulty-_actual_difficulty_variation, _actual_difficulty+_actual_difficulty_variation)
 
 		var index_a = available_pool_indexes[_rng.randi()%available_pool_indexes.size()-1]
 

@@ -66,7 +66,7 @@ func show_campaign_setup():
 	$"LevelSelectEp1".visible = false
 	$"LevelSelectEp2".visible = false
 
-	$"%CampaignSeedLE".text = Globals.custom_difficulty["campaign_seed"]
+	#$"%CampaignSeedLE".text = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["campaign_seed"]
 	$"%DifficultyOption".selected = Globals.campaign_difficulty_idx
 
 	$"CampaignSetup".visible = true
@@ -146,7 +146,8 @@ func _on_Button_button_up():
 			print("Can't open feedback url")
 
 func _on_CampaignSeedLE_text_changed(var new_text):
-	Globals.custom_difficulty["campaign_seed"] = new_text
+	pass
+	#Globals.custom_difficulty["campaign_seed"] = new_text
 
 func _on_CSBack_button_up():
 	$"CampaignSetup".visible = false

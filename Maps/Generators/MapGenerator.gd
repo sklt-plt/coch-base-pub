@@ -139,7 +139,7 @@ func randomize_seed():
 func setup_rng_seed():
 	if not Engine.is_editor_hint():
 		if (EpisodeManager.is_normal_episode_playing() and Globals.get_difficulty_field("campaign_seed") != "" and not gen_seed.empty()):
-			var mixed_seed = gen_seed + Globals.custom_difficulty["campaign_seed"]
+			var mixed_seed = gen_seed + Globals.get_difficulty_field("campaign_seed")
 			_rng.set_seed(mixed_seed.hash())
 		elif EpisodeManager.is_custom_episode_playing() and not gen_seed.empty():
 			_rng.set_seed(gen_seed.hash())

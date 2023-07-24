@@ -6,6 +6,12 @@ func show_delayed():
 
 func show():
 	$"DelayT".stop()
+
+	if Globals.get_difficulty_field("ironman"):
+		$"Control/RestartB".visible = false
+	else:
+		$"Control/RestartB".visible = true
+
 	.show()
 
 func _on_RestartB_button_up():

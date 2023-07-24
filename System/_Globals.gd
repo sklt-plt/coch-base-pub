@@ -7,10 +7,10 @@ enum CAMPAIGN_DIFFICULTY_ID {
 	EASY = 0,
 	NORMAL = 1,
 	HARD = 2,
-#	HARD_IRON = 3,
+	HARD_EX = 3,
 #	HARD_OHKO = 4,
 #	HARD_IRON_OHKO = 5,
-	CUSTOM = 3
+	CUSTOM = 4
 }
 
 #var content_pack_path = "res://Content/default"
@@ -51,20 +51,7 @@ var user_settings = {
 
 var campaign_difficulty_idx = 1
 
-var custom_difficulty = {
-	"enemy_firepower_scale": 100,
-	"player_firepower_scale": 100,
-	"enemy_am_scale": 0,
-	"item_am_scale": 0,
-	"campaign_seed": "",
-	"level_main_path_scale": 0.1,
-	"level_sub_path_scale": 0.5,
-	"score_req": [0, 0],
-	#"one_hit_ko": false,
-	#"ironman": false,
-}
-
-const CAMPAIGN_DIFFICULTIES = [
+var campaign_difficulties = [
 	#Easy
 	{
 		"enemy_firepower_scale": 0.3,
@@ -75,6 +62,8 @@ const CAMPAIGN_DIFFICULTIES = [
 		"level_main_path_scale": 0.5,
 		"level_sub_path_scale": 0.5,
 		"score_req": [0, 0],
+		"one_hit_ko": false,
+		"ironman": false,
 	},
 	#Normal
 	{
@@ -86,6 +75,8 @@ const CAMPAIGN_DIFFICULTIES = [
 		"level_main_path_scale": 1,
 		"level_sub_path_scale": 1,
 		"score_req": [300, 600],
+		"one_hit_ko": false,
+		"ironman": false,
 	},
 	#Hard
 	{
@@ -97,16 +88,35 @@ const CAMPAIGN_DIFFICULTIES = [
 		"level_main_path_scale": 1,
 		"level_sub_path_scale": 1.75,
 		"score_req": [900, 1200],
-	}#,
-#	#Hard Ironman
-#	{
-#	},
-#	#Hard OHKO
-#	{
-#	},
-#	#Hard Iron OHKO
-#	{
-#	}
+		"one_hit_ko": false,
+		"ironman": false,
+	},
+	#Hard Ex
+	{
+		"enemy_firepower_scale": 1.2,
+		"player_firepower_scale": 1,
+		"enemy_am_scale": 2,
+		"item_am_scale": 1,
+		"campaign_seed": "",
+		"level_main_path_scale": 1,
+		"level_sub_path_scale": 1.75,
+		"score_req": [900, 1200],
+		"one_hit_ko": true,
+		"ironman": false,
+	},
+	#Custom
+	{
+		"enemy_firepower_scale": 100,
+		"player_firepower_scale": 100,
+		"enemy_am_scale": 0,
+		"item_am_scale": 0,
+		"campaign_seed": "a",
+		"level_main_path_scale": 1,
+		"level_sub_path_scale": 0.5,
+		"score_req": [0, 0],
+		"one_hit_ko": false,
+		"ironman": false,
+	}
 ]
 
 const player_input_settings = {"Aim" : "", "Quick Melee" : "", "Backwards" : "", "Crawl" : "", "Fire" : "", "Forward" : "", "Interact" : "",
@@ -127,11 +137,11 @@ func load_user_progress():
 		save_user_progress()
 
 func load_user_difficulty():
-	if not FileHelper.load_file(USER_DIFFICULTY_FILENAME, custom_difficulty):
+	if not FileHelper.load_file(USER_DIFFICULTY_FILENAME, campaign_difficulties[CAMPAIGN_DIFFICULTY_ID.CUSTOM]):
 		save_user_difficulty()
 
 func save_user_difficulty():
-	FileHelper.save_file(USER_DIFFICULTY_FILENAME, custom_difficulty)
+	FileHelper.save_file(USER_DIFFICULTY_FILENAME, campaign_difficulties[CAMPAIGN_DIFFICULTY_ID.CUSTOM])
 
 func save_user_progress():
 	FileHelper.save_file(USER_PROGRESS_FILENAME, player_progress)
@@ -303,12 +313,9 @@ func save_user_settings():
 
 func get_difficulty_field(var field: String):
 	if Engine.editor_hint:
-		return CAMPAIGN_DIFFICULTIES[EDITOR_DIFFICULTY][field]
+		return campaign_difficulties[EDITOR_DIFFICULTY][field]
 
 	if $"/root/EpisodeManager".is_normal_episode_playing():
-		if campaign_difficulty_idx == CAMPAIGN_DIFFICULTY_ID.CUSTOM:
-			return custom_difficulty[field]
-		else:
-			return CAMPAIGN_DIFFICULTIES[campaign_difficulty_idx][field]
+		return campaign_difficulties[campaign_difficulty_idx][field]
 	else:
-		return CAMPAIGN_DIFFICULTIES[1][field]
+		return campaign_difficulties[1][field]

@@ -102,6 +102,9 @@ func upgrade_resource(var resource, var value):
 		give(resource, value)
 
 func deal_damage(var value):
+	if Globals.get_difficulty_field("one_hit_ko"):
+		value = INF
+
 	if r_health > 0.0:
 		var armor_damage = value * ARMOR_DAMAGE_PERCENTAGE
 		var actual_armor_damage = min(r_armor, armor_damage)
@@ -110,7 +113,7 @@ func deal_damage(var value):
 		r_armor -= actual_armor_damage
 		r_health -= health_damage
 
-		$"../HUD/HurtEffect".color.a += health_damage/resources_limits["r_health"]
+		$"../HUD/HurtEffect".color.a += min(1, health_damage/resources_limits["r_health"])
 
 		if r_health <= 0.0:
 			$"../InputProxy".is_locked = true
