@@ -90,19 +90,6 @@ var campaign_difficulties = [
 		"one_hit_ko": false,
 		"ironman": false,
 	},
-	#Hard OHKO
-	{
-		"enemy_firepower_scale": 1.2,
-		"player_firepower_scale": 1,
-		"enemy_am_scale": 2,
-		"item_am_scale": 1,
-		"campaign_seed": "",
-		"level_main_path_scale": 1,
-		"level_sub_path_scale": 1.75,
-		"score_req": [900, 1200],
-		"one_hit_ko": true,
-		"ironman": false,
-	},
 	#Hard Iron
 	{
 		"enemy_firepower_scale": 1.2,
@@ -115,6 +102,19 @@ var campaign_difficulties = [
 		"score_req": [900, 1200],
 		"one_hit_ko": false,
 		"ironman": true,
+	},
+	#Hard OHKO
+	{
+		"enemy_firepower_scale": 1.2,
+		"player_firepower_scale": 1,
+		"enemy_am_scale": 2,
+		"item_am_scale": 1,
+		"campaign_seed": "",
+		"level_main_path_scale": 1,
+		"level_sub_path_scale": 1.75,
+		"score_req": [900, 1200],
+		"one_hit_ko": true,
+		"ironman": false,
 	},
 	#Custom
 	{

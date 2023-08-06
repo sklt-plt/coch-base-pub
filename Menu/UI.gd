@@ -8,6 +8,8 @@ export (String) var feedback_url = ""
 
 var selected_ep = -1
 
+var difficulty_descriptions = []
+
 func _ready():
 	$"LevelSelect/Ep2Button".disabled = false
 	$"LevelSelect/Ep3Button".disabled = true#!Globals.player_progress["2"]
@@ -17,6 +19,7 @@ func _ready():
 	$"CampaignSeed".visible = false
 	$"LevelSelect".visible = false
 	$"CampaignSetup".visible = false
+	difficulty_descriptions = $CampaignSetup/DifficultyDescrCont.get_children()
 
 func show_ep_clear_notif():
 	$"MainMenu".visible = false
@@ -68,8 +71,15 @@ func show_campaign_setup():
 
 	#$"%CampaignSeedLE".text = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["campaign_seed"]
 	$"%DifficultyOption".selected = Globals.campaign_difficulty_idx
+	show_difficulty_description(Globals.campaign_difficulty_idx)
 
 	$"CampaignSetup".visible = true
+
+func show_difficulty_description(var index):
+	for desc in difficulty_descriptions:
+		desc.visible = false
+
+	difficulty_descriptions[index].visible = true
 
 func _on_LSBackButton_button_up():
 	show_main_menu()
@@ -161,3 +171,4 @@ func _on_CSBack_button_up():
 
 func _on_DifficultyButton_item_selected(index):
 	Globals.campaign_difficulty_idx = index
+	show_difficulty_description(index)
