@@ -2,6 +2,8 @@ extends Node
 class_name EntityGroupsGenerator
 tool
 
+const MAX_TURRET_MONSTERS = 4
+
 export (Dictionary) var stat_objects = {
 	"level_entrance" : {"path" : "/Ent/Static/LevelEntrance/LevelEntrance.tscn"}
 }
@@ -65,6 +67,10 @@ func prepare():
 	# load monster refs
 	for m in monster_paths_and_costs:
 		m["ref"] = load(Globals.content_pack_path + m["path"])
+		if m["ref"].instance() is StaticEnemy:
+			m["is_turret"] = true
+		else:
+			m["is_turret"] = false
 
 	# load pickups
 	load_pickups(ammo_pickups)
@@ -121,11 +127,17 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 
 	# random cherry-pick algo for enemies
 	# until we exhaust pool
+	var remaining_allowed_turrets = MAX_TURRET_MONSTERS
 	while difficulty_pool > 0.01:
 		var dup_pool = monster_paths_and_costs.duplicate()
-		# filter out too expensive monsters
+		# filter out too expensive and excessive turret monsters
 		for monster in monster_paths_and_costs:
-			if monster["spawn_cost"] > difficulty_pool:
+			if monster["is_turret"]:
+				if remaining_allowed_turrets > 0:
+					remaining_allowed_turrets -= 1
+				else:
+					dup_pool.erase(monster)
+			elif monster["spawn_cost"] > difficulty_pool:
 				dup_pool.erase(monster)
 
 		if dup_pool.empty():
