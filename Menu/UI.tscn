@@ -468,8 +468,10 @@ unique_name_in_owner = true
 margin_top = 18.0
 margin_right = 363.0
 margin_bottom = 38.0
+text = "Easy"
 align = 1
-items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard Ex", null, false, 3, null, "Custom", null, false, 4, null ]
+items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard OHKO", null, false, 3, null, "Hard Ironman", null, false, 4, null, "Custom", null, false, 5, null ]
+selected = 0
 
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
