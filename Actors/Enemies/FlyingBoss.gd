@@ -249,7 +249,7 @@ func _on_BossBat_tree_exiting():
 	$"/root/Player/HUD".deregister_boss_health()
 
 func _on_HurtboxSkeleton_deal_damage(damage, _push_force, _from_direction, _from_ent):
-	self.health -= damage
+	self.health -= damage * Globals.get_difficulty_field("player_firepower_scale")
 	$batAnims/ChaseTimer.stop()
 	$batAnims/DamageTimer.start()
 

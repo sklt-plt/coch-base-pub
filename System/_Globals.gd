@@ -123,7 +123,7 @@ var campaign_difficulties = [
 	},
 	#Custom
 	{
-		"enemy_firepower_scale": 100,
+		"enemy_firepower_scale": 1,
 		"player_firepower_scale": 100,
 		"enemy_am_scale": 0,
 		"item_am_scale": 0,

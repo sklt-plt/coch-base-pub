@@ -22,7 +22,7 @@ func _ready():
 
 func deal_damage(damage, _push_force, _from_direction, _from_ent):
 	if health > 0.1:
-		health -= damage
+		health -= damage * Globals.get_difficulty_field("player_firepower_scale")
 
 	if health < 0.01 and not dead:
 		dead = true

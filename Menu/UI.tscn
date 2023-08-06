@@ -469,8 +469,10 @@ unique_name_in_owner = true
 margin_top = 18.0
 margin_right = 363.0
 margin_bottom = 38.0
+text = "Easy"
 align = 1
 items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard Ironman", null, false, 3, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
+selected = 0
 
 [node name="DifficultyDescrCont" type="AspectRatioContainer" parent="CampaignSetup"]
 anchor_left = 0.651563
@@ -493,12 +495,12 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "Dificulty Description:
+bbcode_text = "Difficulty Description:
 [ul] - [color=#25dd25]reduced[/color] enemy firepower, amount and health[/ul]
 [ul] - [color=#25dd25]increased[/color] items per enemy spawning[/ul]
 [ul] - [color=#25dd25]reduced[/color] maze complexity[/ul]
 [ul] - kill count to reach boss [color=#25dd25]not required[/color] [/ul]"
-text = "Dificulty Description:
+text = "Difficulty Description:
  - reduced enemy firepower, amount and health
  - increased items per enemy spawning
  - reduced maze complexity
@@ -516,12 +518,12 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "Dificulty Description:
+bbcode_text = "Difficulty Description:
 [ul] - [color=#fdfdd0]moderate[/color] enemy firepower, amount and health[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] maze complexity[/ul]
 [ul] - kill count to reach boss [color=#fdfdd0]required[/color][/ul]"
-text = "Dificulty Description:
+text = "Difficulty Description:
  - moderate enemy firepower, amount and health
  - moderate items per enemy spawning
  - moderate maze complexity
@@ -540,18 +542,18 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "Dificulty Description:
+bbcode_text = "Difficulty Description:
 [ul] - [color=#fdc030]increased[/color] enemy firepower and amount[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] enemy health
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
-[ul] - [color=#fdc030]highier[/color] kill count to reach boss required[/ul]"
-text = "Dificulty Description:
+[ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]"
+text = "Difficulty Description:
  - increased enemy firepower and amount
  - moderate enemy health
  - moderate items per enemy spawning
  - increased maze complexity
- - highier kill count to reach boss required"
+ - higher kill count to reach boss required"
 __meta__ = {
 "_edit_use_anchors_": true
 }
@@ -566,20 +568,20 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "Dificulty Description:
+bbcode_text = "Difficulty Description:
 [ul] - [color=#fdc030]increased[/color] enemy firepower and amount[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] enemy health
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
-[ul] - [color=#fdc030]highier[/color] kill count to reach boss required[/ul]
+[ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
 
 [color=red][blink]Ironman - one life, no continues[/blink][/color]"
-text = "Dificulty Description:
+text = "Difficulty Description:
  - increased enemy firepower and amount
  - moderate enemy health
  - moderate items per enemy spawning
  - increased maze complexity
- - highier kill count to reach boss required
+ - higher kill count to reach boss required
 
 Ironman - one life, no continues"
 custom_effects = [ ExtResource( 5 ) ]
@@ -597,22 +599,22 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
-bbcode_text = "Dificulty Description:
+bbcode_text = "Difficulty Description:
 [ul] - [color=red][blink]insane[/blink][/color] enemy firepower[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] enemy health
 [ul] - [color=#fdc030]increased[/color] enemy amount[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
-[ul] - [color=#fdc030]highier[/color] kill count to reach boss required[/ul]
+[ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
 
 [ul][color=red][blink]You die in one hit[/blink][/color]"
-text = "Dificulty Description:
+text = "Difficulty Description:
  - insane enemy firepower
  - moderate enemy health
  - increased enemy amount
  - moderate items per enemy spawning
  - increased maze complexity
- - highier kill count to reach boss required
+ - higher kill count to reach boss required
 
 You die in one hit"
 custom_effects = [ ExtResource( 5 ) ]
