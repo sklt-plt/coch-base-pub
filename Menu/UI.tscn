@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Base/Menu/UI.gd" type="Script" id=1]
 [ext_resource path="res://Base/Menu/default_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Base/Menu/Options.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Base/Menu/EpClearNotif.gd" type="Script" id=4]
+[ext_resource path="res://Base/UI/TextEffectBlink.tres" type="RichTextEffect" id=5]
 
 [node name="UI" type="Control"]
 anchor_right = 1.0
@@ -472,6 +473,166 @@ text = "Easy"
 align = 1
 items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard OHKO", null, false, 3, null, "Hard Ironman", null, false, 4, null, "Custom", null, false, 5, null ]
 selected = 0
+
+[node name="DifficultyDescrCont" type="AspectRatioContainer" parent="CampaignSetup"]
+anchor_left = 0.651563
+anchor_top = 0.0932692
+anchor_right = 0.9585
+anchor_bottom = 0.898962
+margin_right = -0.320004
+margin_bottom = 0.079998
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_mode = 0
+
+[node name="DiffDescrEasy" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
+visible = false
+margin_top = 124.5
+margin_right = 589.0
+margin_bottom = 713.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "Dificulty Description:
+[ul] - [color=#25dd25]reduced[/color] enemy firepower[/ul]
+[ul] - [color=#25dd25]reduced[/color] enemy health
+[ul] - [color=#25dd25]reduced[/color] enemy amount[/ul]
+[ul] - [color=#25dd25]increased[/color] items per enemy spawning[/ul]
+[ul] - [color=#25dd25]reduced[/color] maze complexity[/ul]
+[ul] - kill count to reach boss [color=#25dd25]not required[/color] [/ul]"
+text = "Dificulty Description:
+ - reduced enemy firepower
+ - reduced enemy health
+ - reduced enemy amount
+ - increased items per enemy spawning
+ - reduced maze complexity
+ - kill count to reach boss not required "
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="DiffDescrMedium" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
+margin_top = 124.5
+margin_right = 589.0
+margin_bottom = 713.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "Dificulty Description:
+[ul] - [color=#fdfd50]moderate[/color] enemy firepower[/ul]
+[ul] - [color=#fdfd50]moderate[/color] enemy health
+[ul] - [color=#fdfd50]moderate[/color] enemy amount[/ul]
+[ul] - [color=#fdfd50]moderate[/color] items per enemy spawning[/ul]
+[ul] - [color=#fdfd50]moderate[/color] maze complexity[/ul]
+[ul] - kill count to reach boss [color=#fdfd50]required[/color][/ul]"
+text = "Dificulty Description:
+ - moderate enemy firepower
+ - moderate enemy health
+ - moderate enemy amount
+ - moderate items per enemy spawning
+ - moderate maze complexity
+ - kill count to reach boss required"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="DiffDescrHard" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
+visible = false
+margin_top = 124.5
+margin_right = 589.0
+margin_bottom = 713.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "Dificulty Description:
+[ul] - [color=#fdc030]increased[/color] enemy firepower[/ul]
+[ul] - moderate enemy health
+[ul] - [color=#fdc030]increased[/color] enemy amount[/ul]
+[ul] - moderate items per enemy spawning[/ul]
+[ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
+[ul] - [color=#fdc030]highier[/color] kill count to reach boss required[/ul]"
+text = "Dificulty Description:
+ - increased enemy firepower
+ - moderate enemy health
+ - increased enemy amount
+ - moderate items per enemy spawning
+ - increased maze complexity
+ - highier kill count to reach boss required"
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="DiffDescrHardOHKO" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
+visible = false
+margin_top = 124.5
+margin_right = 589.0
+margin_bottom = 713.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "Dificulty Description:
+[ul] - [color=red][blink]insane[/blink][/color] enemy firepower[/ul]
+[ul] - moderate enemy health
+[ul] - [color=#fdc030]increased[/color] enemy amount[/ul]
+[ul] - moderate items per enemy spawning[/ul]
+[ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
+[ul] - [color=#fdc030]highier[/color] kill count to reach boss required[/ul]
+
+[ul][color=red][blink]You die in one hit[/blink][/color]"
+text = "Dificulty Description:
+ - insane enemy firepower
+ - moderate enemy health
+ - increased enemy amount
+ - moderate items per enemy spawning
+ - increased maze complexity
+ - highier kill count to reach boss required
+
+You die in one hit"
+custom_effects = [ ExtResource( 5 ) ]
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="DiffDescrHardIron" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
+visible = false
+margin_top = 124.5
+margin_right = 589.0
+margin_bottom = 713.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+bbcode_text = "Dificulty Description:
+[ul] - [color=#fdc030]increased[/color] enemy firepower[/ul]
+[ul] - moderate enemy health
+[ul] - [color=#fdc030]increased[/color] enemy amount[/ul]
+[ul] - moderate items per enemy spawning[/ul]
+[ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
+[ul] - [color=#fdc030]highier[/color] kill count to reach boss required[/ul]
+
+[color=red][blink]Ironman - one life, no continues[/blink][/color]"
+text = "Dificulty Description:
+ - increased enemy firepower
+ - moderate enemy health
+ - increased enemy amount
+ - moderate items per enemy spawning
+ - increased maze complexity
+ - highier kill count to reach boss required
+
+Ironman - one life, no continues"
+custom_effects = [ ExtResource( 5 ) ]
+__meta__ = {
+"_edit_use_anchors_": true
+}
 
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
