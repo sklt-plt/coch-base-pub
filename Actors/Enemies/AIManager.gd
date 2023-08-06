@@ -5,7 +5,7 @@ const index_seek_max_tries = 50			# how many enemies to check when seeking awake
 var enemies : Array
 var current = -1
 
-const MAX_PROCESS_PER_FRAME = 3
+const MAX_PROCESS_PER_FRAME = 6
 
 func register_ai(var node):
 	if !enemies:
