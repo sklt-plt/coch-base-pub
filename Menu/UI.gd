@@ -85,6 +85,9 @@ func show_difficulty_description(var index):
 	$"%EFSlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["enemy_firepower_scale"]
 	set_custom_setting_label_text($"%EFValue", "enemy_firepower_scale", $"%EFSlider".value)
 
+	$"%PFSlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["player_firepower_scale"]
+	set_custom_setting_label_text($"%PFValue", "player_firepower_scale", $"%PFSlider".value)
+
 func _on_LSBackButton_button_up():
 	show_main_menu()
 
@@ -184,3 +187,7 @@ func set_custom_setting_label_text(var node, var setting_name, var value):
 func _on_EFSlider_value_changed(new_value):
 	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["enemy_firepower_scale"] = new_value
 	set_custom_setting_label_text($"%EFValue", "enemy_firepower_scale", new_value)
+
+func _on_PFSlider_value_changed(new_value):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["player_firepower_scale"] = new_value
+	set_custom_setting_label_text($"%PFValue", "player_firepower_scale", new_value)

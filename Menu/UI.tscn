@@ -486,57 +486,52 @@ size_flags_vertical = 3
 
 [node name="DiffDescrEasy" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
-margin_top = 124.501
-margin_right = 588.999
-margin_bottom = 713.5
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 bbcode_text = "Difficulty Description:
-[ul] - [color=#25dd25]reduced[/color] enemy firepower, amount and health[/ul]
+[ul] - [color=#25dd25]reduced[/color] enemy firepower and amount[/ul]
+[ul] - [color=#25dd25]increased[/color] player firepower[/ul]
 [ul] - [color=#25dd25]increased[/color] items per enemy spawning[/ul]
 [ul] - [color=#25dd25]reduced[/color] maze complexity[/ul]
 [ul] - kill count to reach boss [color=#25dd25]not required[/color] [/ul]"
 text = "Difficulty Description:
- - reduced enemy firepower, amount and health
+ - reduced enemy firepower and amount
+ - increased player firepower
  - increased items per enemy spawning
  - reduced maze complexity
  - kill count to reach boss not required "
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="DiffDescrMedium" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
-margin_top = 124.501
-margin_right = 588.999
-margin_bottom = 713.5
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
 bbcode_text = "Difficulty Description:
-[ul] - [color=#fdfdd0]moderate[/color] enemy firepower, amount and health[/ul]
+[ul] - [color=#fdfdd0]moderate[/color] enemy firepower and amount[/ul]
+[ul] - [color=#fdfdd0]moderate[/color] player firepower[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] maze complexity[/ul]
 [ul] - kill count to reach boss [color=#fdfdd0]required[/color][/ul]"
 text = "Difficulty Description:
- - moderate enemy firepower, amount and health
+ - moderate enemy firepower and amount
+ - moderate player firepower
  - moderate items per enemy spawning
  - moderate maze complexity
  - kill count to reach boss required"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="DiffDescrHard" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
-margin_top = 124.501
-margin_right = 588.999
-margin_bottom = 713.5
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -544,25 +539,21 @@ size_flags_vertical = 3
 bbcode_enabled = true
 bbcode_text = "Difficulty Description:
 [ul] - [color=#fdc030]increased[/color] enemy firepower and amount[/ul]
-[ul] - [color=#fdfdd0]moderate[/color] enemy health
+[ul] - [color=#fdfdd0]moderate[/color] player firepower[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]"
 text = "Difficulty Description:
  - increased enemy firepower and amount
- - moderate enemy health
+ - moderate player firepower
  - moderate items per enemy spawning
  - increased maze complexity
  - higher kill count to reach boss required"
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="DiffDescrHardIron" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
-margin_top = 124.501
-margin_right = 588.999
-margin_bottom = 713.5
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -570,7 +561,7 @@ size_flags_vertical = 3
 bbcode_enabled = true
 bbcode_text = "Difficulty Description:
 [ul] - [color=#fdc030]increased[/color] enemy firepower and amount[/ul]
-[ul] - [color=#fdfdd0]moderate[/color] enemy health
+[ul] - [color=#fdfdd0]moderate[/color] player firepower[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
@@ -578,22 +569,18 @@ bbcode_text = "Difficulty Description:
 [color=red][blink]Ironman - one life, no continues[/blink][/color]"
 text = "Difficulty Description:
  - increased enemy firepower and amount
- - moderate enemy health
+ - moderate player firepower
  - moderate items per enemy spawning
  - increased maze complexity
  - higher kill count to reach boss required
 
 Ironman - one life, no continues"
 custom_effects = [ ExtResource( 5 ) ]
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="DiffDescrHardOHKO" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
-margin_top = 124.501
-margin_right = 588.999
-margin_bottom = 713.5
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -601,7 +588,7 @@ size_flags_vertical = 3
 bbcode_enabled = true
 bbcode_text = "Difficulty Description:
 [ul] - [color=red][blink]insane[/blink][/color] enemy firepower[/ul]
-[ul] - [color=#fdfdd0]moderate[/color] enemy health
+[ul] - [color=#fdfdd0]moderate[/color] player firepower[/ul]
 [ul] - [color=#fdc030]increased[/color] enemy amount[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
@@ -610,7 +597,7 @@ bbcode_text = "Difficulty Description:
 [ul][color=red][blink]You die in one hit[/blink][/color]"
 text = "Difficulty Description:
  - insane enemy firepower
- - moderate enemy health
+ - moderate player firepower
  - increased enemy amount
  - moderate items per enemy spawning
  - increased maze complexity
@@ -618,9 +605,6 @@ text = "Difficulty Description:
 
 You die in one hit"
 custom_effects = [ ExtResource( 5 ) ]
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="DiffMenuCustom" type="ScrollContainer" parent="CampaignSetup/DifficultyDescrCont"]
 anchor_right = 1.0
@@ -630,7 +614,7 @@ size_flags_vertical = 0
 
 [node name="SC" type="GridContainer" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom"]
 margin_right = 588.999
-margin_bottom = 34.0
+margin_bottom = 54.0
 size_flags_horizontal = 3
 size_flags_vertical = 2
 columns = 3
@@ -681,6 +665,35 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 text = "100%"
 
+[node name="PFLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 38.0
+margin_right = 110.0
+margin_bottom = 52.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Player Firepower:"
+
+[node name="PFSlider" type="HSlider" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 198.0
+margin_top = 38.0
+margin_right = 391.0
+margin_bottom = 54.0
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.01
+value = 1.0
+
+[node name="PFValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 395.0
+margin_top = 38.0
+margin_right = 588.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "100%"
+
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/ManualButton" to="." method="_on_ManualButton_button_up"]
@@ -704,3 +717,4 @@ text = "100%"
 [connection signal="button_up" from="CampaignSetup/Play" to="." method="_on_PlayCampaign_button_up"]
 [connection signal="item_selected" from="CampaignSetup/DifficultyP/MC/GC/DifficultyOption" to="." method="_on_DifficultyButton_item_selected"]
 [connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/EFSlider" to="." method="_on_EFSlider_value_changed"]
+[connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/PFSlider" to="." method="_on_PFSlider_value_changed"]
