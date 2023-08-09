@@ -474,7 +474,7 @@ align = 1
 items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard Ironman", null, false, 3, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
 selected = 0
 
-[node name="DifficultyDescrCont" type="AspectRatioContainer" parent="CampaignSetup"]
+[node name="DifficultyDescrCont" type="Control" parent="CampaignSetup"]
 anchor_left = 0.651563
 anchor_top = 0.0932692
 anchor_right = 0.9585
@@ -483,7 +483,6 @@ margin_right = -0.320004
 margin_bottom = 0.079998
 size_flags_horizontal = 3
 size_flags_vertical = 3
-stretch_mode = 0
 
 [node name="DiffDescrEasy" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
@@ -510,6 +509,7 @@ __meta__ = {
 }
 
 [node name="DiffDescrMedium" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
+visible = false
 margin_top = 124.501
 margin_right = 588.999
 margin_bottom = 713.5
@@ -622,11 +622,64 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="DiffMenuCustom" type="Control" parent="CampaignSetup/DifficultyDescrCont"]
-visible = false
-margin_top = 124.501
+[node name="DiffMenuCustom" type="ScrollContainer" parent="CampaignSetup/DifficultyDescrCont"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="SC" type="GridContainer" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom"]
 margin_right = 588.999
-margin_bottom = 713.5
+margin_bottom = 34.0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+columns = 3
+
+[node name="Header" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_right = 194.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Custom Settings:"
+
+[node name="Separator" type="Control" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_left = 198.0
+margin_right = 391.0
+margin_bottom = 14.0
+
+[node name="Separator2" type="Control" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_left = 395.0
+margin_right = 588.0
+margin_bottom = 14.0
+
+[node name="EFLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 18.0
+margin_right = 114.0
+margin_bottom = 32.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Enemy Firepower:"
+
+[node name="EFSlider" type="HSlider" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 198.0
+margin_top = 18.0
+margin_right = 391.0
+margin_bottom = 34.0
+size_flags_horizontal = 3
+max_value = 1.8
+step = 0.01
+value = 0.6
+
+[node name="EFValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 395.0
+margin_top = 18.0
+margin_right = 588.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "100%"
 
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
@@ -650,3 +703,4 @@ margin_bottom = 713.5
 [connection signal="button_up" from="CampaignSetup/CSBack" to="." method="_on_CSBack_button_up"]
 [connection signal="button_up" from="CampaignSetup/Play" to="." method="_on_PlayCampaign_button_up"]
 [connection signal="item_selected" from="CampaignSetup/DifficultyP/MC/GC/DifficultyOption" to="." method="_on_DifficultyButton_item_selected"]
+[connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/EFSlider" to="." method="_on_EFSlider_value_changed"]
