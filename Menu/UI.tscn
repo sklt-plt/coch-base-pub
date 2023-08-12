@@ -614,7 +614,7 @@ size_flags_vertical = 0
 
 [node name="SC" type="GridContainer" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom"]
 margin_right = 588.999
-margin_bottom = 54.0
+margin_bottom = 114.0
 size_flags_horizontal = 3
 size_flags_vertical = 2
 columns = 3
@@ -652,7 +652,7 @@ margin_right = 391.0
 margin_bottom = 34.0
 size_flags_horizontal = 3
 max_value = 1.8
-step = 0.01
+step = 0.03
 value = 0.6
 
 [node name="EFValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
@@ -681,7 +681,7 @@ margin_right = 391.0
 margin_bottom = 54.0
 size_flags_horizontal = 3
 max_value = 2.0
-step = 0.01
+step = 0.05
 value = 1.0
 
 [node name="PFValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
@@ -690,6 +690,94 @@ margin_left = 395.0
 margin_top = 38.0
 margin_right = 588.0
 margin_bottom = 52.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "100%"
+
+[node name="EALabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 58.0
+margin_right = 102.0
+margin_bottom = 72.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Enemy Amount:"
+
+[node name="EASlider" type="HSlider" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 198.0
+margin_top = 58.0
+margin_right = 391.0
+margin_bottom = 74.0
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.05
+value = 1.0
+
+[node name="EAValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 395.0
+margin_top = 58.0
+margin_right = 588.0
+margin_bottom = 72.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "100%"
+
+[node name="IALabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 78.0
+margin_right = 90.0
+margin_bottom = 92.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Item Amount:"
+
+[node name="IASlider" type="HSlider" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 198.0
+margin_top = 78.0
+margin_right = 391.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+max_value = 2.0
+step = 0.05
+value = 1.0
+
+[node name="IAValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 395.0
+margin_top = 78.0
+margin_right = 588.0
+margin_bottom = 92.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "100%"
+
+[node name="LSLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 98.0
+margin_right = 68.0
+margin_bottom = 112.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Level Size:"
+
+[node name="LSSlider" type="HSlider" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 198.0
+margin_top = 98.0
+margin_right = 391.0
+margin_bottom = 114.0
+size_flags_horizontal = 3
+min_value = 0.25
+max_value = 1.75
+step = 0.05
+value = 1.0
+
+[node name="LSValue" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 395.0
+margin_top = 98.0
+margin_right = 588.0
+margin_bottom = 112.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
 text = "100%"
@@ -718,3 +806,6 @@ text = "100%"
 [connection signal="item_selected" from="CampaignSetup/DifficultyP/MC/GC/DifficultyOption" to="." method="_on_DifficultyButton_item_selected"]
 [connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/EFSlider" to="." method="_on_EFSlider_value_changed"]
 [connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/PFSlider" to="." method="_on_PFSlider_value_changed"]
+[connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/EASlider" to="." method="_on_EASlider_value_changed"]
+[connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/IASlider" to="." method="_on_IASlider_value_changed"]
+[connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/LSSlider" to="." method="_on_LSSlider_value_changed"]

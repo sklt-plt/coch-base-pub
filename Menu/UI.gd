@@ -88,6 +88,15 @@ func show_difficulty_description(var index):
 	$"%PFSlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["player_firepower_scale"]
 	set_custom_setting_label_text($"%PFValue", "player_firepower_scale", $"%PFSlider".value)
 
+	$"%EASlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["enemy_am_scale"]
+	set_custom_setting_label_text($"%EAValue", "enemy_am_scale", $"%EASlider".value)
+
+	$"%IASlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["item_am_scale"]
+	set_custom_setting_label_text($"%IAValue", "item_am_scale", $"%IASlider".value)
+
+	$"%LSSlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_sub_path_scale"]
+	set_custom_setting_label_text($"%LSValue", "level_sub_path_scale", $"%LSSlider".value)
+
 func _on_LSBackButton_button_up():
 	show_main_menu()
 
@@ -182,7 +191,7 @@ func _on_DifficultyButton_item_selected(index):
 
 func set_custom_setting_label_text(var node, var setting_name, var value):
 	var base_value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.NORMAL][setting_name]
-	node.text = String(floor((value*100) / base_value)) + "%"
+	node.text = String((value*100) / base_value) + "%"
 
 func _on_EFSlider_value_changed(new_value):
 	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["enemy_firepower_scale"] = new_value
@@ -191,3 +200,17 @@ func _on_EFSlider_value_changed(new_value):
 func _on_PFSlider_value_changed(new_value):
 	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["player_firepower_scale"] = new_value
 	set_custom_setting_label_text($"%PFValue", "player_firepower_scale", new_value)
+
+func _on_EASlider_value_changed(new_value):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["enemy_am_scale"] = new_value
+	set_custom_setting_label_text($"%EAValue", "enemy_am_scale", new_value)
+
+func _on_IASlider_value_changed(new_value):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["item_am_scale"] = new_value
+	set_custom_setting_label_text($"%IAValue", "item_am_scale", new_value)
+
+func _on_LSSlider_value_changed(new_value):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_main_path_scale"] = min(new_value, 1)
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_sub_path_scale"] = new_value
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_sub_path_amount"] = min(new_value, 1.25)
+	set_custom_setting_label_text($"%LSValue", "level_sub_path_scale", new_value)
