@@ -471,7 +471,7 @@ margin_right = 363.0
 margin_bottom = 38.0
 text = "Easy"
 align = 1
-items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard Ironman", null, false, 3, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
+items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard No Continues", null, false, 3, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
 selected = 0
 
 [node name="DifficultyDescrCont" type="Control" parent="CampaignSetup"]
@@ -566,7 +566,7 @@ bbcode_text = "Difficulty Description:
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
 
-[color=red][blink]Ironman - one life, no continues[/blink][/color]"
+[color=red][blink]One life, no continues[/blink][/color]"
 text = "Difficulty Description:
  - increased enemy firepower and amount
  - moderate player firepower
@@ -574,7 +574,7 @@ text = "Difficulty Description:
  - increased maze complexity
  - higher kill count to reach boss required
 
-Ironman - one life, no continues"
+One life, no continues"
 custom_effects = [ ExtResource( 5 ) ]
 
 [node name="DiffDescrHardOHKO" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
@@ -614,7 +614,7 @@ size_flags_vertical = 0
 
 [node name="SC" type="GridContainer" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom"]
 margin_right = 588.999
-margin_bottom = 114.0
+margin_bottom = 226.0
 size_flags_horizontal = 3
 size_flags_vertical = 2
 columns = 3
@@ -782,6 +782,103 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 text = "100%"
 
+[node name="CSLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 123.0
+margin_right = 101.0
+margin_bottom = 137.0
+size_flags_horizontal = 0
+text = "Campaign Seed:"
+
+[node name="CSLE" type="LineEdit" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 198.0
+margin_top = 118.0
+margin_right = 391.0
+margin_bottom = 142.0
+size_flags_horizontal = 3
+align = 1
+placeholder_text = "--Random--"
+
+[node name="Separator3" type="Control" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_left = 395.0
+margin_top = 118.0
+margin_right = 588.0
+margin_bottom = 118.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="SRLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 151.0
+margin_right = 93.0
+margin_bottom = 165.0
+size_flags_horizontal = 0
+text = "Use score req."
+
+[node name="SRCBox" type="CheckBox" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 282.0
+margin_top = 146.0
+margin_right = 306.0
+margin_bottom = 170.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Separator4" type="Control" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_left = 395.0
+margin_top = 146.0
+margin_right = 588.0
+margin_bottom = 146.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="OHKOLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 179.0
+margin_right = 79.0
+margin_bottom = 193.0
+size_flags_horizontal = 0
+text = "One hit K.O."
+
+[node name="OHKOCBox" type="CheckBox" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 282.0
+margin_top = 174.0
+margin_right = 306.0
+margin_bottom = 198.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Separator5" type="Control" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_left = 395.0
+margin_top = 174.0
+margin_right = 588.0
+margin_bottom = 174.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="IronLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_top = 207.0
+margin_right = 64.0
+margin_bottom = 221.0
+size_flags_horizontal = 0
+text = "Continues"
+
+[node name="IronCBox" type="CheckBox" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+unique_name_in_owner = true
+margin_left = 282.0
+margin_top = 202.0
+margin_right = 306.0
+margin_bottom = 226.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Separator6" type="Control" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
+margin_left = 395.0
+margin_top = 202.0
+margin_right = 588.0
+margin_bottom = 202.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
 [connection signal="button_up" from="MainMenu/Selection/StartButton" to="." method="_on_ContinueButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/OptionsButton" to="." method="_on_OptionsButton_button_up"]
 [connection signal="button_up" from="MainMenu/Selection/ManualButton" to="." method="_on_ManualButton_button_up"]
@@ -809,3 +906,7 @@ text = "100%"
 [connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/EASlider" to="." method="_on_EASlider_value_changed"]
 [connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/IASlider" to="." method="_on_IASlider_value_changed"]
 [connection signal="value_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/LSSlider" to="." method="_on_LSSlider_value_changed"]
+[connection signal="text_changed" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/CSLE" to="." method="_on_CSLE_text_changed"]
+[connection signal="toggled" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/SRCBox" to="." method="_on_SRCBox_toggled"]
+[connection signal="toggled" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/OHKOCBox" to="." method="_on_OHKOCBox_toggled"]
+[connection signal="toggled" from="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC/IronCBox" to="." method="_on_IronCBox_toggled"]

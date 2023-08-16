@@ -69,7 +69,6 @@ func show_campaign_setup():
 	$"LevelSelectEp1".visible = false
 	$"LevelSelectEp2".visible = false
 
-	#$"%CampaignSeedLE".text = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["campaign_seed"]
 	$"%DifficultyOption".selected = Globals.campaign_difficulty_idx
 	show_difficulty_description(Globals.campaign_difficulty_idx)
 
@@ -96,6 +95,11 @@ func show_difficulty_description(var index):
 
 	$"%LSSlider".value = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_sub_path_scale"]
 	set_custom_setting_label_text($"%LSValue", "level_sub_path_scale", $"%LSSlider".value)
+
+	$"%CSLE".text = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["campaign_seed"]
+	$"%SRCBox".pressed = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["score_req"]
+	$"%OHKOCBox".pressed = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["one_hit_ko"]
+	$"%IronCBox".pressed = !Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["ironman"]
 
 func _on_LSBackButton_button_up():
 	show_main_menu()
@@ -171,10 +175,6 @@ func _on_Button_button_up():
 		if OS.shell_open(feedback_url) != OK:
 			print("Can't open feedback url")
 
-func _on_CampaignSeedLE_text_changed(var new_text):
-	pass
-	#Globals.custom_difficulty["campaign_seed"] = new_text
-
 func _on_CSBack_button_up():
 	$"CampaignSetup".visible = false
 	Globals.save_user_difficulty()
@@ -214,3 +214,19 @@ func _on_LSSlider_value_changed(new_value):
 	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_sub_path_scale"] = new_value
 	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["level_sub_path_amount"] = min(new_value, 1.25)
 	set_custom_setting_label_text($"%LSValue", "level_sub_path_scale", new_value)
+
+func _on_CSLE_text_changed(new_text):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["campaign_seed"] = new_text
+
+func _on_SRCBox_toggled(button_pressed):
+	var base_req = Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.NORMAL]["score_req"]
+	if button_pressed:
+		Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["score_req"] = base_req
+	else:
+		Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["score_req"] = 0
+
+func _on_OHKOCBox_toggled(button_pressed):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["one_hit_ko"] = button_pressed
+
+func _on_IronCBox_toggled(button_pressed):
+	Globals.campaign_difficulties[Globals.CAMPAIGN_DIFFICULTY_ID.CUSTOM]["ironman"] = !button_pressed
