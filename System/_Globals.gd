@@ -123,15 +123,15 @@ var campaign_difficulties = [
 	},
 	#Custom
 	{
-		"enemy_firepower_scale": 1,
-		"player_firepower_scale": 100,
-		"enemy_am_scale": 0,
-		"item_am_scale": 0,
-		"campaign_seed": "a",
+		"enemy_firepower_scale": 0.6,
+		"player_firepower_scale": 1,
+		"enemy_am_scale": 1,
+		"item_am_scale": 1,
+		"campaign_seed": "",
 		"level_main_path_scale": 1,
-		"level_sub_path_scale": 0.5,
+		"level_sub_path_scale": 1,
 		"level_sub_path_amount": 1,
-		"score_req": 0,
+		"score_req": 300,
 		"one_hit_ko": false,
 		"ironman": false,
 	}
