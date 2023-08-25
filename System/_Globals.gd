@@ -8,8 +8,7 @@ enum CAMPAIGN_DIFFICULTY_ID {
 	NORMAL = 1,
 	HARD = 2,
 	HARD_OHKO = 3,
-	HARD_IRON = 4,
-	CUSTOM = 5
+	CUSTOM = 4
 }
 
 #var content_pack_path = "res://Content/default"
@@ -91,20 +90,6 @@ var campaign_difficulties = [
 		"level_sub_path_amount": 1,
 		"score_req": 900,
 		"one_hit_ko": false,
-		"ironman": false,
-	},
-	#Hard Iron
-	{
-		"enemy_firepower_scale": 1.2,
-		"player_firepower_scale": 1,
-		"enemy_am_scale": 2,
-		"item_am_scale": 1,
-		"campaign_seed": "",
-		"level_main_path_scale": 1,
-		"level_sub_path_scale": 1.75,
-		"level_sub_path_amount": 1,
-		"score_req": 900,
-		"one_hit_ko": false,
 		"ironman": true,
 	},
 	#Hard OHKO
@@ -119,7 +104,7 @@ var campaign_difficulties = [
 		"level_sub_path_amount": 1,
 		"score_req": 900,
 		"one_hit_ko": true,
-		"ironman": false,
+		"ironman": true,
 	},
 	#Custom
 	{

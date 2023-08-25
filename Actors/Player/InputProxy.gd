@@ -27,7 +27,13 @@ func _unhandled_input(_event):
 		else:
 			$"../GameOverStats".show()
 
-	if Input.is_action_pressed("DBG_ENABLE"):
+	if Input.is_action_pressed("DBG_ENABLE") && Input.is_action_pressed("DBG_ENABLE2"):
+		if (Input.is_action_just_pressed("DBG_1") || Input.is_action_just_pressed("DBG_2") ||
+			Input.is_action_just_pressed("DBG_3") || Input.is_action_just_pressed("DBG_4") ||
+			Input.is_action_just_pressed("DBG_5") || Input.is_action_just_pressed("DBG_6") ||
+			Input.is_action_just_pressed("DBG_7") || Input.is_action_just_pressed("DBG_9")) :
+				AchievementHelper.disqualify()
+
 		if Input.is_action_just_pressed("DBG_1"):
 			if not $"../PlayerMovement".is_flying:
 				get_node("/root/Player").start_flying()

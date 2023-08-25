@@ -1,13 +1,15 @@
 extends PauseScreen
 class_name GameOver
 
+const IRONMAN_MAX_DEATHS = 2
+
 func show_delayed():
 	$"DelayT".start()
 
 func show():
 	$"DelayT".stop()
 
-	if Globals.get_difficulty_field("ironman"):
+	if Globals.get_difficulty_field("ironman") and $"/root/Player".check("s_deaths") >= IRONMAN_MAX_DEATHS:
 		$"Control/RestartB".visible = false
 	else:
 		$"Control/RestartB".visible = true

@@ -7,6 +7,8 @@ func _ready():
 	$"/root/Player/HUD".visible = false
 	$"/root/Player/BodyCollision/LookHeight/LookDirection/WorldCamera".current = false
 	$"MenuCamera".current = true
+	AchievementHelper.qualify()
+
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	if $"/root/EpisodeManager".episode_clear_idx > 0:

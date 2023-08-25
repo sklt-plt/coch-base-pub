@@ -48,6 +48,7 @@ func change_map(var map_path: String):
 				episode_clear_idx = current_ep
 
 			$"/root/Player/GameOverStats".show()
+			AchievementHelper.give_clear_ep_achievements(current_ep)
 
 		print("Can't load level: ", map_path)
 		return false

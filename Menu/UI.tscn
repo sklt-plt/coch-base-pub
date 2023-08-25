@@ -471,7 +471,7 @@ margin_right = 363.0
 margin_bottom = 38.0
 text = "Easy"
 align = 1
-items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard No Continues", null, false, 3, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
+items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
 selected = 0
 
 [node name="DifficultyDescrCont" type="Control" parent="CampaignSetup"]
@@ -542,40 +542,15 @@ bbcode_text = "Difficulty Description:
 [ul] - [color=#fdfdd0]moderate[/color] player firepower[/ul]
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
-[ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]"
-text = "Difficulty Description:
- - increased enemy firepower and amount
- - moderate player firepower
- - moderate items per enemy spawning
- - increased maze complexity
- - higher kill count to reach boss required"
-
-[node name="DiffDescrHardIron" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-bbcode_enabled = true
-bbcode_text = "Difficulty Description:
-[ul] - [color=#fdc030]increased[/color] enemy firepower and amount[/ul]
-[ul] - [color=#fdfdd0]moderate[/color] player firepower[/ul]
-[ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
-[ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
-
-[color=red][blink]One life, no continues[/blink][/color]"
+[ul] - you only have [color=#fdc030]three lives[/color][/ul]"
 text = "Difficulty Description:
  - increased enemy firepower and amount
  - moderate player firepower
  - moderate items per enemy spawning
  - increased maze complexity
  - higher kill count to reach boss required
-
-One life, no continues"
-custom_effects = [ ExtResource( 5 ) ]
+ - you only have three lives"
 
 [node name="DiffDescrHardOHKO" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
 visible = false
@@ -593,6 +568,7 @@ bbcode_text = "Difficulty Description:
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
+[ul] - you only have [color=#fdc030]three lives[/color][/ul]
 
 [ul][color=red][blink]You die in one hit[/blink][/color]"
 text = "Difficulty Description:
@@ -602,6 +578,7 @@ text = "Difficulty Description:
  - moderate items per enemy spawning
  - increased maze complexity
  - higher kill count to reach boss required
+ - you only have three lives
 
 You die in one hit"
 custom_effects = [ ExtResource( 5 ) ]
@@ -857,10 +834,10 @@ size_flags_vertical = 0
 
 [node name="IronLabel" type="Label" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
 margin_top = 207.0
-margin_right = 64.0
+margin_right = 132.0
 margin_bottom = 221.0
 size_flags_horizontal = 0
-text = "Continues"
+text = "Unlimited Continues"
 
 [node name="IronCBox" type="CheckBox" parent="CampaignSetup/DifficultyDescrCont/DiffMenuCustom/SC"]
 unique_name_in_owner = true
