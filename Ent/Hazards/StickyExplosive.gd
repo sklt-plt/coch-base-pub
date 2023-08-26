@@ -9,14 +9,10 @@ func hit_target(var col : KinematicCollision):
 		queue_free()
 		return
 
-	var hit_any = false
 	if col.collider.has_method("deal_damage") and not col.collider is ExplosiveBarrel:
 		col.collider.deal_damage(hit_damage, push_force, self.global_translation, null)
-		hit_any = true
-		$"/root/Player".give("s_shots_hit", 1)
 
 	var explosive = $Explosive
-	explosive.projectile_already_hit = hit_any
 
 	var expl_tr= explosive.global_transform
 	self.remove_child(explosive)

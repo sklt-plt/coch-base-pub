@@ -4,6 +4,7 @@ const DEBUG = true
 
 const SPEEDRUN_MAX_TIME_TOTAL = 600  # seconds to minutes, 10 minutes total
 const BARRELS_MIN_KILLS = 10
+const ACCURACY_MIN_PERCENTAGE = 0.9
 
 var is_disqualified = false
 
@@ -23,7 +24,6 @@ enum ACHIEVEMENTS {
 	CLEAR_EP2_HARD_IRON,
 	CLEAR_EP2_HARD_OHKO,
 	CLEAR_SPEEDRUN,
-	CLEAR_ENEMY_PERCENTAGE,
 	CLEAR_TREASURE_PERCENTAGE,
 	CLEAR_HIT_PERCENTAGE,
 	CLEAR_CUSTOM,
@@ -45,7 +45,6 @@ var ACH_ENUM_TO_STRING = {
 	ACHIEVEMENTS.CLEAR_EP2_HARD_IRON : "CLEAR_EP2_HARD_IRON",
 	ACHIEVEMENTS.CLEAR_EP2_HARD_OHKO : "CLEAR_EP2_HARD_OHKO",
 	ACHIEVEMENTS.CLEAR_SPEEDRUN : "CLEAR_SPEEDRUN",
-	ACHIEVEMENTS.CLEAR_ENEMY_PERCENTAGE : "CLEAR_ENEMY_PERCENTAGE",
 	ACHIEVEMENTS.CLEAR_TREASURE_PERCENTAGE : "CLEAR_TREASURE_PERCENTAGE",
 	ACHIEVEMENTS.CLEAR_HIT_PERCENTAGE : "CLEAR_HIT_PERCENTAGE",
 	ACHIEVEMENTS.CLEAR_CUSTOM : "CLEAR_CUSTOM",
@@ -130,5 +129,11 @@ func give_clear_ep_achievements(var episode_index):
 	if ((Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.NORMAL or
 		Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD or
 		Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD_OHKO) and
-		$"/root/Player".check("s_time_total") < 600): # seconds to minutes * 10
+		$"/root/Player".check("s_time_total") < SPEEDRUN_MAX_TIME_TOTAL):
 			set_achievemenet(ACHIEVEMENTS.CLEAR_SPEEDRUN)
+
+	if $"/root/Player".check("s_treasure_open") == $"/root/Player".check("s_treasure_possible"):
+		set_achievemenet(ACHIEVEMENTS.CLEAR_TREASURE_PERCENTAGE)
+
+	if $"/root/Player".check("s_shots_hit") >= $"/root/Player".check("s_shots_fired") * ACCURACY_MIN_PERCENTAGE:
+		set_achievemenet(ACHIEVEMENTS.CLEAR_HIT_PERCENTAGE)

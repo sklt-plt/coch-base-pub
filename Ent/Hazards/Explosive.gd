@@ -5,7 +5,7 @@ export (float) var expl_damage = 10.0
 
 export (PackedScene) var effect
 
-var projectile_already_hit = false
+var is_from_barrel = false
 var was_barrel_and_kicked = false
 
 func explode(var to_ignore : Array = []):
@@ -22,8 +22,7 @@ func explode(var to_ignore : Array = []):
 	#deal damage directly if possible
 	var parent = get_parent()
 	if parent.has_method("deal_damage"):
-		if parent is KinematicEnemy or parent is StaticEnemy and parent.get_node("AI").health > 0:
-			hit_any = true
+		hit_any = true
 
 		parent.deal_damage(expl_damage, 0, parent.global_translation, null)
 
@@ -48,8 +47,7 @@ func explode(var to_ignore : Array = []):
 				mul = 1/($BlastRadius.shape.radius + (distance_to - $BlastRadius.shape.radius))  # linear faloff
 				var final_dmg = expl_damage*mul
 
-				if body is KinematicEnemy or body is StaticEnemy and body.get_node("AI").health > 0:
-					hit_any = true
+				hit_any = true
 
 				body.deal_damage(final_dmg, final_dmg*2, get_global_transform().origin , null)#/2, get_global_transform().origin , null)
 
@@ -61,7 +59,7 @@ func explode(var to_ignore : Array = []):
 
 				$"/root/Player".give("s_damage_dealt", expl_damage*mul)
 
-	if hit_any and not projectile_already_hit:
+	if hit_any and not is_from_barrel:
 		$"/root/Player".give("s_shots_hit", 1)
 
 	#remove explosive

@@ -3,6 +3,9 @@ class_name ExplosiveBarrel
 
 var exploded = false
 
+func _ready():
+	$Explosive.is_from_barrel = true
+
 func _enter_tree():
 	mode = RigidBody.MODE_STATIC
 
