@@ -42,7 +42,8 @@ func show():
 	if kills_possible > 0:
 		$"StatsSC/GC/KillsPVal".text = String(kills*100 / kills_possible) + " %"
 
-	var shots_hit = player.check("s_shots_hit")
+	# shots hit can be > shots fired, because of explosion chaining so...
+	var shots_hit = min(player.check("s_shots_hit"), player.check("s_shots_fired"))
 	var shots_total = player.check("s_shots_fired")
 	var shots_text = String(shots_hit) + " out of " + String(shots_total)
 

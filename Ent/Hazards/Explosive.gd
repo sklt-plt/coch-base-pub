@@ -5,6 +5,8 @@ export (float) var expl_damage = 10.0
 
 export (PackedScene) var effect
 
+var projectile_already_hit = false
+
 func explode(var to_ignore : Array = []):
 	#add effect
 	if not self.is_inside_tree():
@@ -15,9 +17,13 @@ func explode(var to_ignore : Array = []):
 		get_tree().current_scene.add_child(n_effect)
 		n_effect.global_translation = self.global_translation
 
+	var hit_any = false
 	#deal damage directly if possible
 	var ent = get_parent()
 	if ent.has_method("deal_damage"):
+		if ent is KinematicEnemy or ent is StaticEnemy and ent.get_node("AI").health > 0:
+			hit_any = true
+
 		ent.deal_damage(expl_damage, 0, ent.global_translation, null)
 
 	#deal damage indirectly in radius
@@ -33,16 +39,22 @@ func explode(var to_ignore : Array = []):
 		var result = space_state.intersect_ray(get_global_transform().origin, body.get_global_transform().origin, to_ignore, collision_mask)
 
 		if result and result.collider == body:
-			#how much of a fraction of damage to give to body
-			var my_global_t = get_global_transform().origin
-			var distance_to = my_global_t.distance_to(result.position)
-			var mul
-			mul = 1/($BlastRadius.shape.radius + (distance_to - $BlastRadius.shape.radius))  # linear faloff
-			var final_dmg = expl_damage*mul
-
 			if body.has_method("deal_damage"):
+				#how much of a fraction of damage to give to body
+				var my_global_t = get_global_transform().origin
+				var distance_to = my_global_t.distance_to(result.position)
+				var mul
+				mul = 1/($BlastRadius.shape.radius + (distance_to - $BlastRadius.shape.radius))  # linear faloff
+				var final_dmg = expl_damage*mul
+
+				if body is KinematicEnemy or body is StaticEnemy and body.get_node("AI").health > 0:
+					hit_any = true
+
 				body.deal_damage(final_dmg, final_dmg*2, get_global_transform().origin , null)#/2, get_global_transform().origin , null)
 				$"/root/Player".give("s_damage_dealt", expl_damage*mul)
+
+	if hit_any and not projectile_already_hit:
+		$"/root/Player".give("s_shots_hit", 1)
 
 	#remove explosive
 	self.queue_free()
