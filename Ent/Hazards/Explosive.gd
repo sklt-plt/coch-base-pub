@@ -6,6 +6,7 @@ export (float) var expl_damage = 10.0
 export (PackedScene) var effect
 
 var projectile_already_hit = false
+var was_barrel_and_kicked = false
 
 func explode(var to_ignore : Array = []):
 	#add effect
@@ -19,12 +20,12 @@ func explode(var to_ignore : Array = []):
 
 	var hit_any = false
 	#deal damage directly if possible
-	var ent = get_parent()
-	if ent.has_method("deal_damage"):
-		if ent is KinematicEnemy or ent is StaticEnemy and ent.get_node("AI").health > 0:
+	var parent = get_parent()
+	if parent.has_method("deal_damage"):
+		if parent is KinematicEnemy or parent is StaticEnemy and parent.get_node("AI").health > 0:
 			hit_any = true
 
-		ent.deal_damage(expl_damage, 0, ent.global_translation, null)
+		parent.deal_damage(expl_damage, 0, parent.global_translation, null)
 
 	#deal damage indirectly in radius
 	var in_blast = get_overlapping_bodies()
@@ -51,6 +52,13 @@ func explode(var to_ignore : Array = []):
 					hit_any = true
 
 				body.deal_damage(final_dmg, final_dmg*2, get_global_transform().origin , null)#/2, get_global_transform().origin , null)
+
+				if parent is ExplosiveBarrel and body is KinematicEnemy or body is StaticEnemy and body.get_node("AI").health < 0:
+					$"/root/Player".give("s_barrel_kills", 1)
+					AchievementHelper.try_give_barrel_kills_achievement()
+					if was_barrel_and_kicked:
+						AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.BARREL_LAUNCH)
+
 				$"/root/Player".give("s_damage_dealt", expl_damage*mul)
 
 	if hit_any and not projectile_already_hit:

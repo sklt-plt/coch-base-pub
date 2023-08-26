@@ -16,6 +16,8 @@ func deal_damage(var amount, var push_force, var from_dir, var _from_ent):
 	if is_zero_approx(amount):
 		# basically kick
 		apply_central_impulse((self.global_translation-from_dir).normalized() * push_force*20)
+		$Explosive.was_barrel_and_kicked = true
+
 	elif not exploded:
 		exploded = true
 		self.mode = MODE_STATIC

@@ -2,6 +2,9 @@ extends Node
 
 const DEBUG = true
 
+const SPEEDRUN_MAX_TIME_TOTAL = 600  # seconds to minutes, 10 minutes total
+const BARRELS_MIN_KILLS = 10
+
 var is_disqualified = false
 
 func print_dbg(var string):
@@ -26,7 +29,8 @@ enum ACHIEVEMENTS {
 	CLEAR_CUSTOM,
 	ARCADE_SCORE,
 	ARCADE_COMBO,
-	BARREL_KILLS
+	BARREL_KILLS,
+	BARREL_LAUNCH
 }
 
 var ACH_ENUM_TO_STRING = {
@@ -47,7 +51,8 @@ var ACH_ENUM_TO_STRING = {
 	ACHIEVEMENTS.CLEAR_CUSTOM : "CLEAR_CUSTOM",
 	ACHIEVEMENTS.ARCADE_SCORE : "ARCADE_SCORE",
 	ACHIEVEMENTS.ARCADE_COMBO : "ARCADE_COMBO",
-	ACHIEVEMENTS.BARREL_KILLS : "BARREL_KILLS"
+	ACHIEVEMENTS.BARREL_KILLS : "BARREL_KILLS",
+	ACHIEVEMENTS.BARREL_LAUNCH : "BARREL_LAUNCH"
 }
 
 func disqualify():
@@ -58,6 +63,10 @@ func qualify():
 
 func set_achievemenet(var index : int):
 	print_dbg("Got achievement: " + ACH_ENUM_TO_STRING[index])
+
+	###
+	#### TODO: TEST ON WINDOWS
+	###
 
 	if is_disqualified:
 		print_dbg("Player is disqualified from achievements")
@@ -73,49 +82,53 @@ func set_achievemenet(var index : int):
 
 	Steam.set_achievement(ACH_ENUM_TO_STRING[index])
 
+func try_give_barrel_kills_achievement():
+	if $"/root/Player".check("s_barrel_kills") >= BARRELS_MIN_KILLS:
+		set_achievemenet(ACHIEVEMENTS.BARREL_KILLS)
+
 func give_clear_ep_achievements(var episode_index):
 	match episode_index:
 		1 :
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.EASY:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_EASY)
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.NORMAL:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_EASY)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_NORMAL)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_NORMAL)
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_EASY)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_NORMAL)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_HARD)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_NORMAL)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_HARD)
 				if $"/root/Player".check("s_deaths") != null and $"/root/Player".check("s_deaths") == 0:
-					AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_HARD_IRON)
+					set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_HARD_IRON)
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD_OHKO:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_EASY)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_NORMAL)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_HARD)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_NORMAL)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_HARD)
 				if $"/root/Player".check("s_deaths") != null and $"/root/Player".check("s_deaths") == 0:
-					AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_HARD_IRON)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP1_HARD_OHKO)
+					set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_HARD_IRON)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP1_HARD_OHKO)
 		2 :
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.EASY:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_EASY)
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.NORMAL:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_EASY)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_NORMAL)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_NORMAL)
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_EASY)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_NORMAL)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_HARD)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_NORMAL)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_HARD)
 				if $"/root/Player".check("s_deaths") != null and $"/root/Player".check("s_deaths") == 0:
-					AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_HARD_IRON)
+					set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_HARD_IRON)
 			if Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD_OHKO:
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_EASY)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_NORMAL)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_HARD)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_EASY)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_NORMAL)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_HARD)
 				if $"/root/Player".check("s_deaths") != null and $"/root/Player".check("s_deaths") == 0:
-					AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_HARD_IRON)
-				AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_EP2_HARD_OHKO)
+					set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_HARD_IRON)
+				set_achievemenet(ACHIEVEMENTS.CLEAR_EP2_HARD_OHKO)
 
 	if ((Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.NORMAL or
 		Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD or
 		Globals.campaign_difficulty_idx == Globals.CAMPAIGN_DIFFICULTY_ID.HARD_OHKO) and
 		$"/root/Player".check("s_time_total") < 600): # seconds to minutes * 10
-			AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.CLEAR_SPEEDRUN)
+			set_achievemenet(ACHIEVEMENTS.CLEAR_SPEEDRUN)
