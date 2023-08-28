@@ -26,10 +26,8 @@ enum ACHIEVEMENTS {
 	CLEAR_SPEEDRUN,
 	CLEAR_TREASURE_PERCENTAGE,
 	CLEAR_HIT_PERCENTAGE,
-	CLEAR_CUSTOM,
 	ARCADE_SCORE,
 	ARCADE_COMBO,
-	BARREL_KILLS,
 	BARREL_LAUNCH
 }
 
@@ -47,11 +45,21 @@ var ACH_ENUM_TO_STRING = {
 	ACHIEVEMENTS.CLEAR_SPEEDRUN : "CLEAR_SPEEDRUN",
 	ACHIEVEMENTS.CLEAR_TREASURE_PERCENTAGE : "CLEAR_TREASURE_PERCENTAGE",
 	ACHIEVEMENTS.CLEAR_HIT_PERCENTAGE : "CLEAR_HIT_PERCENTAGE",
-	ACHIEVEMENTS.CLEAR_CUSTOM : "CLEAR_CUSTOM",
 	ACHIEVEMENTS.ARCADE_SCORE : "ARCADE_SCORE",
 	ACHIEVEMENTS.ARCADE_COMBO : "ARCADE_COMBO",
-	ACHIEVEMENTS.BARREL_KILLS : "BARREL_KILLS",
 	ACHIEVEMENTS.BARREL_LAUNCH : "BARREL_LAUNCH"
+}
+
+enum STATS {
+	TOTAL_DAMAGE,
+	TOTAL_CUSTOM_MAPS,
+	TOTAL_BARREL_KILLS,
+}
+
+var STAT_ENUM_TO_STRING = {
+	STATS.TOTAL_DAMAGE : "TOTAL_DAMAGE",
+	STATS.TOTAL_CUSTOM_MAPS : "TOTAL_CUSTOM_MAPS",
+	STATS.TOTAL_BARREL_KILLS : "TOTAL_BARREL_KILLS"
 }
 
 func disqualify():
@@ -81,9 +89,14 @@ func set_achievemenet(var index : int):
 
 	Steam.set_achievement(ACH_ENUM_TO_STRING[index])
 
-func try_give_barrel_kills_achievement():
-	if $"/root/Player".check("s_barrel_kills") >= BARRELS_MIN_KILLS:
-		set_achievemenet(ACHIEVEMENTS.BARREL_KILLS)
+func give_barrel_kills_stat():
+	return
+
+func give_clear_custom_stat():
+	return
+
+func give_damage_stat(var value):
+	return
 
 func give_clear_ep_achievements(var episode_index):
 	match episode_index:

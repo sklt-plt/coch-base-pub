@@ -52,8 +52,7 @@ func explode(var to_ignore : Array = []):
 				body.deal_damage(final_dmg, final_dmg*2, get_global_transform().origin , null)#/2, get_global_transform().origin , null)
 
 				if parent is ExplosiveBarrel and body is KinematicEnemy or body is StaticEnemy and body.get_node("AI").health < 0:
-					$"/root/Player".give("s_barrel_kills", 1)
-					AchievementHelper.try_give_barrel_kills_achievement()
+					AchievementHelper.give_barrel_kills_stat()
 					if was_barrel_and_kicked:
 						AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.BARREL_LAUNCH)
 
