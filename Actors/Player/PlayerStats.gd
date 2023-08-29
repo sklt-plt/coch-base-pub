@@ -46,6 +46,9 @@ func give(var stat, var value):
 		print("Error: can't give stat '", stat, "' - not found")
 		return
 
+	if stat == "s_damage_dealt":
+		AchievementHelper.increment_filtered_stat(AchievementHelper.STATS.TOTAL_DAMAGE, value)
+
 	set(stat, stat_value + value)
 
 func check(var stat):

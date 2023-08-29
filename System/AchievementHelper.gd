@@ -27,7 +27,7 @@ enum ACHIEVEMENTS {
 	CLEAR_TREASURE_PERCENTAGE,
 	CLEAR_HIT_PERCENTAGE,
 	ARCADE_SCORE,
-	ARCADE_COMBO,
+	ARCADE_TIME,
 	BARREL_LAUNCH
 }
 
@@ -46,7 +46,7 @@ var ACH_ENUM_TO_STRING = {
 	ACHIEVEMENTS.CLEAR_TREASURE_PERCENTAGE : "CLEAR_TREASURE_PERCENTAGE",
 	ACHIEVEMENTS.CLEAR_HIT_PERCENTAGE : "CLEAR_HIT_PERCENTAGE",
 	ACHIEVEMENTS.ARCADE_SCORE : "ARCADE_SCORE",
-	ACHIEVEMENTS.ARCADE_COMBO : "ARCADE_COMBO",
+	ACHIEVEMENTS.ARCADE_TIME : "ARCADE_TIME",
 	ACHIEVEMENTS.BARREL_LAUNCH : "BARREL_LAUNCH"
 }
 
@@ -89,11 +89,28 @@ func set_achievemenet(var index : int):
 
 	Steam.set_achievement(ACH_ENUM_TO_STRING[index])
 
-func give_barrel_kills_stat():
-	return
+func increment_filtered_stat(var stat : int, var amount : int):
+	if !Steam.is_init():
+		return
 
-func give_clear_custom_stat():
-	return
+	var current = Steam.user_stats.get_stat(STAT_ENUM_TO_STRING[stat])
+
+	if current:
+		Steam.user_stats.set_stati(STAT_ENUM_TO_STRING[stat], current + amount)
+	else:
+		Steam.user_stats.set_stati(STAT_ENUM_TO_STRING[stat], amount)
+
+	$"FilteringTimer".start()
+
+func increment_stat(var stat : int, var amount : int):
+	if !Steam.is_init():
+		return
+
+	var current = Steam.user_stats.get_stat(STAT_ENUM_TO_STRING[stat])
+	if current:
+		Steam.user_stats.set_stat(STAT_ENUM_TO_STRING[stat], current + amount)
+	else:
+		Steam.user_stats.set_stat(STAT_ENUM_TO_STRING[stat], amount)
 
 func give_damage_stat(var value):
 	return
@@ -150,3 +167,9 @@ func give_clear_ep_achievements(var episode_index):
 
 	if $"/root/Player".check("s_shots_hit") >= $"/root/Player".check("s_shots_fired") * ACCURACY_MIN_PERCENTAGE:
 		set_achievemenet(ACHIEVEMENTS.CLEAR_HIT_PERCENTAGE)
+
+func _on_FilteringTimer_timeout():
+	if !Steam.is_init():
+		return
+
+	Steam.user_stats.store_stats()

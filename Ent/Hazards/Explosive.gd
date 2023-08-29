@@ -32,6 +32,8 @@ func explode(var to_ignore : Array = []):
 	#get physics space_state for raycasting
 	var space_state = get_world().direct_space_state
 
+	var barrel_kills = 0
+
 	for body in in_blast:
 		#check direct line of sight except for to_ignore (directly hit & missile parent)
 		to_ignore.append(self)
@@ -52,7 +54,8 @@ func explode(var to_ignore : Array = []):
 				body.deal_damage(final_dmg, final_dmg*2, get_global_transform().origin , null)#/2, get_global_transform().origin , null)
 
 				if parent is ExplosiveBarrel and body is KinematicEnemy or body is StaticEnemy and body.get_node("AI").health < 0:
-					AchievementHelper.give_barrel_kills_stat()
+					barrel_kills += 1
+
 					if was_barrel_and_kicked:
 						AchievementHelper.set_achievemenet(AchievementHelper.ACHIEVEMENTS.BARREL_LAUNCH)
 
@@ -60,6 +63,9 @@ func explode(var to_ignore : Array = []):
 
 	if hit_any and not is_from_barrel:
 		$"/root/Player".give("s_shots_hit", 1)
+
+	if barrel_kills != 0:
+		AchievementHelper.increment_stat(AchievementHelper.STATS.TOTAL_BARREL_KILLS, barrel_kills)
 
 	#remove explosive
 	self.queue_free()

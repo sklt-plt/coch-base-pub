@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Base/System/AchievementHelper.gd" type="Script" id=1]
+
+[node name="AchievementHelper" type="Node"]
+script = ExtResource( 1 )
+
+[node name="FilteringTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[connection signal="timeout" from="FilteringTimer" to="." method="_on_FilteringTimer_timeout"]
