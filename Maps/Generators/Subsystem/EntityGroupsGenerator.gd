@@ -2,7 +2,8 @@ extends Node
 class_name EntityGroupsGenerator
 tool
 
-const MAX_TURRET_MONSTERS = 4
+const MAX_TURRETS_CAMPAIGN = 4
+const MAX_TURRETS_ARCADE = 1
 
 export (Dictionary) var stat_objects = {
 	"level_entrance" : {"path" : "/Ent/Static/LevelEntrance/LevelEntrance.tscn"}
@@ -127,7 +128,12 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 
 	# random cherry-pick algo for enemies
 	# until we exhaust pool
-	var remaining_allowed_turrets = MAX_TURRET_MONSTERS
+	var remaining_allowed_turrets = MAX_TURRETS_CAMPAIGN
+	if EpisodeManager.is_endless_episode_playing():
+		remaining_allowed_turrets = MAX_TURRETS_ARCADE
+	else:
+		remaining_allowed_turrets = MAX_TURRETS_CAMPAIGN
+
 	while difficulty_pool > 0.01:
 		var dup_pool = monster_paths_and_costs.duplicate()
 		# filter out too expensive and excessive turret monsters

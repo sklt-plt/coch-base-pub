@@ -26,7 +26,7 @@ export (AudioStream) var audio_death
 
 export (bool) var use_time_limit
 
-const TIME_LEFT_MAX = 4.0*60
+const TIME_LEFT_MAX = 3.0*60
 
 var progress_multiplier_decay = 0.0
 const PROGRESS_MULTIPLIER_DECAY_SPEED_3x = 0.15

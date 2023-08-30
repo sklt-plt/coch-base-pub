@@ -31,8 +31,8 @@ var use_prefabs = true
 var _prefabs_on_main = true
 
 const BASE_ROOM_SIZE = 15
-const MAX_MAIN_PATH_ROOMS = 13
-const MAX_SAFE_SUB_PATHS = 6
+const MAX_MAIN_PATH_ROOMS = 10
+const MAX_SAFE_SUB_PATHS = 5
 const MAX_SAFE_SUB_PATH_LENGHT = 3
 const MAX_SAFE_ENEMY_BUDGET = 12
 
@@ -52,7 +52,8 @@ func randomize_values():
 
 	gen_seed = ""	# will be randomized by Generator
 
-	var desired_difficulty = float($"/root/Player".check("s_level"))*1.5
+	var desired_difficulty = float($"/root/Player".check("s_level")*1.5 + 1.0)
+	print(desired_difficulty)
 
 	num_of_sub_paths = min(rng.randi_range(desired_difficulty/2, desired_difficulty), MAX_SAFE_SUB_PATHS)
 	sub_path_max_length = min(ceil(desired_difficulty/3), MAX_SAFE_SUB_PATH_LENGHT)
@@ -83,10 +84,10 @@ func randomize_values():
 	else:
 		use_prefabs = false
 
-	if EpisodeManager.current_ep == 101 and $"/root/Player".check("s_level") == 4:
+	if EpisodeManager.current_ep == 101 and $"/root/Player".check("s_level") == 3:
 		$"/root/Player".give("e_double_barrel_level", 1)
 
-	if EpisodeManager.current_ep == 102 and $"/root/Player".check("s_level") == 4:
+	if EpisodeManager.current_ep == 102 and $"/root/Player".check("s_level") == 3:
 		$"/root/Player".give("e_crossbow_level", 1)
 
 func apply():
