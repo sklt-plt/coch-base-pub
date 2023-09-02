@@ -35,6 +35,7 @@ const MAX_MAIN_PATH_ROOMS = 10
 const MAX_SAFE_SUB_PATHS = 5
 const MAX_SAFE_SUB_PATH_LENGHT = 3
 const MAX_SAFE_ENEMY_BUDGET = 12
+const MAX_SAFE_ROOM_SIZE = 40
 
 func generate_overrides():
 	var ui_node = get_node_or_null("OverridesUI")
@@ -65,8 +66,8 @@ func randomize_values():
 
 	var base_min_size = generator._rooms_data_generator._room_min_walls_length
 	var base_max_size = generator._rooms_data_generator._room_max_walls_length
-	_min_room_size = base_min_size + (base_min_size * $"/root/Player".check("s_level")*0.33) 	#needs to be aligned to difficulty
-	_max_room_size = base_max_size + (base_max_size * $"/root/Player".check("s_level")*0.33) 	#needs to be aligned to difficulty
+	_min_room_size = min(base_min_size + (base_min_size * $"/root/Player".check("s_level")*0.33), MAX_SAFE_ROOM_SIZE)
+	_max_room_size = min(base_max_size + (base_max_size * $"/root/Player".check("s_level")*0.33), MAX_SAFE_ROOM_SIZE)
 
 	_min_room_height = 3 + $"/root/Player".check("s_level")/2	#s_level is an integer so it should floor
 	_max_room_height = _min_room_height + 2

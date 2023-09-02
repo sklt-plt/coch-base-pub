@@ -60,7 +60,7 @@ func prepare():
 	_actual_difficulty_variation = min(_enemy_difficulty_variation, _actual_difficulty)
 
 	_actual_main_path_length = ceil(_main_path_length * Globals.get_difficulty_field("level_main_path_scale"))
-	_actual_sub_path_length = ceil(_num_of_sub_paths * Globals.get_difficulty_field("level_sub_path_amount"))
+	_actual_sub_path_length = ceil(_sub_path_length * Globals.get_difficulty_field("level_sub_path_amount"))
 	_actual_num_of_sub_paths =  ceil(_num_of_sub_paths * Globals.get_difficulty_field("level_sub_path_scale"))
 
 func generate_difficulty_pools(var number_of_rooms: int):
