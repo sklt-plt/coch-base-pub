@@ -38,6 +38,13 @@ func _ready():
 	flush_old_map()
 
 	if not Engine.is_editor_hint():
+		initialize_subsystems()
+		flush_old_map()
+		if EpisodeManager.is_endless_episode_playing():
+			var overrides = self.get_node("GeneratorOverrides")
+			overrides.generate_overrides()
+			overrides.apply()
+
 		generate = true
 		hide_after_generation = true
 
@@ -56,16 +63,16 @@ func _process(_delta):
 	var t = OS.get_ticks_msec()
 
 	if generate:
-		var maybe_overrides = self.get_node_or_null("GeneratorOverrides")
+		if Engine.is_editor_hint():
+			initialize_subsystems()
+			flush_old_map()
 
-		if maybe_overrides and not maybe_overrides.done:
-			return
-
-		flush_old_map()
-		initialize_subsystems()
-
-		if maybe_overrides and maybe_overrides.done:
-			maybe_overrides.apply()
+		if EpisodeManager.is_custom_episode_playing():
+			var overrides = self.get_node("GeneratorOverrides")
+			if not overrides.done:
+				return
+			else:
+				overrides.apply()
 
 		setup_rng_seed()
 

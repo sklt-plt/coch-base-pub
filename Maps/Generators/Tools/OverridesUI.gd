@@ -76,17 +76,17 @@ func _on_PlayButton_button_up():
 	overrides.num_of_sub_paths = $"SC/GC/SubPathNumSB".value
 	to_save["num_of_sub_paths"] = overrides.num_of_sub_paths
 
-	overrides.min_room_size = $"SC/GC/RoomSizeBarsGC/MinSB".value
-	to_save["min_room_size"] = overrides.min_room_size
+	overrides._min_room_size = $"SC/GC/RoomSizeBarsGC/MinSB".value
+	to_save["min_room_size"] = overrides._min_room_size
 
-	overrides.max_room_size = $"SC/GC/RoomSizeBarsGC/MaxSB".value
-	to_save["max_room_size"] = overrides.max_room_size
+	overrides._max_room_size = $"SC/GC/RoomSizeBarsGC/MaxSB".value
+	to_save["max_room_size"] = overrides._max_room_size
 
-	overrides.min_room_height = $"SC/GC/RoomHeightGC/MinSB".value
-	to_save["min_room_height"] = overrides.min_room_height
+	overrides._min_room_height = $"SC/GC/RoomHeightGC/MinSB".value
+	to_save["min_room_height"] = overrides._min_room_height
 
-	overrides.max_room_height = $"SC/GC/RoomHeightGC/MaxSB".value
-	to_save["max_room_height"] = overrides.max_room_height
+	overrides._max_room_height = $"SC/GC/RoomHeightGC/MaxSB".value
+	to_save["max_room_height"] = overrides._max_room_height
 
 	overrides._average_room_difficulty = $"SC/GC/AvgRoomDifficultySB".value
 	to_save["_average_room_difficulty"] = overrides._average_room_difficulty
@@ -123,7 +123,6 @@ func _on_PlayButton_button_up():
 	overrides.done = true
 
 	self.visible = false
-	get_tree().paused = false
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 	if soundtrack_node:

@@ -11,10 +11,10 @@ var main_path_length = 3
 var sub_path_max_length = 3
 var num_of_sub_paths = 3
 
-var min_room_size = 15
-var max_room_size = 15
-var min_room_height = 3
-var max_room_height = 4
+var _min_room_size = 15
+var _max_room_size = 15
+var _min_room_height = 3
+var _max_room_height = 4
 
 var _average_room_difficulty = 0.0
 var _average_difficulty_variation = 0
@@ -36,7 +36,7 @@ const MAX_SAFE_SUB_PATHS = 5
 const MAX_SAFE_SUB_PATH_LENGHT = 3
 const MAX_SAFE_ENEMY_BUDGET = 12
 
-func _ready():
+func generate_overrides():
 	var ui_node = get_node_or_null("OverridesUI")
 	if ui_node:
 		#player will set values and "done" through ui
@@ -49,35 +49,36 @@ func _ready():
 func randomize_values():
 	var rng = RandomNumberGenerator.new()
 	rng.randomize()
+	var generator = get_parent()
 
 	gen_seed = ""	# will be randomized by Generator
 
-	var desired_difficulty = float($"/root/Player".check("s_level")*1.5 + 1.0)
-	print(desired_difficulty)
+	var player_level_scale = float($"/root/Player".check("s_level")*1.8)
+	var desired_difficulty = generator._rooms_data_generator._enemy_difficulty + player_level_scale
 
-	num_of_sub_paths = min(rng.randi_range(desired_difficulty/2, desired_difficulty), MAX_SAFE_SUB_PATHS)
-	sub_path_max_length = min(ceil(desired_difficulty/3), MAX_SAFE_SUB_PATH_LENGHT)
-	main_path_length = min(5+(desired_difficulty), MAX_MAIN_PATH_ROOMS)
+	num_of_sub_paths = min(rng.randi_range(player_level_scale/2, player_level_scale-1), MAX_SAFE_SUB_PATHS)
+	sub_path_max_length = min(ceil(player_level_scale/3), MAX_SAFE_SUB_PATH_LENGHT)
+	main_path_length = min(4+(player_level_scale), MAX_MAIN_PATH_ROOMS)
 
 	_average_room_difficulty = min(desired_difficulty, MAX_SAFE_ENEMY_BUDGET)		#already randomized in generator
 	_average_difficulty_variation = round(_average_room_difficulty*0.2)					#already randomized in generator
 
-	var base_room_size = BASE_ROOM_SIZE + $"/root/Player".check("s_level")*1.5 	#needs to be aligned to difficulty
+	var base_min_size = generator._rooms_data_generator._room_min_walls_length
+	var base_max_size = generator._rooms_data_generator._room_max_walls_length
+	_min_room_size = base_min_size + (base_min_size * $"/root/Player".check("s_level")*0.33) 	#needs to be aligned to difficulty
+	_max_room_size = base_max_size + (base_max_size * $"/root/Player".check("s_level")*0.33) 	#needs to be aligned to difficulty
 
-	min_room_size = round(base_room_size-0.1*base_room_size)
-	max_room_size = round(base_room_size+0.15*base_room_size)
+	_min_room_height = 3 + $"/root/Player".check("s_level")/2	#s_level is an integer so it should floor
+	_max_room_height = _min_room_height + 2
 
-	min_room_height = 3 + $"/root/Player".check("s_level")/2	#s_level is an integer so it should floor
-	max_room_height = min_room_height + 2
-
-	_max_random_walks =  round(min_room_size*0.33)
+	_max_random_walks =  round(_min_room_size*0.33)
 	_random_walks_widths = rng.randi()%RandomWalksInteriorGenerator.PATH_WIDTHS_TABLES.size()
 
-	_arena_obstacle_per_quadrant = round(rng.randf_range(min_room_size*0.1, min_room_size*0.2))
-	_arena_obstacle_min_size = round(min_room_size*0.1)
-	_arena_obstacle_max_size = round(min_room_size*0.5)
+	_arena_obstacle_per_quadrant = round(rng.randf_range(_min_room_size*0.1, _min_room_size*0.2))
+	_arena_obstacle_min_size = round(_min_room_size*0.1)
+	_arena_obstacle_max_size = round(_min_room_size*0.5)
 
-	_arena_obstacle_outline_thickness = round(min_room_size*0.1)
+	_arena_obstacle_outline_thickness = round(_min_room_size*0.1)
 
 	if (rng.randi()%100) > 70:
 		use_prefabs = true
@@ -100,10 +101,10 @@ func apply():
 		generator._rooms_data_generator._main_path_length = main_path_length
 		generator._rooms_data_generator._sub_path_length = sub_path_max_length
 		generator._rooms_data_generator._num_of_sub_paths = num_of_sub_paths
-		generator._rooms_data_generator._room_min_walls_length = min_room_size
-		generator._rooms_data_generator._room_max_walls_length = max_room_size
-		generator._rooms_data_generator._room_min_walls_height = min_room_height
-		generator._rooms_data_generator._room_max_walls_height = max_room_height
+		generator._rooms_data_generator._room_min_walls_length = _min_room_size
+		generator._rooms_data_generator._room_max_walls_length = _max_room_size
+		generator._rooms_data_generator._room_min_walls_height = _min_room_height
+		generator._rooms_data_generator._room_max_walls_height = _max_room_height
 		generator._rooms_data_generator._enemy_difficulty = _average_room_difficulty
 		generator._rooms_data_generator._enemy_difficulty_variation = _average_difficulty_variation
 		generator._random_walks_interior_generator._num_of_random_paths = _max_random_walks
