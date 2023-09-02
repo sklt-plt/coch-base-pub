@@ -28,6 +28,7 @@ func show():
 		$"StatsSC/GC/LevelL".visible = true
 		$"StatsSC/GC/LevelVal".visible = true
 		$"StatsSC/GC/LevelVal".text = String(player.check("s_level"))
+		AchievementHelper.try_give_arcade_achievements()
 	else:
 		$"StatsSC/GC/LevelL".visible = false
 		$"StatsSC/GC/LevelVal".visible = false

@@ -26,8 +26,6 @@ enum ACHIEVEMENTS {
 	CLEAR_SPEEDRUN,
 	CLEAR_TREASURE_PERCENTAGE,
 	CLEAR_HIT_PERCENTAGE,
-	ARCADE_SCORE,
-	ARCADE_TIME,
 	BARREL_LAUNCH
 }
 
@@ -45,8 +43,6 @@ var ACH_ENUM_TO_STRING = {
 	ACHIEVEMENTS.CLEAR_SPEEDRUN : "CLEAR_SPEEDRUN",
 	ACHIEVEMENTS.CLEAR_TREASURE_PERCENTAGE : "CLEAR_TREASURE_PERCENTAGE",
 	ACHIEVEMENTS.CLEAR_HIT_PERCENTAGE : "CLEAR_HIT_PERCENTAGE",
-	ACHIEVEMENTS.ARCADE_SCORE : "ARCADE_SCORE",
-	ACHIEVEMENTS.ARCADE_TIME : "ARCADE_TIME",
 	ACHIEVEMENTS.BARREL_LAUNCH : "BARREL_LAUNCH"
 }
 
@@ -54,12 +50,16 @@ enum STATS {
 	TOTAL_DAMAGE,
 	TOTAL_CUSTOM_MAPS,
 	TOTAL_BARREL_KILLS,
+	BEST_ARCADE_SCORE,
+	BEST_ARCADE_TIME
 }
 
 var STAT_ENUM_TO_STRING = {
 	STATS.TOTAL_DAMAGE : "TOTAL_DAMAGE",
 	STATS.TOTAL_CUSTOM_MAPS : "TOTAL_CUSTOM_MAPS",
-	STATS.TOTAL_BARREL_KILLS : "TOTAL_BARREL_KILLS"
+	STATS.TOTAL_BARREL_KILLS : "TOTAL_BARREL_KILLS",
+	STATS.BEST_ARCADE_SCORE : "BEST_ARCADE_SCORE",
+	STATS.BEST_ARCADE_TIME : "BEST_ARCADE_TIME"
 }
 
 func disqualify():
@@ -111,6 +111,15 @@ func increment_stat(var stat : int, var amount : int):
 		Steam.user_stats.set_stat(STAT_ENUM_TO_STRING[stat], current + amount)
 	else:
 		Steam.user_stats.set_stat(STAT_ENUM_TO_STRING[stat], amount)
+
+func try_give_arcade_achievements():
+	if !Steam.is_init():
+		return
+
+	Steam.user_stats.set_stati(STAT_ENUM_TO_STRING[STATS.BEST_ARCADE_SCORE], $"/root/Player".check("s_score"))
+	Steam.user_stats.set_statf(STAT_ENUM_TO_STRING[STATS.BEST_ARCADE_TIME], $"/root/Player".check("s_time_total") / 60)
+
+	Steam.user_stats.store_stats()
 
 func give_damage_stat(var value):
 	return

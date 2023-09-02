@@ -35,7 +35,7 @@ const MAX_MAIN_PATH_ROOMS = 10
 const MAX_SAFE_SUB_PATHS = 5
 const MAX_SAFE_SUB_PATH_LENGHT = 3
 const MAX_SAFE_ENEMY_BUDGET = 12
-const MAX_SAFE_ROOM_SIZE = 40
+const MAX_SAFE_ROOM_SIZE = 35
 
 func generate_overrides():
 	var ui_node = get_node_or_null("OverridesUI")
