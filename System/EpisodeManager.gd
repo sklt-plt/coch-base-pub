@@ -79,8 +79,9 @@ func load_object_cache(var ep_idx: int):
 func start_episode(var ep_idx: int):
 	reset_episode_cache()
 	load_object_cache(ep_idx)
-	$"/root/Player".reset()
 	current_ep = ep_idx
+
+	$"/root/Player".reset()
 
 	if is_endless_episode_playing():
 		$"/root/Player".setup_arcade_mode()

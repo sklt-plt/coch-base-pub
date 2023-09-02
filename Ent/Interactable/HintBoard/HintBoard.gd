@@ -13,14 +13,14 @@ var hints = {
 	],
 	2:
 	[
-		"There is no fall damage, trust me",
+		"You can climb some buildings\n And there is no fall damage, trust me",
 		"Crossbow time!\n\n Bolts explode shortly after hitting the target and when you press {KEY_ALTFIRE}!",
 		"You have plenty of time to get out Sniper's line of sight. Sort of"#,
 		#"Backpack weapon reloading is totally intended",
 	],
 	199:
 	[
-		"Arcade rules:\n\n - Defeat enemies to score\n - Score multiplier increases each level\n - You have 4 minutes but killing enemies and picking up items freezes timer\n\n Good luck!"
+		"Arcade rules:\n\n - Defeat enemies to score\n - Score multiplier increases each level\n - You have 3 minutes but killing enemies and picking up items freezes timer\n\n Good luck! \n P.S. The timer is already started"
 	]
 }
 
