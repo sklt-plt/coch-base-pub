@@ -1,7 +1,7 @@
 extends PauseScreen
 class_name GameOver
 
-const IRONMAN_MAX_DEATHS = 2
+const IRONMAN_MAX_DEATHS = 4
 
 func show_delayed():
 	$"DelayT".start()

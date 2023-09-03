@@ -1,6 +1,6 @@
 extends Node
 
-const DEBUG = true
+const DEBUG = false
 
 const SPEEDRUN_MAX_TIME_TOTAL = 600  # seconds to minutes, 10 minutes total
 const BARRELS_MIN_KILLS = 10
@@ -70,10 +70,6 @@ func qualify():
 
 func set_achievemenet(var index : int):
 	print_dbg("Got achievement: " + ACH_ENUM_TO_STRING[index])
-
-	###
-	#### TODO: TEST ON WINDOWS
-	###
 
 	if is_disqualified:
 		print_dbg("Player is disqualified from achievements")

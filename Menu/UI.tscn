@@ -471,7 +471,7 @@ margin_right = 363.0
 margin_bottom = 38.0
 text = "Easy"
 align = 1
-items = [ "Easy", null, false, 0, null, "Normal", null, false, 1, null, "Hard", null, false, 2, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
+items = [ "Easy", null, false, 0, null, "Medium", null, false, 1, null, "Hard", null, false, 2, null, "Hard OHKO", null, false, 4, null, "Custom", null, false, 5, null ]
 selected = 0
 
 [node name="DifficultyDescrCont" type="Control" parent="CampaignSetup"]
@@ -543,17 +543,16 @@ bbcode_text = "Difficulty Description:
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
-[ul] - you only have [color=#fdc030]three lives[/color][/ul]"
+[ul] - you only have [color=#fdc030]five lives[/color][/ul]"
 text = "Difficulty Description:
  - increased enemy firepower and amount
  - moderate player firepower
  - moderate items per enemy spawning
  - increased maze complexity
  - higher kill count to reach boss required
- - you only have three lives"
+ - you only have five lives"
 
 [node name="DiffDescrHardOHKO" type="RichTextLabel" parent="CampaignSetup/DifficultyDescrCont"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -568,7 +567,7 @@ bbcode_text = "Difficulty Description:
 [ul] - [color=#fdfdd0]moderate[/color] items per enemy spawning[/ul]
 [ul] - [color=#fdc030]increased[/color] maze complexity[/ul]
 [ul] - [color=#fdc030]higher[/color] kill count to reach boss required[/ul]
-[ul] - you only have [color=#fdc030]three lives[/color][/ul]
+[ul] - you only have [color=#fdc030]five lives[/color][/ul]
 
 [ul][color=red][blink]You die in one hit[/blink][/color]"
 text = "Difficulty Description:
@@ -578,12 +577,13 @@ text = "Difficulty Description:
  - moderate items per enemy spawning
  - increased maze complexity
  - higher kill count to reach boss required
- - you only have three lives
+ - you only have five lives
 
 You die in one hit"
 custom_effects = [ ExtResource( 5 ) ]
 
 [node name="DiffMenuCustom" type="ScrollContainer" parent="CampaignSetup/DifficultyDescrCont"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
