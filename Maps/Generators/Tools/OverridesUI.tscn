@@ -32,9 +32,6 @@ margin_top = -0.480003
 margin_right = 0.679932
 margin_bottom = 0.119995
 scroll_horizontal_enabled = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="GC" type="GridContainer" parent="SC"]
 margin_right = 432.0
@@ -90,9 +87,8 @@ margin_right = 394.0
 margin_bottom = 63.0
 size_flags_horizontal = 9
 min_value = 2.0
-max_value = 50.0
+max_value = 15.0
 value = 6.0
-allow_greater = true
 align = 1
 
 [node name="DummyControl4" type="Control" parent="SC/GC"]
@@ -119,8 +115,8 @@ margin_top = 78.0
 margin_right = 394.0
 margin_bottom = 102.0
 size_flags_horizontal = 9
-max_value = 50.0
-value = 3.0
+max_value = 4.0
+value = 1.0
 allow_greater = true
 align = 1
 
@@ -148,8 +144,9 @@ margin_top = 117.0
 margin_right = 394.0
 margin_bottom = 141.0
 size_flags_horizontal = 9
-max_value = 50.0
+max_value = 3.0
 value = 3.0
+allow_greater = true
 align = 1
 
 [node name="DummyControl8" type="Control" parent="SC/GC"]
@@ -188,6 +185,7 @@ margin_left = 37.0
 margin_right = 111.0
 margin_bottom = 24.0
 min_value = 4.0
+max_value = 40.0
 value = 10.0
 
 [node name="ToL" type="Label" parent="SC/GC/RoomSizeBarsGC"]
@@ -202,6 +200,7 @@ margin_left = 134.0
 margin_right = 208.0
 margin_bottom = 24.0
 min_value = 4.0
+max_value = 40.0
 value = 30.0
 
 [node name="DummyControl12" type="Control" parent="SC/GC"]
@@ -240,7 +239,7 @@ margin_left = 37.0
 margin_right = 111.0
 margin_bottom = 24.0
 min_value = 2.0
-max_value = 75.0
+max_value = 20.0
 value = 3.0
 
 [node name="ToL" type="Label" parent="SC/GC/RoomHeightGC"]
@@ -255,7 +254,7 @@ margin_left = 134.0
 margin_right = 208.0
 margin_bottom = 24.0
 min_value = 2.0
-max_value = 75.0
+max_value = 20.0
 value = 5.0
 
 [node name="DummyControl13" type="Control" parent="SC/GC"]
@@ -282,9 +281,8 @@ margin_top = 234.0
 margin_right = 394.0
 margin_bottom = 258.0
 size_flags_horizontal = 9
-max_value = 50.0
+max_value = 15.0
 value = 10.0
-allow_greater = true
 align = 1
 
 [node name="DummyControl16" type="Control" parent="SC/GC"]
@@ -311,7 +309,7 @@ margin_top = 273.0
 margin_right = 394.0
 margin_bottom = 297.0
 size_flags_horizontal = 9
-max_value = 50.0
+max_value = 10.0
 value = 5.0
 align = 1
 
@@ -339,8 +337,8 @@ margin_top = 312.0
 margin_right = 394.0
 margin_bottom = 336.0
 size_flags_horizontal = 9
-value = 15.0
-allow_greater = true
+max_value = 6.0
+value = 2.0
 align = 1
 
 [node name="DummyControl18" type="Control" parent="SC/GC"]
@@ -397,6 +395,7 @@ margin_top = 386.0
 margin_right = 394.0
 margin_bottom = 410.0
 size_flags_horizontal = 9
+max_value = 12.0
 step = 4.0
 value = 4.0
 rounded = true
@@ -439,9 +438,8 @@ margin_left = 37.0
 margin_right = 111.0
 margin_bottom = 24.0
 min_value = 1.0
-max_value = 50.0
+max_value = 8.0
 value = 1.0
-allow_greater = true
 
 [node name="ToL" type="Label" parent="SC/GC/ArenaObstacleGC"]
 margin_left = 115.0
@@ -455,9 +453,8 @@ margin_left = 134.0
 margin_right = 208.0
 margin_bottom = 24.0
 min_value = 1.0
-max_value = 50.0
+max_value = 8.0
 value = 3.0
-allow_greater = true
 
 [node name="DummyControl14" type="Control" parent="SC/GC"]
 margin_left = 409.0
@@ -484,9 +481,8 @@ margin_right = 394.0
 margin_bottom = 488.0
 size_flags_horizontal = 9
 min_value = 2.0
-max_value = 10.0
+max_value = 6.0
 value = 2.0
-allow_greater = true
 align = 1
 
 [node name="DummyControl20" type="Control" parent="SC/GC"]
