@@ -39,7 +39,7 @@ func get_elements(var root):
 	# furniture object = root of roots
 	# CollisionObject = take whole with children
 	# FurnitureElements = take one
-	# anything else = iterate over children
+	# MeshInstance or Spatial = copy and iterate over children
 	if root is FurnitureObject:
 		parent = FurnitureObject.new()
 		parent.size = root.size
@@ -55,7 +55,13 @@ func get_elements(var root):
 		return parent
 		parent.translation = root.translation
 		parent.rotation = root.rotation
-	else:
+	elif root is MeshInstance:
+		parent = MeshInstance.new()
+		parent.mesh = root.mesh
+		parent.translation = root.translation
+		parent.rotation = root.rotation
+		parent.scale = root.scale
+	elif root is Spatial:
 		parent = Spatial.new()
 		parent.translation = root.translation
 		parent.rotation = root.rotation
