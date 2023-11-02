@@ -129,7 +129,7 @@ func generate_entity_groups(var room_geometry : RoomGeometry, var tree_ref : Gen
 	# random cherry-pick algo for enemies
 	# until we exhaust pool
 	var remaining_allowed_turrets = MAX_TURRETS_CAMPAIGN
-	if EpisodeManager.is_endless_episode_playing():
+	if not Engine.is_editor_hint() and EpisodeManager.is_endless_episode_playing():
 		remaining_allowed_turrets = MAX_TURRETS_ARCADE
 	else:
 		remaining_allowed_turrets = MAX_TURRETS_CAMPAIGN

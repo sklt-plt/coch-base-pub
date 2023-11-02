@@ -67,7 +67,7 @@ func _process(_delta):
 			initialize_subsystems()
 			flush_old_map()
 
-		if EpisodeManager.is_custom_episode_playing():
+		if not Engine.is_editor_hint() and EpisodeManager.is_custom_episode_playing():
 			var overrides = self.get_node("GeneratorOverrides")
 			if not overrides.done:
 				return
