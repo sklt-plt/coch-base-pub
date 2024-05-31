@@ -1,13 +1,7 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Base/Actors/Player/HUD/MapContainer.gd" type="Script" id=1]
-[ext_resource path="res://Content/custom/UI/UITheme.tres" type="Theme" id=2]
 [ext_resource path="res://Base/UI/minimap_mask.png" type="Texture" id=3]
-[ext_resource path="res://Content/custom/Actors/Player/HUD/map_exit.png" type="Texture" id=4]
-[ext_resource path="res://Content/custom/Actors/Player/HUD/map_chest2.png" type="Texture" id=5]
-[ext_resource path="res://Content/custom/Actors/Player/HUD/map_key.png" type="Texture" id=6]
-[ext_resource path="res://Content/custom/Actors/Player/HUD/map_player.png" type="Texture" id=7]
-[ext_resource path="res://Content/custom/Actors/Player/HUD/map_check.png" type="Texture" id=8]
 
 [sub_resource type="CanvasItemMaterial" id=6]
 light_mode = 2
@@ -20,13 +14,7 @@ light_mode = 2
 [node name="MapContainer" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 2 )
 script = ExtResource( 1 )
-IMAGE_CLEAR = ExtResource( 8 )
-IMAGE_KEY = ExtResource( 6 )
-IMAGE_TREASURE = ExtResource( 5 )
-IMAGE_PLAYER = ExtResource( 7 )
-IMAGE_EXIT = ExtResource( 4 )
 
 [node name="Light2DMM" type="Light2D" parent="."]
 texture = ExtResource( 3 )
@@ -83,7 +71,7 @@ __meta__ = {
 use_parent_material = true
 margin_left = 70.0
 margin_right = 1850.0
-margin_bottom = 36.0
+margin_bottom = 14.0
 size_flags_horizontal = 5
 size_flags_vertical = 0
 text = "Legend:"
@@ -101,7 +89,7 @@ margin_bottom = 109.0
 columns = 6
 
 [node name="GridContainer5" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
-margin_right = 109.0
+margin_right = 77.0
 margin_bottom = 50.0
 columns = 2
 
@@ -132,17 +120,17 @@ expand = true
 stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer5"]
-margin_left = 58.0
-margin_top = 7.0
-margin_right = 109.0
-margin_bottom = 43.0
+margin_left = 54.0
+margin_top = 18.0
+margin_right = 77.0
+margin_bottom = 32.0
 size_flags_horizontal = 2
 text = "You"
 valign = 2
 
 [node name="GridContainer2" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
-margin_left = 117.0
-margin_right = 328.0
+margin_left = 81.0
+margin_right = 209.0
 margin_bottom = 50.0
 columns = 2
 
@@ -155,17 +143,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer2"]
-margin_left = 58.0
-margin_top = 7.0
-margin_right = 211.0
-margin_bottom = 43.0
+margin_left = 54.0
+margin_top = 18.0
+margin_right = 128.0
+margin_bottom = 32.0
 size_flags_horizontal = 2
 text = "Unexplored"
 valign = 2
 
 [node name="GridContainer3" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
-margin_left = 336.0
-margin_right = 512.0
+margin_left = 213.0
+margin_right = 322.0
 margin_bottom = 50.0
 columns = 2
 
@@ -195,17 +183,17 @@ expand = true
 stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer3"]
-margin_left = 58.0
-margin_top = 7.0
-margin_right = 176.0
-margin_bottom = 43.0
+margin_left = 54.0
+margin_top = 18.0
+margin_right = 109.0
+margin_bottom = 32.0
 size_flags_horizontal = 2
 text = "Explored"
 valign = 2
 
 [node name="GridContainer4" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
-margin_left = 520.0
-margin_right = 690.0
+margin_left = 326.0
+margin_right = 435.0
 margin_bottom = 50.0
 columns = 2
 
@@ -235,17 +223,17 @@ expand = true
 stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer4"]
-margin_left = 58.0
-margin_top = 7.0
-margin_right = 170.0
-margin_bottom = 43.0
+margin_left = 54.0
+margin_top = 18.0
+margin_right = 109.0
+margin_bottom = 32.0
 size_flags_horizontal = 2
 text = "Treasure"
 valign = 2
 
 [node name="GridContainer6" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
-margin_left = 698.0
-margin_right = 805.0
+margin_left = 439.0
+margin_right = 516.0
 margin_bottom = 50.0
 columns = 2
 
@@ -275,17 +263,17 @@ expand = true
 stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer6"]
-margin_left = 58.0
-margin_top = 7.0
-margin_right = 107.0
-margin_bottom = 43.0
+margin_left = 54.0
+margin_top = 18.0
+margin_right = 77.0
+margin_bottom = 32.0
 size_flags_horizontal = 2
 text = "Key"
 valign = 2
 
 [node name="GridContainer7" type="GridContainer" parent="LegendMC/MarginContainer/GridContainer"]
-margin_left = 813.0
-margin_right = 931.0
+margin_left = 520.0
+margin_right = 603.0
 margin_bottom = 50.0
 columns = 2
 
@@ -315,10 +303,10 @@ expand = true
 stretch_mode = 6
 
 [node name="Legend2" type="Label" parent="LegendMC/MarginContainer/GridContainer/GridContainer7"]
-margin_left = 58.0
-margin_top = 7.0
-margin_right = 118.0
-margin_bottom = 43.0
+margin_left = 54.0
+margin_top = 18.0
+margin_right = 83.0
+margin_bottom = 32.0
 size_flags_horizontal = 2
 text = "Goal"
 valign = 2

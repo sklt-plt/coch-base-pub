@@ -16,5 +16,8 @@ __meta__ = {
 "_editor_description_": ""
 }
 
+[node name="IFrameTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="." to="." method="_on_MeleeDetector_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_MeleeDetector_area_exited"]
