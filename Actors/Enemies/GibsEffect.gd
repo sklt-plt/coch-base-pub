@@ -12,26 +12,17 @@
 #    You should have received a copy of the GNU Lesser General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-extends Node
-
-var top_piece : Spatial
-var bottom_piece : Spatial
-var left_piece : Spatial
-var right_piece : Spatial
-var gun_parent
+extends Spatial
 
 func _ready():
-	top_piece = get_node("TopPiece")
-	bottom_piece = get_node("BottomPiece")
-	left_piece = get_node("LeftPiece")
-	right_piece = get_node("RightPiece")
-	gun_parent = $"/root/Player/BodyCollision/LookHeight/LookDirection/GunController"
+	var rbs = get_children()
+	var rng = RandomNumberGenerator.new()
+	rng.randomize()
 
-func _physics_process(_delta):
-	top_piece.translation.y = gun_parent.current_gun.current_inaccuracy*7
+	for rb in rbs:
+		if rb is RigidBody:
+			rb.apply_impulse(Vector3.ZERO, Vector3(rng.randf_range(-2.0, 2.0), rng.randf_range(3.0, 6.0), rng.randf_range(-2.0, 2.0)))
 
-	bottom_piece.translation.y = -gun_parent.current_gun.current_inaccuracy*7
 
-	left_piece.translation.x = -gun_parent.current_gun.current_inaccuracy*7
-
-	right_piece.translation.x = gun_parent.current_gun.current_inaccuracy*7
+func _on_Timer_timeout():
+	self.queue_free()
